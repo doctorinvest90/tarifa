@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calculadora da Tarifa Invisível — Doctor Invest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#0D1B2A;--navy2:#1B3A5C;--gold:#C9A84C;--ivory:#F7F5F0;--dark:#060c14}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:'DM Sans',sans-serif;font-weight:300;background:var(--ivory);color:var(--navy);font-size:17px;line-height:1.55;padding:32px 16px}
+  .wrap{max-width:640px;margin:0 auto}
+  .label{font-size:12px;font-weight:500;letter-spacing:3.5px;text-transform:uppercase;color:var(--gold)}
+  h1{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:34px;line-height:1.1;margin:.2em 0 .4em}
+  p.lead{color:rgba(13,27,42,.75);margin-bottom:24px}
+  .frente{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid #E4DFD3;border-radius:8px;padding:12px 14px;margin:8px 0}
+  .frente label{flex:1;font-size:15px}
+  .frente label small{display:block;color:rgba(13,27,42,.5);font-size:12.5px}
+  .frente .campo{display:flex;align-items:center;gap:6px;font-size:15px;color:var(--navy2)}
+  .frente input{width:110px;padding:8px 10px;border:1px solid #D8D2C2;border-radius:6px;font:inherit;font-size:15px;text-align:right;background:var(--ivory)}
+  .frente input:focus{outline:2px solid var(--gold);border-color:var(--gold)}
+  .total{margin-top:24px;background:linear-gradient(160deg,#152538,var(--navy) 60%,var(--dark));color:var(--ivory);border-radius:10px;padding:22px 24px}
+  .total .num{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:44px;color:var(--gold);line-height:1.1}
+  .total .sub{font-size:13px;letter-spacing:1px;text-transform:uppercase;color:rgba(247,245,240,.6);margin-top:2px}
+  .total .dec{display:flex;gap:28px;margin-top:14px;border-top:1px solid rgba(201,168,76,.25);padding-top:12px}
+  .total .dec .num2{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:26px}
+  .nota{font-size:12.5px;color:rgba(13,27,42,.55);margin-top:16px}
+  footer{margin-top:28px;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:rgba(13,27,42,.45);text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="label">Kit · A Tarifa Invisível do Médico</div>
+  <h1>Quanto sai da sua conta por ano sem aparecer?</h1>
+  <p class="lead">Preencha o custo <strong>mensal</strong> que você encontrou em cada frente da auditoria. A calculadora soma sozinha e mostra o tamanho anual da tarifa invisível.</p>
+
+  <div id="frentes"></div>
+
+  <div class="total">
+    <div class="num" id="totalAno">R$ 0</div>
+    <div class="sub">por ano, hoje, saindo da sua conta</div>
+    <div class="dec">
+      <div><div class="num2" id="totalMes">R$ 0</div><div class="sub">por mês</div></div>
+      <div><div class="num2" id="totalDez">R$ 0</div><div class="sub">em 10 anos, sem contar qualquer rendimento</div></div>
+    </div>
+  </div>
+
+  <p class="nota">A soma de 10 anos é aritmética simples (custo anual × 10), sem considerar rendimento, inflação ou reajuste de tarifas — o número real tende a ser maior, porque tarifas sobem. Esta calculadora não recomenda investimentos; ela mede custo.</p>
+  <footer>Doctor Invest · material educacional</footer>
+</div>
+<script>
+  const FRENTES = [
+    ["Frente 01 · Pacote de serviços", "a cesta mensal do banco"],
+    ["Frente 02 · Taxa de administração de fundos", "converta o % ao ano em R$/mês"],
+    ["Frente 03 · Previdência privada", "administração + carregamento"],
+    ["Frente 04 · Tarifas PJ da clínica", "conta PJ, maquininha, boletos"],
+    ["Frente 05 · Cartões e anuidades", "anuidade ÷ 12 + juros rotativos"],
+    ["Frente 06 · Câmbio e viagens", "spread e IOF do último ano ÷ 12"],
+    ["Frente 07 · Seguros embutidos", "prestamista, capitalização, títulos"],
+    ["Frente 08 · Corretagem e custódia", "taxas da corretora e da bolsa"],
+  ];
+  const cont = document.getElementById("frentes");
+  FRENTES.forEach(([nome, dica], i) => {
+    const row = document.createElement("div");
+    row.className = "frente";
+    row.innerHTML = `<label>${nome}<small>${dica}</small></label>
+      <span class="campo">R$ <input type="number" min="0" step="1" inputmode="decimal" data-i="${i}" placeholder="0"> /mês</span>`;
+    cont.appendChild(row);
+  });
+  const fmt = (v) => "R$ " + v.toLocaleString("pt-BR", { maximumFractionDigits: 0 });
+  function recalc() {
+    let mes = 0;
+    document.querySelectorAll("input[data-i]").forEach((el) => { mes += Number(el.value) || 0; });
+    document.getElementById("totalMes").textContent = fmt(mes);
+    document.getElementById("totalAno").textContent = fmt(mes * 12);
+    document.getElementById("totalDez").textContent = fmt(mes * 12 * 10);
+  }
+  cont.addEventListener("input", recalc);
+  recalc();
+</script>
+</body>
+</html>
