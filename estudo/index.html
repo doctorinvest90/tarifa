@@ -196,16 +196,17 @@
     <p class="sub">Deixe o e-mail e o estudo abre na sequência. Você passa a receber também as análises que escrevo duas vezes por semana para médicos investidores.</p>
 
     <div class="form-box" id="form-box">
-      <!-- ═══════════════════════════════════════════════════════════════════
-           TROCAR ESTA LINHA pelo embed do subscribe form do beehiiv.
-           No app: Grow > Subscribe Forms > novo form > Embed.
-           Cole aqui o <iframe src="https://embeds.beehiiv.com/<uuid>?slim=true">
-           e configure o redirect de sucesso para:
-           https://tarifa.drheliobarros.com.br/estudo/obrigado.html
-           Enquanto a linha não for trocada, o script abaixo troca o iframe por
-           um link direto, para a página nunca ficar quebrada em público.
-           ═══════════════════════════════════════════════════════════════════ -->
-      <iframe src="https://embeds.beehiiv.com/SUBSTITUIR-PELO-EMBED?slim=true" data-test-id="beehiiv-embed" height="52" frameborder="0" scrolling="no" title="Receber o estudo por e-mail"></iframe>
+      <!-- Subscribe form "Estudo — Comprar, alugar ou construir (landing)".
+           O redirect de sucesso aponta para /estudo/obrigado.html com o e-mail
+           REMOVIDO da URL (remove_email_from_redirect_url = true) — identidade
+           em query string vaza para histórico e Referer.
+           A altura 190 acomoda o tema ao vivo, que ainda mostra título e
+           subtítulo. Quando o rascunho for publicado no beehiiv o cabeçalho
+           some e isto pode cair para ~70. -->
+      <iframe src="https://subscribe-forms.beehiiv.com/318f62e9-8672-4379-9b0f-81ee20053d79"
+              class="beehiiv-embed" data-test-id="beehiiv-embed" height="190"
+              frameborder="0" scrolling="no" title="Receber o estudo por e-mail"></iframe>
+      <script async src="https://subscribe-forms.beehiiv.com/attribution.js"></script>
     </div>
 
     <p class="nota">Sem custo e sem cadastro. Um e-mail por edição, duas vezes por semana, e o descadastro fica em todo rodapé.</p>
@@ -239,16 +240,6 @@
     }
   }
   send("view");
-
-  // Rede de segurança: enquanto o embed do beehiiv não for colado, o iframe
-  // aponta para um form que não existe e renderiza "Not found". Trocar por um
-  // link vivo é preferível a publicar uma caixa quebrada.
-  var frame = document.querySelector('#form-box iframe');
-  if (frame && frame.src.indexOf("SUBSTITUIR") !== -1) {
-    document.getElementById("form-box").innerHTML =
-      '<a class="btn" href="https://doctor-invest.beehiiv.com/subscribe?utm_source=estudo-imovel" ' +
-      'style="margin:4px 0 2px">Assinar e receber o estudo</a>';
-  }
 
   // O submit acontece dentro do iframe do beehiiv e não é observável daqui.
   // A conversão é medida pelo "view" da página de obrigado, que só é
