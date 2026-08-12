@@ -200,13 +200,24 @@
            O redirect de sucesso aponta para /estudo/obrigado.html com o e-mail
            REMOVIDO da URL (remove_email_from_redirect_url = true) — identidade
            em query string vaza para histórico e Referer.
-           Altura 70: o tema publicado não tem cabeçalho, o form ocupa ~45px e
-           a folga cobre a mensagem de erro de e-mail inválido. -->
+           Altura 130, não 70: o formulário vazio ocupa ~45px, mas o beehiiv usa o
+           mesmo espaço para responder (e-mail inválido, "você já é assinante"). Com
+           70 a resposta ficava cortada e o visitante via a tela não fazer nada.
+           Foi exatamente o que aconteceu no teste de 12/08. -->
       <iframe src="https://subscribe-forms.beehiiv.com/318f62e9-8672-4379-9b0f-81ee20053d79"
-              class="beehiiv-embed" data-test-id="beehiiv-embed" height="70"
+              class="beehiiv-embed" data-test-id="beehiiv-embed" height="130"
               frameborder="0" scrolling="no" title="Receber o estudo por e-mail"></iframe>
       <script async src="https://subscribe-forms.beehiiv.com/attribution.js"></script>
     </div>
+
+    <!-- Saída para quem JÁ assina: o beehiiv não redireciona assinante existente, então
+         sem isto a lista inteira (~600 ativos) bate numa porta fechada ao vir do DM. -->
+    <p class="nota" style="margin-top:18px">
+      Já recebe a newsletter?
+      <a href="obrigado.html" data-ja-assina
+         style="color:var(--gold);border-bottom:1px solid rgba(201,168,76,.45);text-decoration:none;padding-bottom:1px">O
+      estudo está aqui, sem precisar preencher de novo.</a>
+    </p>
 
     <p class="nota">Sem custo e sem cadastro. Um e-mail por edição, duas vezes por semana, e o descadastro fica em todo rodapé.</p>
   </div>
@@ -245,6 +256,11 @@
   // alcançável pelo redirect de sucesso do formulário.
   document.querySelectorAll('a[href="#receber"]').forEach(function (a) {
     a.addEventListener("click", function () { send("form_scroll"); });
+  });
+  // Separa quem já assinava de quem converteu de fato: sem isto os dois chegam na
+  // página de obrigado como "lead" e o número de captação fica inflado.
+  document.querySelectorAll("[data-ja-assina]").forEach(function (a) {
+    a.addEventListener("click", function () { send("ja_assinante"); });
   });
 })();
 </script>
