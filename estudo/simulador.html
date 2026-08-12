@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comprar, alugar ou construir? — Simulador Doctor Invest</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --noite:#0D1B2A; --ouro:#C9A84C; --azul:#1B3A5C; --marfim:#F7F5F0;
+  --linha:#DFDAD0; --cinza:#5A6472; --branco:#FFFFFF;
+  --serif:'Cormorant Garamond',Georgia,serif;
+  --sans:'DM Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--marfim);color:#22303F;font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+
+/* ---------- CABEÇALHO ---------- */
+.top{background:var(--noite);color:#fff;padding:38px 0 34px}
+.eyebrow{font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--ouro);font-weight:500;margin-bottom:18px}
+.top h1{font-family:var(--serif);font-weight:600;font-size:clamp(30px,7vw,50px);line-height:1.06;letter-spacing:-.01em;margin-bottom:14px}
+.top p{color:#A9B6C6;font-size:14.5px;max-width:56ch}
+.top p b{color:#fff;font-weight:500}
+
+/* ---------- FAIXA DE VEREDITO (SIGNATURE) ---------- */
+.verdict{position:sticky;top:0;z-index:40;background:var(--noite);border-top:1px solid rgba(201,168,76,.28);
+  border-bottom:1px solid rgba(201,168,76,.28);box-shadow:0 6px 22px rgba(13,27,42,.16)}
+.verdict-in{display:flex;align-items:center;gap:18px;padding:13px 20px;max-width:1040px;margin:0 auto}
+.v-main{flex:1;min-width:0}
+.v-lab{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#7C8B9C;margin-bottom:3px}
+.v-name{font-family:var(--serif);font-size:clamp(20px,5vw,28px);font-weight:600;color:var(--ouro);line-height:1.12;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.v-val{text-align:right;flex-shrink:0}
+.v-val .n{font-family:var(--serif);font-size:clamp(21px,5vw,30px);font-weight:700;color:var(--ouro);line-height:1;letter-spacing:-.01em;white-space:nowrap}
+.v-val .s{font-size:10px;color:#7C8B9C;margin-top:4px;letter-spacing:.04em}
+
+/* ---------- SEÇÕES ---------- */
+section{padding:38px 0}
+.sec-h{margin-bottom:6px}
+.sec-h h2{font-family:var(--serif);font-size:26px;font-weight:600;color:var(--noite);letter-spacing:-.005em}
+.sec-sub{font-size:13.5px;color:var(--cinza);margin-bottom:20px;max-width:62ch}
+hr.r{border:0;border-top:1px solid var(--linha);margin:0 0 20px}
+
+/* ---------- CONTROLES ---------- */
+.ctrls{display:grid;grid-template-columns:1fr;gap:2px;background:var(--linha);border:1px solid var(--linha);border-radius:3px;overflow:hidden}
+@media(min-width:720px){.ctrls{grid-template-columns:1fr 1fr}}
+.ctrl{background:var(--branco);padding:15px 17px 17px}
+.ctrl-top{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-bottom:2px}
+.ctrl label{font-size:12.5px;font-weight:500;color:var(--noite);letter-spacing:.005em}
+.ctrl .out{font-family:var(--serif);font-size:19px;font-weight:700;color:var(--azul);white-space:nowrap;font-variant-numeric:tabular-nums}
+.ctrl .hint{font-size:10.5px;color:var(--cinza);line-height:1.45;margin-bottom:11px;min-height:15px}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:22px;background:transparent;cursor:pointer;display:block}
+input[type=range]::-webkit-slider-runnable-track{height:3px;background:var(--linha);border-radius:2px}
+input[type=range]::-moz-range-track{height:3px;background:var(--linha);border-radius:2px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:19px;height:19px;border-radius:50%;
+  background:var(--ouro);border:3px solid var(--branco);box-shadow:0 1px 5px rgba(13,27,42,.32);margin-top:-8px}
+input[type=range]::-moz-range-thumb{width:13px;height:13px;border-radius:50%;background:var(--ouro);
+  border:3px solid var(--branco);box-shadow:0 1px 5px rgba(13,27,42,.32)}
+input[type=range]:focus-visible{outline:2px solid var(--azul);outline-offset:3px;border-radius:3px}
+
+details.adv{margin-top:2px;border:1px solid var(--linha);border-top:0;background:var(--branco);border-radius:0 0 3px 3px}
+details.adv summary{cursor:pointer;padding:13px 17px;font-size:12px;font-weight:500;color:var(--azul);
+  letter-spacing:.05em;text-transform:uppercase;list-style:none;display:flex;align-items:center;gap:8px}
+details.adv summary::-webkit-details-marker{display:none}
+details.adv summary::before{content:'+';font-size:16px;color:var(--ouro);font-weight:700;line-height:1}
+details.adv[open] summary::before{content:'–'}
+details.adv summary:focus-visible{outline:2px solid var(--azul);outline-offset:-2px}
+.adv-grid{display:grid;grid-template-columns:1fr;gap:2px;background:var(--linha);border-top:1px solid var(--linha)}
+@media(min-width:720px){.adv-grid{grid-template-columns:1fr 1fr}}
+
+.row-btns{display:flex;gap:10px;margin-top:16px;flex-wrap:wrap}
+button.act{font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:.05em;padding:10px 17px;
+  border:1px solid var(--noite);background:transparent;color:var(--noite);cursor:pointer;border-radius:2px;transition:background .15s,color .15s}
+button.act:hover{background:var(--noite);color:#fff}
+button.act:focus-visible{outline:2px solid var(--ouro);outline-offset:2px}
+.fixas{font-size:11px;color:var(--cinza);margin-top:14px;line-height:1.6}
+
+/* ---------- RESULTADOS ---------- */
+.cards{display:grid;grid-template-columns:1fr;gap:12px}
+@media(min-width:720px){.cards{grid-template-columns:repeat(3,1fr)}}
+.card{background:var(--branco);border:1px solid var(--linha);border-top:3px solid var(--linha);padding:19px 18px 17px;
+  position:relative;transition:border-color .2s}
+.card.win{border-top-color:var(--ouro);box-shadow:0 3px 16px rgba(13,27,42,.08)}
+.card .pos{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--cinza);font-weight:500}
+.card.win .pos{color:var(--ouro);font-weight:700}
+.card h3{font-family:var(--serif);font-size:20px;font-weight:600;color:var(--noite);margin:6px 0 2px;line-height:1.15}
+.card .desc{font-size:11.5px;color:var(--cinza);margin-bottom:14px;line-height:1.45;min-height:32px}
+.card .big{font-family:var(--serif);font-size:31px;font-weight:700;color:var(--noite);line-height:1;letter-spacing:-.015em;
+  font-variant-numeric:tabular-nums}
+.card .un{font-size:11px;color:var(--cinza);margin-top:5px;letter-spacing:.04em}
+.card .brk{margin-top:14px;padding-top:12px;border-top:1px solid #EDE9E0;font-size:11.5px;color:var(--cinza);line-height:1.65}
+.card .brk span{float:right;color:var(--noite);font-weight:500;font-variant-numeric:tabular-nums}
+.card .brk div{overflow:hidden}
+
+/* ---------- GRÁFICO ---------- */
+.chart-box{background:var(--branco);border:1px solid var(--linha);padding:18px 14px 10px;margin-top:6px}
+svg.chart{width:100%;height:auto;display:block;overflow:visible}
+.leg{display:flex;flex-wrap:wrap;gap:16px;margin-top:12px;padding:0 4px;font-size:11.5px;color:var(--cinza)}
+.leg i{display:inline-block;width:15px;height:3px;margin-right:7px;vertical-align:middle;border-radius:2px}
+
+/* ---------- BREAK-EVEN ---------- */
+.be{background:var(--noite);color:#fff;padding:26px 22px 22px;margin-top:6px}
+.be h3{font-family:var(--serif);font-size:21px;font-weight:600;color:#fff;margin-bottom:5px}
+.be .cap{font-size:12.5px;color:#93A0B0;margin-bottom:24px;max-width:60ch;line-height:1.55}
+.scale{position:relative;height:104px;margin:0 4px 4px}
+.scale .bar{position:absolute;top:44px;left:0;right:0;height:2px;background:rgba(255,255,255,.16)}
+.scale .fill{position:absolute;top:44px;left:0;height:2px;background:var(--ouro);transition:width .18s ease-out}
+.mark{position:absolute;top:44px;width:112px;margin-left:-56px;text-align:center}
+.mark .pin{width:2px;height:11px;background:#7C8B9C;margin:0 auto}
+.mark .txt{font-size:9.5px;color:#7C8B9C;line-height:1.35;margin-top:5px}
+.mark.zero{width:34px;margin-left:0;text-align:left}
+.mark.zero .pin{margin:0}
+.mark.fim{margin-left:-112px;text-align:right}
+.mark.fim .pin{margin:0 0 0 auto}
+.needle{position:absolute;top:0;width:160px;margin-left:-80px;text-align:center;transition:left .18s ease-out}
+.needle .lab{font-family:var(--serif);font-size:17px;font-weight:700;color:var(--ouro);white-space:nowrap;line-height:1.1;margin-bottom:8px}
+.needle .dot{width:13px;height:13px;border-radius:50%;background:var(--ouro);margin:0 auto;border:3px solid var(--noite);
+  box-shadow:0 0 0 2px var(--ouro)}
+.needle.esq{margin-left:0;text-align:left}
+.needle.esq .dot{margin:0}
+.needle.dir{margin-left:-160px;text-align:right}
+.needle.dir .dot{margin:0 0 0 auto}
+.be-verd{margin-top:20px;padding-top:18px;border-top:1px solid rgba(201,168,76,.3);font-size:13.5px;line-height:1.65;color:#D5DDE6}
+.be-verd b{color:#fff;font-weight:500}
+.be-verd.ok b{color:var(--ouro)}
+
+/* ---------- FLUXO ---------- */
+table{width:100%;border-collapse:collapse;font-size:12.5px;background:var(--branco);border:1px solid var(--linha)}
+th{background:var(--noite);color:#fff;font-weight:500;text-align:left;padding:9px 11px;font-size:10px;
+  letter-spacing:.07em;text-transform:uppercase}
+td{padding:9px 11px;border-bottom:1px solid #EFEBE2;font-variant-numeric:tabular-nums}
+th.n,td.n{text-align:right}
+tbody tr:last-child td{border-bottom:0}
+tbody td:first-child{white-space:nowrap}
+tbody tr.tot td{background:var(--marfim);font-weight:700;color:var(--noite);border-top:1.5px solid var(--ouro)}
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+
+/* ---------- CTA / RODAPÉ ---------- */
+.cta{background:var(--azul);color:#fff;padding:34px 24px;margin:44px 0 0;text-align:center}
+.cta h3{font-family:var(--serif);font-size:26px;font-weight:600;margin-bottom:10px;line-height:1.2}
+.cta p{color:#C3D0DE;font-size:14px;max-width:52ch;margin:0 auto 22px}
+.cta a{display:inline-block;background:var(--ouro);color:var(--noite);font-weight:700;font-size:13px;
+  letter-spacing:.06em;text-transform:uppercase;padding:14px 30px;text-decoration:none;border-radius:2px;transition:transform .15s}
+.cta a:hover{transform:translateY(-1px)}
+.cta a:focus-visible{outline:3px solid #fff;outline-offset:3px}
+footer{padding:26px 0 44px;font-size:10.5px;color:var(--cinza);line-height:1.65;text-align:justify}
+footer b{color:var(--noite)}
+footer .assin{margin-top:14px;padding-top:14px;border-top:1px solid var(--linha);font-size:11px;text-align:left}
+footer .assin b{font-weight:700;color:var(--noite)}
+
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<div class="top">
+  <div class="wrap">
+    <div class="eyebrow">Doctor Invest · Simulador</div>
+    <h1>Comprar, alugar<br>ou construir?</h1>
+    <p>Três famílias com o mesmo dinheiro, a mesma casa e o mesmo orçamento mensal. A única diferença é o que cada uma faz com o capital. <b>Mexa nos números e veja o que muda.</b></p>
+    <p style="margin-top:16px;font-size:13px"><a href="./" data-estudo style="color:var(--ouro);text-decoration:none;border-bottom:1px solid rgba(201,168,76,.4);padding-bottom:2px">Ler o estudo completo, com metodologia, dez cenários e as fontes →</a></p>
+  </div>
+</div>
+
+<div class="verdict">
+  <div class="verdict-in">
+    <div class="v-main">
+      <div class="v-lab" id="vLab">Família 2 chega na frente</div>
+      <div class="v-name" id="vName">Aluga e investe</div>
+    </div>
+    <div class="v-val">
+      <div class="n" id="vVal">R$ 3,67 mi</div>
+      <div class="s" id="vDelta">+R$ 1,41 mi sobre o 2º</div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+<section>
+  <div class="sec-h"><h2>Os números que você controla</h2></div>
+  <p class="sec-sub">Tudo é recalculado na hora, mês a mês, ao longo de todo o prazo. Os resultados aparecem sempre em reais de hoje — já descontada a inflação.</p>
+  <hr class="r">
+
+  <div class="ctrls" id="ctrlMain"></div>
+  <details class="adv">
+    <summary>Premissas avançadas</summary>
+    <div class="adv-grid" id="ctrlAdv"></div>
+  </details>
+
+  <div class="row-btns">
+    <button class="act" id="btnReset">Voltar ao cenário do estudo</button>
+    <button class="act" id="btnBarato">E se o financiamento ficasse barato?</button>
+  </div>
+  <p class="fixas"><b>Fixo em todos os cenários:</b> ITBI e registro de 4% na compra pronta e 4,2% no terreno · seguros MIP/DFI de 0,42% ao ano sobre o saldo devedor · taxa de administração de R$ 25/mês · IPTU de 0,6% e manutenção e seguro de 1,2% ao ano sobre o valor do imóvel · amortização SAC · obra em 24 meses pagando aluguel em paralelo.</p>
+</section>
+
+<section>
+  <div class="sec-h"><h2>Patrimônio líquido ao final do prazo</h2></div>
+  <p class="sec-sub">Imóvel a valor de mercado, mais investimentos, menos o saldo devedor que ainda restar.</p>
+  <hr class="r">
+  <div class="cards" id="cards"></div>
+</section>
+
+<section>
+  <div class="sec-h"><h2>A trajetória, ano a ano</h2></div>
+  <p class="sec-sub">Quem larga na frente nem sempre chega na frente. Repare em quando as curvas se cruzam.</p>
+  <hr class="r">
+  <div class="chart-box">
+    <svg class="chart" id="chart" viewBox="0 0 640 320" role="img" aria-label="Gráfico da evolução do patrimônio líquido das três famílias"></svg>
+    <div class="leg">
+      <span><i style="background:#C9A84C"></i>Família 1 — compra pronta</span>
+      <span><i style="background:#0D1B2A"></i>Família 2 — aluga e investe</span>
+      <span><i style="background:#1B3A5C"></i>Família 3 — constrói</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="be">
+    <h3>Quanto o imóvel precisaria valorizar</h3>
+    <p class="cap">Em vez de adivinhar o futuro, inverta a pergunta: de quanta valorização acima da inflação, todo ano e sem falhar, a Família 1 precisaria para empatar com quem alugou e investiu?</p>
+    <div class="scale">
+      <div class="bar"></div>
+      <div class="fill" id="beFill"></div>
+      <div class="mark zero" style="left:0%"><div class="pin"></div><div class="txt">zero</div></div>
+      <div class="mark" style="left:24%"><div class="pin"></div><div class="txt">IPCA + 1,2%<br>histórico FipeZAP 1979–2015</div></div>
+      <div class="mark fim" style="left:100%"><div class="pin"></div><div class="txt">IPCA + 5%<br>ao ano</div></div>
+      <div class="needle" id="beNeedle" style="left:76.8%">
+        <div class="lab" id="beLab">IPCA + 3,84%</div>
+        <div class="dot"></div>
+      </div>
+    </div>
+    <p class="be-verd" id="beVerd"></p>
+  </div>
+</section>
+
+<section>
+  <div class="sec-h"><h2>O desembolso mensal de cada família</h2></div>
+  <p class="sec-sub">Todas gastam o mesmo por mês. Quem gasta menos com moradia investe a diferença — é essa regra que torna a comparação honesta.</p>
+  <hr class="r">
+  <div class="tbl-scroll">
+    <table>
+      <thead><tr><th>Mês</th><th class="n">Família 1</th><th class="n">Família 2</th><th class="n">Família 3</th><th class="n">Orçamento</th></tr></thead>
+      <tbody id="fluxo"></tbody>
+    </table>
+  </div>
+  <p class="fixas"><b>Por que encarecer a obra melhora quem aluga.</b> O orçamento comum é o maior desembolso entre as três em cada mês. Se a obra da Família 3 fica mais cara, o orçamento sobe — e a Família 2, que continua só pagando aluguel, aporta a diferença maior. É consequência direta da regra que torna a comparação justa: ninguém pode "vencer" simplesmente gastando menos e consumindo a sobra.</p>
+</section>
+
+<div class="cta">
+  <h3>Os números da sua vida não são os do exemplo</h3>
+  <p>Este simulador usa premissas médias. Sua taxa, seu imposto, seu FGTS, seu prazo e seu perfil de risco mudam a conta — às vezes o suficiente para inverter a resposta.</p>
+  <!-- Destino alinhado ao resto do material do estudo: a página de obrigado manda pro
+       mesmo quiz. O respondi que estava aqui foi migrado pro Fillout e o leitor da
+       planilha dele foi removido, então submissão ali podia não chegar a ninguém. -->
+  <a href="https://drheliobarros.com.br/captacao-gestao-de-patrimonio-quiz/?utm_source=simulador&utm_medium=cta&utm_campaign=comprar-alugar-construir"
+     target="_blank" rel="noopener" data-cta>Quero rodar essa conta com a minha realidade</a>
+</div>
+
+<footer>
+  <b>Aviso.</b> Este simulador tem finalidade exclusivamente educacional e informativa e não constitui recomendação, oferta ou solicitação de compra ou venda de qualquer ativo, nem consultoria ou análise de valores mobiliários nos termos da regulamentação da Comissão de Valores Mobiliários. As projeções são meramente ilustrativas, construídas a partir das premissas que você mesmo definiu acima, e não representam promessa, garantia ou expectativa de rentabilidade futura. Rentabilidade passada não é garantia de rentabilidade futura. Investimentos envolvem risco, inclusive de perda do capital investido. Decisões patrimoniais dependem de análise individualizada de perfil, objetivos, horizonte, situação tributária e capacidade de tolerância a risco. Consulte um profissional habilitado antes de decidir.
+  <div class="assin"><b>Doctor Invest</b> · Hélio Cardoso de Barros — CEO, especialista de investimentos CGA · Parâmetros de mercado apurados em agosto de 2026 · Referências: Índice FipeZAP (FIPE/DataZAP), Banco Central do Brasil (série 226 — TR), CUB Sinduscon-SP.</div>
+</footer>
+
+</div>
+
+<script>
+/* ================= PARÂMETROS ================= */
+const P = {
+  valor:1000000, caixa:200000, taxa:11.5, ret:6.0, valoriz:0.0,
+  ipca:4.5, tr:2.02, prazo:30, yieldAl:6.0, estouro:20, pctTerreno:25, pctObra:55
+};
+const BASE = {...P};
+
+const DEFS_MAIN = [
+  {k:'valor',   lab:'Valor do imóvel pronto',        min:300000,max:3000000,step:50000, fmt:'money',
+   hint:'A casa que as três famílias querem morar.'},
+  {k:'caixa',   lab:'Capital disponível hoje',       min:0,     max:1500000,step:10000, fmt:'money',
+   hint:'O que cada família tem no bolso no mês zero.'},
+  {k:'taxa',    lab:'Taxa do banco (nominal, + TR)', min:7,     max:15,     step:0.05,  fmt:'pct2',
+   hint:'Agosto de 2026: Caixa a partir de 11,19%, Itaú 11,60%, Santander 11,69%.'},
+  {k:'ret',     lab:'Retorno da carteira, líquido e acima da inflação', min:1,max:10,step:0.1, fmt:'pctIpca',
+   hint:'Líquido de imposto. Com Selic a 14,25%, IPCA + 6% é factível em ativos isentos.'},
+  {k:'valoriz', lab:'Valorização do imóvel acima da inflação', min:-2,max:6,step:0.1, fmt:'pctIpca',
+   hint:'Histórico FipeZAP de 1979 a 2015: cerca de IPCA + 1,2% ao ano.'}
+];
+const DEFS_ADV = [
+  {k:'prazo',      lab:'Prazo do financiamento', min:10,max:35,step:1,    fmt:'anos', hint:'Sistema SAC.'},
+  {k:'ipca',       lab:'IPCA de longo prazo',    min:2, max:9, step:0.1,  fmt:'pct1', hint:'Corrói a prestação nominal ao longo do tempo.'},
+  {k:'tr',         lab:'TR acumulada no ano',    min:0, max:4, step:0.01, fmt:'pct2', hint:'Ficou zerada de 2017 a 2021. Hoje está em 2,02%.'},
+  {k:'yieldAl',    lab:'Aluguel anual sobre o valor do imóvel', min:3,max:9,step:0.05, fmt:'pct2',
+   hint:'FipeZAP, fevereiro de 2026: 6,03% ao ano.'},
+  {k:'estouro',    lab:'Estouro do orçamento da obra', min:0,max:60,step:1, fmt:'pct0', hint:'Quanto a obra custa a mais do que o orçado.'},
+  {k:'pctTerreno', lab:'Terreno, em % do valor do imóvel', min:10,max:45,step:1, fmt:'pct0', hint:'Quanto do valor final é o terreno.'},
+  {k:'pctObra',    lab:'Obra orçada, em % do valor do imóvel', min:35,max:80,step:1, fmt:'pct0', hint:'Custo de construção antes do estouro.'}
+];
+
+/* ================= FORMATAÇÃO ================= */
+const nf0 = new Intl.NumberFormat('pt-BR',{maximumFractionDigits:0});
+const brl = v => 'R$ ' + nf0.format(Math.round(v));
+const dec = (v,n) => v.toLocaleString('pt-BR',{minimumFractionDigits:n,maximumFractionDigits:n});
+function milhoes(v){
+  if(Math.abs(v) >= 1e6) return 'R$ ' + dec(v/1e6,2) + ' mi';
+  return 'R$ ' + nf0.format(Math.round(v/1000)) + ' mil';
+}
+function fmtVal(f,v){
+  if(f==='money')   return brl(v);
+  if(f==='pct2')    return dec(v,2) + '%';
+  if(f==='pct1')    return dec(v,1) + '%';
+  if(f==='pct0')    return Math.round(v) + '%';
+  if(f==='pctIpca') return 'IPCA + ' + dec(v,1) + '%';
+  if(f==='anos')    return Math.round(v) + ' anos';
+  return v;
+}
+
+/* ================= MOTOR DE CÁLCULO ================= */
+const SEG_MES = 0.00035, TAXA_ADM = 25, CUSTO_AQUIS = 0.04, CUSTO_TERRENO = 0.042;
+const IPTU_A = 0.006, MANUT_A = 0.012, MESES_OBRA = 24;
+
+function simular(p){
+  const H = Math.round(p.prazo*12);
+  const iNomA = (1 + p.taxa/100) * (1 + p.tr/100) - 1;
+  const iNomM = Math.pow(1+iNomA, 1/12) - 1;
+  const rInvM = Math.pow(1 + p.ret/100, 1/12) - 1;
+  const ipcaM = Math.pow(1 + p.ipca/100, 1/12) - 1;
+  const defl  = t => Math.pow(1 + p.ipca/100, t/12);
+
+  const aluguelM = p.valor * (p.yieldAl/100) / 12;
+  const iptuM    = p.valor * IPTU_A / 12;
+  const manutM   = p.valor * MANUT_A / 12;
+  const custoProp = iptuM + manutM;
+  const custoInq  = aluguelM + iptuM;
+
+  /* --- Família 1 --- */
+  const custos1  = p.valor * CUSTO_AQUIS;
+  const entrada1 = p.caixa - custos1;
+  const financ1  = Math.max(p.valor - entrada1, 0);
+  const sobra1   = Math.max(entrada1 - p.valor, 0);
+  const amort1   = financ1 / H;
+  const f1 = [], sd1 = [];
+  let s = financ1, juros1 = 0;
+  for(let t=1;t<=H;t++){
+    const j = s*iNomM, seg = s*SEG_MES;
+    juros1 += j;
+    const parc = amort1 + j + seg + TAXA_ADM;
+    s -= amort1;
+    f1.push(parc/defl(t) + custoProp);
+    sd1.push(Math.max(s,0)/defl(t));
+  }
+
+  /* --- Família 2 --- */
+  const f2 = new Array(H).fill(custoInq);
+
+  /* --- Família 3 --- */
+  const terreno  = p.valor * (p.pctTerreno/100);
+  const obraReal = p.valor * (p.pctObra/100) * (1 + p.estouro/100);
+  const custos3  = terreno * CUSTO_TERRENO;
+  const need3    = terreno + custos3 - p.caixa;
+  const financ3  = Math.max(need3 + obraReal, 0);
+  const sobra3   = Math.max(-(need3 + obraReal), 0);
+  const mo       = Math.min(MESES_OBRA, H-1);
+  const amort3   = financ3 / H;
+  const f3 = [], sd3 = [];
+  s = 0;
+  for(let t=1;t<=H;t++){
+    if(t<=mo){
+      const lib = Math.max(need3,0) + obraReal*(t/mo);
+      const parc = lib*iNomM + lib*SEG_MES + TAXA_ADM;
+      f3.push(parc/defl(t) + custoInq);
+      s = lib;                       /* o banco só deve o que já foi liberado */
+    } else {
+      const j = s*iNomM, seg = s*SEG_MES;
+      const parc = amort3 + j + seg + TAXA_ADM;
+      s -= amort3;
+      f3.push(parc/defl(t) + custoProp);
+    }
+    sd3.push(Math.max(s,0)/defl(t));
+  }
+
+  /* --- Orçamento comum --- */
+  const budget = f1.map((v,i)=>Math.max(v, f2[i], f3[i]));
+  const invest = (ini, saidas) => {
+    let inv = ini; const tr = [];
+    for(let t=0;t<H;t++){ inv = inv*(1+rInvM) + (budget[t]-saidas[t]); tr.push(inv); }
+    return tr;
+  };
+  const i1 = invest(sobra1, f1);
+  const i2 = invest(p.caixa, f2);
+  const i3 = invest(sobra3, f3);
+
+  const vr = p.valoriz/100;
+  const casa  = t => p.valor * Math.pow(1+vr, t/12);
+  const casa3 = t => t<=mo ? (terreno + obraReal*(t/mo)) : casa(t);
+
+  const p1 = i1.map((v,i)=> casa(i+1)  + v - sd1[i]);
+  const p2 = i2.slice();
+  const p3 = i3.map((v,i)=> casa3(i+1) + v - sd3[i]);
+
+  /* --- Break-even de valorização --- */
+  const be = (invFinal, sdFinal, alvo) => {
+    let lo=-0.10, hi=0.40;
+    for(let k=0;k<200;k++){
+      const mid=(lo+hi)/2;
+      (p.valor*Math.pow(1+mid,p.prazo) + invFinal - sdFinal < alvo) ? lo=mid : hi=mid;
+    }
+    return (lo+hi)/2;
+  };
+  const alvo = p2[H-1];
+  return {
+    H, p1, p2, p3, f1, f2, f3, budget, iNomA, juros1, financ1, financ3,
+    inv1:i1[H-1], inv2:i2[H-1], inv3:i3[H-1], sd1f:sd1[H-1], sd3f:sd3[H-1],
+    casaFim: casa(H), custoTotal3: terreno + custos3 + obraReal,
+    be1: be(i1[H-1], sd1[H-1], alvo), be3: be(i3[H-1], sd3[H-1], alvo)
+  };
+}
+
+/* ================= RENDERIZAÇÃO ================= */
+const FAM = [
+  {id:1, nome:'Família 1', ape:'compra pronta e financia', cor:'#C9A84C',
+   desc:'Paga ITBI, dá entrada e financia o resto. Nunca paga aluguel.'},
+  {id:2, nome:'Família 2', ape:'aluga e investe',          cor:'#0D1B2A',
+   desc:'Investe tudo, aluga e aporta a diferença todo mês. Não tem imóvel no fim.'},
+  {id:3, nome:'Família 3', ape:'constrói e financia',      cor:'#1B3A5C',
+   desc:'Compra o terreno, constrói em 24 meses pagando aluguel, depois financia.'}
+];
+
+function buildCtrls(){
+  const mk = (d) => `
+    <div class="ctrl">
+      <div class="ctrl-top">
+        <label for="s_${d.k}">${d.lab}</label>
+        <span class="out" id="o_${d.k}"></span>
+      </div>
+      <div class="hint">${d.hint}</div>
+      <input type="range" id="s_${d.k}" min="${d.min}" max="${d.max}" step="${d.step}" value="${P[d.k]}"
+        aria-label="${d.lab}">
+    </div>`;
+  document.getElementById('ctrlMain').innerHTML = DEFS_MAIN.map(mk).join('');
+  document.getElementById('ctrlAdv').innerHTML  = DEFS_ADV.map(mk).join('');
+  [...DEFS_MAIN, ...DEFS_ADV].forEach(d=>{
+    document.getElementById('s_'+d.k).addEventListener('input', e=>{
+      P[d.k] = parseFloat(e.target.value);
+      render();
+    });
+  });
+}
+
+function syncCtrls(){
+  [...DEFS_MAIN, ...DEFS_ADV].forEach(d=>{
+    document.getElementById('s_'+d.k).value = P[d.k];
+    document.getElementById('o_'+d.k).textContent = fmtVal(d.fmt, P[d.k]);
+  });
+}
+
+function drawChart(r){
+  /* viewBox estreito em telas pequenas: mantém os rótulos legíveis quando o SVG escala */
+  const mob = (typeof window !== 'undefined' ? window.innerWidth : 1000) < 680;
+  const W  = mob ? 380 : 640;
+  const Hh = mob ? 300 : 320;
+  const ml = mob ? 44 : 54, mr = mob ? 12 : 14, mt = 14, mb = mob ? 36 : 34;
+  const fs = mob ? 12 : 10;
+  document.getElementById('chart').setAttribute('viewBox', `0 0 ${W} ${Hh}`);
+  const anos = r.H/12;
+  const series = [
+    {v:r.p1, cor:'#C9A84C'}, {v:r.p2, cor:'#0D1B2A'}, {v:r.p3, cor:'#1B3A5C'}
+  ];
+  let max = 0, min = 0;
+  series.forEach(s=>s.v.forEach(x=>{ if(x>max)max=x; if(x<min)min=x; }));
+  const step = Math.pow(10, Math.floor(Math.log10(Math.max(max,1)))) / 2;
+  max = Math.ceil(max/step)*step;
+  min = Math.min(0, Math.floor(min/step)*step);
+  const X = m => ml + (m/(r.H-1))*(W-ml-mr);
+  const Y = v => mt + (1-(v-min)/(max-min))*(Hh-mt-mb);
+
+  let g = '';
+  const nTicks = 5;
+  for(let i=0;i<=nTicks;i++){
+    const v = min + (max-min)*i/nTicks, y = Y(v);
+    g += `<line x1="${ml}" y1="${y.toFixed(1)}" x2="${W-mr}" y2="${y.toFixed(1)}" stroke="#EDE9E0" stroke-width="1"/>`;
+    g += `<text x="${ml-7}" y="${(y+fs*0.35).toFixed(1)}" text-anchor="end" font-family="DM Sans,sans-serif" font-size="${fs}" fill="#8A8F98">${
+      Math.abs(v)>=1e6 ? dec(v/1e6,1)+'M' : Math.round(v/1000)+'k'}</text>`;
+  }
+  const passo = anos<=12 ? 2 : 5;
+  for(let a=passo;a<=anos;a+=passo){
+    const x = X(a*12-1);
+    g += `<text x="${x.toFixed(1)}" y="${Hh-mb+fs+6}" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="${fs}" fill="#8A8F98">${a}</text>`;
+  }
+  g += `<text x="${(ml+(W-mr))/2}" y="${Hh-3}" text-anchor="middle" font-family="DM Sans,sans-serif" font-size="${fs}" fill="#5A6472">Ano</text>`;
+
+  series.forEach(s=>{
+    let d = '';
+    for(let m=0;m<r.H;m+=2){ d += (d?'L':'M') + X(m).toFixed(1) + ' ' + Y(s.v[m]).toFixed(1) + ' '; }
+    d += 'L' + X(r.H-1).toFixed(1) + ' ' + Y(s.v[r.H-1]).toFixed(1);
+    g += `<path d="${d}" fill="none" stroke="${s.cor}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round"/>`;
+    g += `<circle cx="${X(r.H-1).toFixed(1)}" cy="${Y(s.v[r.H-1]).toFixed(1)}" r="3.6" fill="${s.cor}"/>`;
+  });
+  document.getElementById('chart').innerHTML = g;
+}
+
+function render(){
+  syncCtrls();
+  const r = simular(P);
+  const H = r.H;
+
+  const fin = [
+    {f:FAM[0], v:r.p1[H-1], be:r.be1},
+    {f:FAM[1], v:r.p2[H-1], be:null},
+    {f:FAM[2], v:r.p3[H-1], be:r.be3}
+  ].sort((a,b)=>b.v-a.v);
+
+  /* faixa de veredito */
+  document.getElementById('vLab').textContent = fin[0].f.nome + ' chega na frente';
+  document.getElementById('vName').textContent = fin[0].f.ape.charAt(0).toUpperCase() + fin[0].f.ape.slice(1);
+  document.getElementById('vVal').textContent = milhoes(fin[0].v);
+  const d = fin[0].v - fin[1].v;
+  document.getElementById('vDelta').textContent =
+    (d < 1000 ? 'praticamente empatada com a 2ª' : '+' + milhoes(d) + ' sobre a 2ª');
+
+  /* cartões */
+  const taxaReal = ((1+r.iNomA)/(1+P.ipca/100)-1)*100;
+  document.getElementById('cards').innerHTML = fin.map((x,i)=>{
+    const F = x.f;
+    let extra = '';
+    if(F.id===1) extra = `<div><span>${brl(r.financ1)}</span>Financiado</div>
+       <div><span>${brl(r.juros1)}</span>Juros nominais</div>
+       <div><span>IPCA + ${dec(x.be*100,2)}%</span>Valorização para empatar</div>`;
+    if(F.id===2) extra = `<div><span>${brl(P.caixa)}</span>Investido no mês zero</div>
+       <div><span>100% líquido</span>Composição final</div>
+       <div><span>${H} aportes</span>Disciplina exigida</div>`;
+    if(F.id===3) extra = `<div><span>${brl(r.financ3)}</span>Financiado</div>
+       <div><span>${brl(r.custoTotal3)}</span>Custo total da casa</div>
+       <div><span>IPCA + ${dec(x.be*100,2)}%</span>Valorização para empatar</div>`;
+    return `<div class="card${i===0?' win':''}">
+      <div class="pos">${i===0?'Chega na frente':(i===1?'2º lugar':'3º lugar')}</div>
+      <h3>${F.nome}</h3>
+      <div class="desc">${F.ape.charAt(0).toUpperCase()+F.ape.slice(1)}. ${F.desc}</div>
+      <div class="big">${milhoes(x.v)}</div>
+      <div class="un">em reais de hoje, no ano ${P.prazo}</div>
+      <div class="brk">${extra}</div>
+    </div>`;
+  }).join('');
+
+  drawChart(r);
+
+  /* break-even */
+  const bePct = r.be1*100;
+  const pos = Math.max(0, Math.min(100, (bePct/5)*100));
+  const nd = document.getElementById('beNeedle');
+  document.getElementById('beFill').style.width = pos + '%';
+  nd.style.left = pos + '%';
+  nd.className = 'needle' + (pos < 18 ? ' esq' : (pos > 82 ? ' dir' : ''));
+  const beTxt = bePct < 0 ? 'IPCA − ' + dec(Math.abs(bePct),2) + '%' : 'IPCA + ' + dec(bePct,2) + '%';
+  document.getElementById('beLab').textContent = beTxt;
+
+  const vEl = document.getElementById('beVerd');
+  if(bePct < 0){
+    vEl.className = 'be-verd ok';
+    /* "supera quem alugou", não "chega na frente": a barra fixa no topo já usa essa
+       expressão para o vencedor geral, que nem sempre é a Família 1. */
+    vEl.innerHTML = `Aqui a conta virou: <b>a Família 1 supera quem alugou mesmo se o imóvel perder valor real</b> — a barreira é ${beTxt} ao ano. Com a dívida a <b>${dec(taxaReal,2)}% reais ao ano</b>, financiar deixou de ser caro em relação ao que a carteira rende.`;
+  } else if(bePct <= 1.2){
+    vEl.className = 'be-verd ok';
+    vEl.innerHTML = `A barreira caiu para <b>${beTxt} ao ano</b> — abaixo do que o mercado imobiliário brasileiro entregou no longo prazo. <b>Neste cenário, financiar se justifica.</b> A dívida está a ${dec(taxaReal,2)}% reais ao ano.`;
+  } else {
+    vEl.className = 'be-verd';
+    vEl.innerHTML = `A Família 1 precisaria de <b>${beTxt} ao ano durante ${P.prazo} anos seguidos</b> — contra o histórico de longo prazo de cerca de IPCA + 1,2%. O motivo é a diferença de taxas: a dívida custa <b>${dec(taxaReal,2)}% reais ao ano</b> e o imóvel, como ativo, rende bem menos que isso.`;
+  }
+
+  /* fluxo */
+  const meses = [1,12,24,60,120,180,240,300,360].filter(m=>m<=H);
+  if(!meses.includes(H)) meses.push(H);
+  const som = a => a.reduce((x,y)=>x+y,0);
+  document.getElementById('fluxo').innerHTML =
+    meses.map(m=>`<tr><td>${m}${m===24&&H>24?' · obra entregue':''}</td>
+      <td class="n">${nf0.format(Math.round(r.f1[m-1]))}</td>
+      <td class="n">${nf0.format(Math.round(r.f2[m-1]))}</td>
+      <td class="n">${nf0.format(Math.round(r.f3[m-1]))}</td>
+      <td class="n">${nf0.format(Math.round(r.budget[m-1]))}</td></tr>`).join('')
+    + `<tr class="tot"><td>Soma do período</td>
+      <td class="n">${nf0.format(Math.round(som(r.f1)))}</td>
+      <td class="n">${nf0.format(Math.round(som(r.f2)))}</td>
+      <td class="n">${nf0.format(Math.round(som(r.f3)))}</td>
+      <td class="n">${nf0.format(Math.round(som(r.budget)))}</td></tr>`;
+}
+
+/* ================= AÇÕES ================= */
+document.getElementById('btnReset').addEventListener('click', ()=>{
+  Object.assign(P, BASE); render();
+});
+document.getElementById('btnBarato').addEventListener('click', ()=>{
+  Object.assign(P, BASE, {taxa:7.5, tr:0, ret:3.5, valoriz:2.0}); render();
+  document.querySelector('.be').scrollIntoView({block:'center'});
+});
+
+buildCtrls();
+render();
+let _rz; window.addEventListener('resize', ()=>{ clearTimeout(_rz); _rz=setTimeout(render,140); });
+
+/* ---------- beacon de funil (mesmo endpoint das outras páginas do estudo) ----------
+   Sem isto o simulador é invisível no funil: não dá pra saber se ele traz gente
+   pro estudo ou se só entretém. */
+(function(){
+  var API = "https://webhook.drheliobarros.com.br/api/funnel/events";
+  var live = /drheliobarros\.com\.br$/.test(location.hostname);
+  var utm = new URLSearchParams(location.search);
+  function send(event){
+    if(!live) return;                       /* não polui o funil com teste local */
+    var payload = JSON.stringify({
+      page: "estudo", event: event,
+      utm_source: utm.get("utm_source") || "",
+      utm_campaign: utm.get("utm_campaign") || "",
+      utm_content: utm.get("utm_content") || ""
+    });
+    if(navigator.sendBeacon) navigator.sendBeacon(API, new Blob([payload],{type:"application/json"}));
+    else fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:payload,keepalive:true});
+  }
+  send("simulador_view");
+  document.querySelectorAll("[data-cta]").forEach(function(a){
+    a.addEventListener("click", function(){ send("simulador_cta"); });
+  });
+  document.querySelectorAll("[data-estudo]").forEach(function(a){
+    a.addEventListener("click", function(){ send("simulador_para_estudo"); });
+  });
+})();
+</script>
+</body>
+</html>
