@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Do aluguel do anúncio ao aluguel que chega: a folha de conferência | Doctor Invest</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0 auto; padding: 40px 24px 64px; max-width: 720px;
+         font: 17px/1.65 Georgia, "Times New Roman", serif; color: #1a1a1a; background: #fff; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 20px; margin: 32px 0 8px; }
+  .marca { font: 600 13px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+           text-transform: uppercase; color: #8a6d3b; margin-bottom: 24px; }
+  ol, ul { padding-left: 24px; }
+  li { margin-bottom: 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 24px 0; }
+  th, td { border: 1px solid #e0dcd4; padding: 8px 10px; text-align: left; font-size: 15px; }
+  hr { border: 0; border-top: 1px solid #e0dcd4; margin: 40px 0 24px; }
+  footer { font: 14px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .quiz { background: #faf8f4; border: 1px solid #e0dcd4; border-radius: 6px;
+          padding: 20px 22px; }
+  .quiz-tag { font: 600 12px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+              text-transform: uppercase; color: #8a6d3b; margin-bottom: 10px; }
+  .quiz-pergunta { font-weight: 700; margin: 0 0 10px; }
+  .quiz-veredito { margin: 0 0 10px; font: 16px/1.5 -apple-system, system-ui, sans-serif; }
+  .quiz-veredito.certo { color: #1d6b3f; }
+  .quiz-veredito.errado { color: #8a2f2f; }
+  .quiz-exp { margin: 0; font-size: 16px; color: #4a4a4a; }
+  .quiz-sep { margin: 32px 0 28px; }
+  .nps { margin: 14px 0 0; font: 15px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .nps-q { margin-right: 10px; }
+  .nps-b { font: inherit; color: #8a6d3b; background: #fff; border: 1px solid #e0dcd4;
+           border-radius: 4px; min-width: 34px; padding: 5px 0; margin-right: 6px; cursor: pointer; }
+  .nps-b:hover { background: #f3efe7; }
+  /* Checklists costam trazer tabela, e a 375px uma tabela de 3 colunas já fica
+     no limite. Aperta o padding em vez de deixar estourar a largura. */
+  @media (max-width: 480px) {
+    body { padding: 28px 18px 48px; }
+    th, td { padding: 6px 8px; font-size: 14px; }
+    .quiz { padding: 16px; }
+  }
+  /* O quiz é do e-mail, não da folha: quem imprime leva a ferramenta, não o
+     jogo. */
+  @media print {
+    body { padding: 0; max-width: none; font-size: 12pt; }
+    .marca { color: #000; }
+    footer, .quiz, .quiz-sep, .nps { display: none; }
+  }
+</style>
+</head>
+<body>
+<section class="quiz">
+  <div class="quiz-tag">Quiz da edição</div>
+  <p class="quiz-pergunta">Descontando vacância, administração, imposto e custos de propriedade, qual foi o retorno real do imóvel de renda para pessoa física, sem contar valorização, medido no estudo?</p>
+  <p class="quiz-veredito" id="qv"></p>
+  <p class="quiz-exp">O yield de 6,13% é bruto. Descontando vacância de oito por cento, um mês de administração por ano, imposto e custos de propriedade, sobram 2,95% ao ano reais na pessoa física, contra 3,79% dentro de holding no lucro presumido.</p>
+<div class="nps" id="nps" hidden></div>
+<script>
+(function () {
+  var cfg = {"endpoint":"https://docs.google.com/forms/d/e/1FAIpQLSejpxIzt3TjWYVPgRk6PYDCRKRibcHkZouGIPtJCjyk9-ypfg/formResponse?entry.1457604422={e}&entry.631805460={n}&submit=Submit","edicao":"2026-W36-dom"};
+  var box = document.getElementById("nps");
+  var q = document.createElement("span");
+  q.className = "nps-q";
+  q.textContent = "Essa edição te serviu?";
+  box.appendChild(q);
+  var votou = false;
+  var voto = function (nota) {
+    return function () {
+      if (votou) return;
+      votou = true;
+      var e = encodeURIComponent(cfg.edicao);
+      new Image().src = cfg.endpoint.indexOf("{n}") < 0
+        ? cfg.endpoint + (cfg.endpoint.indexOf("?") < 0 ? "?" : "&") + "e=" + e + "&n=" + nota
+        : cfg.endpoint.replace("{e}", e).replace("{n}", nota);
+      box.textContent = "Obrigado.";
+    };
+  };
+  for (var n = 1; n <= 5; n++) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "nps-b";
+    b.textContent = String(n);
+    b.setAttribute("aria-label", n + " de 5");
+    b.onclick = voto(n);
+    box.appendChild(b);
+  }
+  box.hidden = false;
+})();
+</script>
+</section>
+<script>
+(function () {
+  var q = {"pergunta":"Descontando vacância, administração, imposto e custos de propriedade, qual foi o retorno real do imóvel de renda para pessoa física, sem contar valorização, medido no estudo?","opcoes":[{"letra":"A","texto":"6,13% ao ano, o rental yield medido pelo FipeZAP"},{"letra":"B","texto":"2,95% ao ano"},{"letra":"C","texto":"3,79% ao ano, o mesmo da holding"},{"letra":"D","texto":"2,22% ao ano, igual à valorização real da série"}],"gabarito":"B","explicacao":"O yield de 6,13% é bruto. Descontando vacância de oito por cento, um mês de administração por ano, imposto e custos de propriedade, sobram 2,95% ao ano reais na pessoa física, contra 3,79% dentro de holding no lucro presumido."};
+  var alvo = document.getElementById("qv");
+  var texto = function (l) {
+    for (var i = 0; i < q.opcoes.length; i++) if (q.opcoes[i].letra === l) return q.opcoes[i].texto;
+    return "";
+  };
+  var escolha = new URLSearchParams(location.search).get("o");
+  var certa = q.gabarito + ") " + texto(q.gabarito);
+  if (escolha && texto(escolha)) {
+    var acertou = escolha === q.gabarito;
+    alvo.textContent = acertou
+      ? "Você marcou " + certa + ". É essa."
+      : "Você marcou " + escolha + ") " + texto(escolha) + ". A resposta é " + certa + ".";
+    alvo.className = "quiz-veredito " + (acertou ? "certo" : "errado");
+  } else {
+    alvo.textContent = "A resposta é " + certa + ".";
+  }
+})();
+</script>
+<hr class="quiz-sep">
+<div class="marca">Doctor Invest</div>
+<h1>Do aluguel do anúncio ao aluguel que chega: a folha de conferência</h1>
+<p><strong>Linha 1 — Aluguel anunciado (bruto, ao ano)</strong>
+O número da apresentação. Anote em reais, não em percentual.</p>
+<p><strong>Linha 2 — Menos vacância</strong>
+Desconte oito por cento do bruto. É a média que o estudo usa; se o imóvel for de perfil difícil de alugar, use mais.</p>
+<p><strong>Linha 3 — Menos administração</strong>
+Um mês de aluguel por ano, se for administrado por imobiliária. Se você mesmo administra, o custo é seu tempo e ele não é zero.</p>
+<p><strong>Linha 4 — Menos imposto de renda</strong>
+Na pessoa física entra na tabela progressiva do carnê-leão. Dentro de holding no lucro presumido a alíquota efetiva é outra. Some a que se aplica ao seu caso.</p>
+<p><strong>Linha 5 — Menos custos de propriedade</strong>
+Imposto municipal, condomínio dos meses vagos, manutenção e reforma entre inquilinos.</p>
+<p><strong>Linha 6 — Resultado líquido, em reais e em percentual do valor do imóvel</strong>
+Este é o número que se compara com qualquer outra alternativa. Nenhum outro serve.</p>
+<p><strong>Linha 7 — A pergunta de controle</strong>
+Se este imóvel exigisse 81% do valor dele em caixa para ser adquirido, você ainda o compraria por esse rendimento líquido?</p>
+<p><strong>Este bloco é anexo, não faz parte do corpo do e-mail.</strong></p>
+
+<hr>
+<footer>Hélio Barros · Doctor Invest · esta página acompanha a newsletter “A jornada do médico investidor”.</footer>
+</body>
+</html>
