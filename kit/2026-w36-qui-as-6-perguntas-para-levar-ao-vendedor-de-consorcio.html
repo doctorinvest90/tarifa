@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>As 6 perguntas para levar ao vendedor de consórcio | Doctor Invest</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0 auto; padding: 40px 24px 64px; max-width: 720px;
+         font: 17px/1.65 Georgia, "Times New Roman", serif; color: #1a1a1a; background: #fff; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 20px; margin: 32px 0 8px; }
+  .marca { font: 600 13px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+           text-transform: uppercase; color: #8a6d3b; margin-bottom: 24px; }
+  ol, ul { padding-left: 24px; }
+  li { margin-bottom: 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 24px 0; }
+  th, td { border: 1px solid #e0dcd4; padding: 8px 10px; text-align: left; font-size: 15px; }
+  hr { border: 0; border-top: 1px solid #e0dcd4; margin: 40px 0 24px; }
+  footer { font: 14px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .quiz { background: #faf8f4; border: 1px solid #e0dcd4; border-radius: 6px;
+          padding: 20px 22px; }
+  .quiz-tag { font: 600 12px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+              text-transform: uppercase; color: #8a6d3b; margin-bottom: 10px; }
+  .quiz-pergunta { font-weight: 700; margin: 0 0 10px; }
+  .quiz-veredito { margin: 0 0 10px; font: 16px/1.5 -apple-system, system-ui, sans-serif; }
+  .quiz-veredito.certo { color: #1d6b3f; }
+  .quiz-veredito.errado { color: #8a2f2f; }
+  .quiz-exp { margin: 0; font-size: 16px; color: #4a4a4a; }
+  .quiz-sep { margin: 32px 0 28px; }
+  .nps { margin: 14px 0 0; font: 15px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .nps-q { margin-right: 10px; }
+  .nps-b { font: inherit; color: #8a6d3b; background: #fff; border: 1px solid #e0dcd4;
+           border-radius: 4px; min-width: 34px; padding: 5px 0; margin-right: 6px; cursor: pointer; }
+  .nps-b:hover { background: #f3efe7; }
+  /* Checklists costam trazer tabela, e a 375px uma tabela de 3 colunas já fica
+     no limite. Aperta o padding em vez de deixar estourar a largura. */
+  @media (max-width: 480px) {
+    body { padding: 28px 18px 48px; }
+    th, td { padding: 6px 8px; font-size: 14px; }
+    .quiz { padding: 16px; }
+  }
+  /* O quiz é do e-mail, não da folha: quem imprime leva a ferramenta, não o
+     jogo. */
+  @media print {
+    body { padding: 0; max-width: none; font-size: 12pt; }
+    .marca { color: #000; }
+    footer, .quiz, .quiz-sep, .nps { display: none; }
+  }
+</style>
+</head>
+<body>
+<section class="quiz">
+  <div class="quiz-tag">Quiz da edição</div>
+  <p class="quiz-pergunta">No grupo acompanhado pelo estudo, qual foi o percentual da carta ofertado pelo lance vencedor da última assembleia observada, em julho de 2026?</p>
+  <p class="quiz-veredito" id="qv"></p>
+  <p class="quiz-exp">O lance vencedor saiu de 68,50% em maio de 2023 para 81,34% em julho de 2026. A alta é mecânica: quem tinha capital foi contemplado cedo e saiu, e quem ficou acumula parcelas que aumentam o percentual que consegue ofertar.</p>
+<div class="nps" id="nps" hidden></div>
+<script>
+(function () {
+  var cfg = {"endpoint":"https://docs.google.com/forms/d/e/1FAIpQLSejpxIzt3TjWYVPgRk6PYDCRKRibcHkZouGIPtJCjyk9-ypfg/formResponse?entry.1457604422={e}&entry.631805460={n}&submit=Submit","edicao":"2026-W36-qui"};
+  var box = document.getElementById("nps");
+  var q = document.createElement("span");
+  q.className = "nps-q";
+  q.textContent = "Essa edição te serviu?";
+  box.appendChild(q);
+  var votou = false;
+  var voto = function (nota) {
+    return function () {
+      if (votou) return;
+      votou = true;
+      var e = encodeURIComponent(cfg.edicao);
+      new Image().src = cfg.endpoint.indexOf("{n}") < 0
+        ? cfg.endpoint + (cfg.endpoint.indexOf("?") < 0 ? "?" : "&") + "e=" + e + "&n=" + nota
+        : cfg.endpoint.replace("{e}", e).replace("{n}", nota);
+      box.textContent = "Obrigado.";
+    };
+  };
+  for (var n = 1; n <= 5; n++) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "nps-b";
+    b.textContent = String(n);
+    b.setAttribute("aria-label", n + " de 5");
+    b.onclick = voto(n);
+    box.appendChild(b);
+  }
+  box.hidden = false;
+})();
+</script>
+</section>
+<script>
+(function () {
+  var q = {"pergunta":"No grupo acompanhado pelo estudo, qual foi o percentual da carta ofertado pelo lance vencedor da última assembleia observada, em julho de 2026?","opcoes":[{"letra":"A","texto":"48%, o mesmo patamar do início da série"},{"letra":"B","texto":"68,5%, estável desde 2023"},{"letra":"C","texto":"81,3%, 12,8 pontos acima de três anos antes"},{"letra":"D","texto":"100%, porque o lance não pode exceder o saldo devedor"}],"gabarito":"C","explicacao":"O lance vencedor saiu de 68,50% em maio de 2023 para 81,34% em julho de 2026. A alta é mecânica: quem tinha capital foi contemplado cedo e saiu, e quem ficou acumula parcelas que aumentam o percentual que consegue ofertar."};
+  var alvo = document.getElementById("qv");
+  var texto = function (l) {
+    for (var i = 0; i < q.opcoes.length; i++) if (q.opcoes[i].letra === l) return q.opcoes[i].texto;
+    return "";
+  };
+  var escolha = new URLSearchParams(location.search).get("o");
+  var certa = q.gabarito + ") " + texto(q.gabarito);
+  if (escolha && texto(escolha)) {
+    var acertou = escolha === q.gabarito;
+    alvo.textContent = acertou
+      ? "Você marcou " + certa + ". É essa."
+      : "Você marcou " + escolha + ") " + texto(escolha) + ". A resposta é " + certa + ".";
+    alvo.className = "quiz-veredito " + (acertou ? "certo" : "errado");
+  } else {
+    alvo.textContent = "A resposta é " + certa + ".";
+  }
+})();
+</script>
+<hr class="quiz-sep">
+<div class="marca">Doctor Invest</div>
+<h1>As 6 perguntas para levar ao vendedor de consórcio</h1>
+<p><strong>1. Qual foi o lance vencedor das últimas seis assembleias deste grupo?</strong>
+Peça as atas, não o número de cabeça. É de divulgação obrigatória. Anote os seis percentuais em ordem: o que interessa é se estão subindo.</p>
+<p><strong>2. Quantas cotas ativas ainda não foram contempladas neste grupo?</strong>
+Está no extrato do grupo. Divida uma vaga de sorteio por esse número para achar a sua chance por assembleia.</p>
+<p><strong>3. Quantas vagas de contemplação por assembleia, e quantas são de sorteio?</strong>
+Sorteio e lance são filas diferentes. Se só uma vaga é de sorteio, a fila é a resposta da pergunta 2.</p>
+<p><strong>4. Qual é a taxa de administração e existe fundo de reserva?</strong>
+Some as duas. Acima de 20,84% você está pior que a média nacional que o Banco Central publica.</p>
+<p><strong>5. Qual índice corrige a carta, e quanto ele acumulou nos últimos três anos?</strong>
+Compare com a inflação do mesmo período. Se a carta corrige muito acima, a janela em que o consórcio compensa encurta.</p>
+<p><strong>6. Qual é o percentual do lance fixo, e quantas cotas costumam disputá-lo?</strong>
+O app da administradora informa a sua posição a cada oferta. A maior posição que você já viu é o piso do número de concorrentes.</p>
+<p><strong>Conferência final:</strong> some o lance que você pretende dar mais todas as parcelas até a contemplação esperada. Subtraia da carta. O que sobrar é o crédito novo que você está comprando. Compare com a taxa de administração total do contrato.</p>
+<p><strong>Este bloco é anexo, não faz parte do corpo do e-mail.</strong></p>
+
+<hr>
+<footer>Hélio Barros · Doctor Invest · esta página acompanha a newsletter “A jornada do médico investidor”.</footer>
+</body>
+</html>
