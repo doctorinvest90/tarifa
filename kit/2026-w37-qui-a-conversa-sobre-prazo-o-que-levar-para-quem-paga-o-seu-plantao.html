@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A conversa sobre prazo: o que levar para quem paga o seu plantão | Doctor Invest</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0 auto; padding: 40px 24px 64px; max-width: 720px;
+         font: 17px/1.65 Georgia, "Times New Roman", serif; color: #1a1a1a; background: #fff; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 20px; margin: 32px 0 8px; }
+  .marca { font: 600 13px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+           text-transform: uppercase; color: #8a6d3b; margin-bottom: 24px; }
+  ol, ul { padding-left: 24px; }
+  li { margin-bottom: 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 24px 0; }
+  th, td { border: 1px solid #e0dcd4; padding: 8px 10px; text-align: left; font-size: 15px; }
+  hr { border: 0; border-top: 1px solid #e0dcd4; margin: 40px 0 24px; }
+  footer { font: 14px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .quiz { background: #faf8f4; border: 1px solid #e0dcd4; border-radius: 6px;
+          padding: 20px 22px; }
+  .quiz-tag { font: 600 12px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+              text-transform: uppercase; color: #8a6d3b; margin-bottom: 10px; }
+  .quiz-pergunta { font-weight: 700; margin: 0 0 10px; }
+  .quiz-veredito { margin: 0 0 10px; font: 16px/1.5 -apple-system, system-ui, sans-serif; }
+  .quiz-veredito.certo { color: #1d6b3f; }
+  .quiz-veredito.errado { color: #8a2f2f; }
+  .quiz-exp { margin: 0; font-size: 16px; color: #4a4a4a; }
+  .quiz-sep { margin: 32px 0 28px; }
+  .nps { margin: 14px 0 0; font: 15px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .nps-q { margin-right: 10px; }
+  .nps-b { font: inherit; color: #8a6d3b; background: #fff; border: 1px solid #e0dcd4;
+           border-radius: 4px; min-width: 34px; padding: 5px 0; margin-right: 6px; cursor: pointer; }
+  .nps-b:hover { background: #f3efe7; }
+  /* Checklists costam trazer tabela, e a 375px uma tabela de 3 colunas já fica
+     no limite. Aperta o padding em vez de deixar estourar a largura. */
+  @media (max-width: 480px) {
+    body { padding: 28px 18px 48px; }
+    th, td { padding: 6px 8px; font-size: 14px; }
+    .quiz { padding: 16px; }
+  }
+  /* O quiz é do e-mail, não da folha: quem imprime leva a ferramenta, não o
+     jogo. */
+  @media print {
+    body { padding: 0; max-width: none; font-size: 12pt; }
+    .marca { color: #000; }
+    footer, .quiz, .quiz-sep, .nps { display: none; }
+  }
+</style>
+</head>
+<body>
+<section class="quiz">
+  <div class="quiz-tag">Quiz da edição</div>
+  <p class="quiz-pergunta">Dois médicos pagam exatamente a mesma taxa de 2% ao mês para antecipar plantão. Um recebe do contratante em 30 dias, o outro em 90. O que acontece com o custo anual da operação de cada um?</p>
+  <p class="quiz-veredito" id="qv"></p>
+  <p class="quiz-exp">Na convenção pro rata die, preço e prazo crescem juntos, então o custo anual da operação fica praticamente idêntico em qualquer prazo, 26,8% ao ano no caso-base. O que triplica é o dinheiro que sai: R$ 7.392 por ano em 30 dias contra R$ 22.176 em 90. Quem compara apenas a taxa dos dois contratos conclui, corretamente, que são iguais, e está olhando a variável errada.</p>
+<div class="nps" id="nps" hidden></div>
+<script>
+(function () {
+  var cfg = {"endpoint":"https://docs.google.com/forms/d/e/1FAIpQLSejpxIzt3TjWYVPgRk6PYDCRKRibcHkZouGIPtJCjyk9-ypfg/formResponse?entry.1457604422={e}&entry.631805460={n}&submit=Submit","edicao":"2026-W37-qui"};
+  var box = document.getElementById("nps");
+  var q = document.createElement("span");
+  q.className = "nps-q";
+  q.textContent = "Essa edição te serviu?";
+  box.appendChild(q);
+  var votou = false;
+  var voto = function (nota) {
+    return function () {
+      if (votou) return;
+      votou = true;
+      var e = encodeURIComponent(cfg.edicao);
+      new Image().src = cfg.endpoint.indexOf("{n}") < 0
+        ? cfg.endpoint + (cfg.endpoint.indexOf("?") < 0 ? "?" : "&") + "e=" + e + "&n=" + nota
+        : cfg.endpoint.replace("{e}", e).replace("{n}", nota);
+      box.textContent = "Obrigado.";
+    };
+  };
+  for (var n = 1; n <= 5; n++) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "nps-b";
+    b.textContent = String(n);
+    b.setAttribute("aria-label", n + " de 5");
+    b.onclick = voto(n);
+    box.appendChild(b);
+  }
+  box.hidden = false;
+})();
+</script>
+</section>
+<script>
+(function () {
+  var q = {"pergunta":"Dois médicos pagam exatamente a mesma taxa de 2% ao mês para antecipar plantão. Um recebe do contratante em 30 dias, o outro em 90. O que acontece com o custo anual da operação de cada um?","opcoes":[{"letra":"A","texto":"O de 90 dias paga o triplo em custo anual, porque o prazo triplica"},{"letra":"B","texto":"O custo anual é praticamente o mesmo nos dois, embora o valor pago no ano triplique"},{"letra":"C","texto":"O de 30 dias paga mais, porque antecipa mais vezes por ano"},{"letra":"D","texto":"Não dá para comparar sem saber o valor do plantão"}],"gabarito":"B","explicacao":"Na convenção pro rata die, preço e prazo crescem juntos, então o custo anual da operação fica praticamente idêntico em qualquer prazo, 26,8% ao ano no caso-base. O que triplica é o dinheiro que sai: R$ 7.392 por ano em 30 dias contra R$ 22.176 em 90. Quem compara apenas a taxa dos dois contratos conclui, corretamente, que são iguais, e está olhando a variável errada."};
+  var alvo = document.getElementById("qv");
+  var texto = function (l) {
+    for (var i = 0; i < q.opcoes.length; i++) if (q.opcoes[i].letra === l) return q.opcoes[i].texto;
+    return "";
+  };
+  var escolha = new URLSearchParams(location.search).get("o");
+  var certa = q.gabarito + ") " + texto(q.gabarito);
+  if (escolha && texto(escolha)) {
+    var acertou = escolha === q.gabarito;
+    alvo.textContent = acertou
+      ? "Você marcou " + certa + ". É essa."
+      : "Você marcou " + escolha + ") " + texto(escolha) + ". A resposta é " + certa + ".";
+    alvo.className = "quiz-veredito " + (acertou ? "certo" : "errado");
+  } else {
+    alvo.textContent = "A resposta é " + certa + ".";
+  }
+})();
+</script>
+<hr class="quiz-sep">
+<div class="marca">Doctor Invest</div>
+<h1>A conversa sobre prazo: o que levar para quem paga o seu plantão</h1>
+<p>O estudo mostra que a taxa da antecipação está no lugar certo, e que a variável que move a conta é o prazo do contratante. Esta folha é para essa conversa, que quase nunca acontece.</p>
+<p><strong>1. Qual é o prazo contratual de pagamento, contado a partir de quando?</strong>
+A data de referência muda tudo. Trinta dias contados do fechamento do mês são muito diferentes de trinta dias contados da entrega da escala. Peça a cláusula, não o número de cabeça.</p>
+<p><strong>2. Qual foi o prazo real médio dos últimos seis pagamentos?</strong>
+Contratual e praticado costumam divergir. Levante as seis últimas datas de crédito no seu extrato e conte os dias. É essa média, não a cláusula, que define quanto você paga por ano.</p>
+<p><strong>3. Existe faixa de antecipação interna, e a que custo?</strong>
+Muitos hospitais e cooperativas adiantam por conta própria, por um custo menor que o do mercado. Quase nenhum divulga. Pergunte diretamente.</p>
+<p><strong>4. O prazo é negociável em troca de previsibilidade de escala?</strong>
+Prazo é contrapartida como qualquer outra. Quem fecha escala com antecedência tem argumento para pedir encurtamento, e o encurtamento vale mais do que a maioria dos reajustes de valor hora.</p>
+<p><strong>5. Se o prazo cair de 90 para 30 dias, quanto isso vale para mim?</strong>
+A conta é direta: some o que você pagou de deságio nos últimos doze meses e divida por três. No caso do estudo, faturando R$ 30.800 por mês, a diferença entre 90 e 30 dias é de R$ 14.784 por ano.</p>
+<p><strong>Como converter a taxa cotada em custo anual</strong>
+A cotação vem em percentual ao mês. Para comparar com qualquer linha de crédito, você precisa da taxa anual sobre o saldo, não do deságio da operação. Eleve (1 + taxa mensal) à décima segunda potência e subtraia 1. Dois por cento ao mês viram 26,8% ao ano, e é esse número que entra na régua do Banco Central.</p>
+<p><strong>A pergunta que fecha a folha:</strong> dos três números que decidem a sua conta, prazo do contratante, taxa cobrada e frequência de uso, qual deles você nunca mediu?</p>
+<p><strong>Este bloco é anexo, não faz parte do corpo do e-mail.</strong></p>
+
+<hr>
+<footer>Hélio Barros · Doctor Invest · esta página acompanha a newsletter “A jornada do médico investidor”.</footer>
+</body>
+</html>
