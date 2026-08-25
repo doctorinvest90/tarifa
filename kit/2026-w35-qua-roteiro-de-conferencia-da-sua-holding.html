@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Roteiro de conferência da sua holding | Doctor Invest</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0 auto; padding: 40px 24px 64px; max-width: 720px;
+         font: 17px/1.65 Georgia, "Times New Roman", serif; color: #1a1a1a; background: #fff; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 20px; margin: 32px 0 8px; }
+  .marca { font: 600 13px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+           text-transform: uppercase; color: #8a6d3b; margin-bottom: 24px; }
+  ol, ul { padding-left: 24px; }
+  li { margin-bottom: 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 24px 0; }
+  th, td { border: 1px solid #e0dcd4; padding: 8px 10px; text-align: left; font-size: 15px; }
+  hr { border: 0; border-top: 1px solid #e0dcd4; margin: 40px 0 24px; }
+  footer { font: 14px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .quiz { background: #faf8f4; border: 1px solid #e0dcd4; border-radius: 6px;
+          padding: 20px 22px; }
+  .quiz-tag { font: 600 12px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+              text-transform: uppercase; color: #8a6d3b; margin-bottom: 10px; }
+  .quiz-pergunta { font-weight: 700; margin: 0 0 10px; }
+  .quiz-veredito { margin: 0 0 10px; font: 16px/1.5 -apple-system, system-ui, sans-serif; }
+  .quiz-veredito.certo { color: #1d6b3f; }
+  .quiz-veredito.errado { color: #8a2f2f; }
+  .quiz-exp { margin: 0; font-size: 16px; color: #4a4a4a; }
+  .quiz-sep { margin: 32px 0 28px; }
+  .nps { margin: 14px 0 0; font: 15px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .nps-q { margin-right: 10px; }
+  .nps-b { font: inherit; color: #8a6d3b; background: #fff; border: 1px solid #e0dcd4;
+           border-radius: 4px; min-width: 34px; padding: 5px 0; margin-right: 6px; cursor: pointer; }
+  .nps-b:hover { background: #f3efe7; }
+  /* Checklists costam trazer tabela, e a 375px uma tabela de 3 colunas já fica
+     no limite. Aperta o padding em vez de deixar estourar a largura. */
+  @media (max-width: 480px) {
+    body { padding: 28px 18px 48px; }
+    th, td { padding: 6px 8px; font-size: 14px; }
+    .quiz { padding: 16px; }
+  }
+  /* O quiz é do e-mail, não da folha: quem imprime leva a ferramenta, não o
+     jogo. */
+  @media print {
+    body { padding: 0; max-width: none; font-size: 12pt; }
+    .marca { color: #000; }
+    footer, .quiz, .quiz-sep, .nps { display: none; }
+  }
+</style>
+</head>
+<body>
+<section class="quiz">
+  <div class="quiz-tag">Quiz da edição</div>
+  <p class="quiz-pergunta">Segundo esta edição, o que faz uma holding realmente proteger o patrimônio do médico enquanto ele está vivo?</p>
+  <p class="quiz-veredito" id="qv"></p>
+  <p class="quiz-exp">A proteção em vida está nas cláusulas das doações, não na existência da holding. Sem incomunicabilidade, impenhorabilidade e reversão, o patrimônio segue exposto a divórcio e execução.</p>
+<div class="nps" id="nps" hidden></div>
+<script>
+(function () {
+  var cfg = {"endpoint":"https://docs.google.com/forms/d/e/1FAIpQLSejpxIzt3TjWYVPgRk6PYDCRKRibcHkZouGIPtJCjyk9-ypfg/formResponse?entry.1457604422={e}&entry.631805460={n}&submit=Submit","edicao":"2026-W35-qua"};
+  var box = document.getElementById("nps");
+  var q = document.createElement("span");
+  q.className = "nps-q";
+  q.textContent = "Essa edição te serviu?";
+  box.appendChild(q);
+  var votou = false;
+  var voto = function (nota) {
+    return function () {
+      if (votou) return;
+      votou = true;
+      var e = encodeURIComponent(cfg.edicao);
+      new Image().src = cfg.endpoint.indexOf("{n}") < 0
+        ? cfg.endpoint + (cfg.endpoint.indexOf("?") < 0 ? "?" : "&") + "e=" + e + "&n=" + nota
+        : cfg.endpoint.replace("{e}", e).replace("{n}", nota);
+      box.textContent = "Obrigado.";
+    };
+  };
+  for (var n = 1; n <= 5; n++) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "nps-b";
+    b.textContent = String(n);
+    b.setAttribute("aria-label", n + " de 5");
+    b.onclick = voto(n);
+    box.appendChild(b);
+  }
+  box.hidden = false;
+})();
+</script>
+</section>
+<script>
+(function () {
+  var q = {"pergunta":"Segundo esta edição, o que faz uma holding realmente proteger o patrimônio do médico enquanto ele está vivo?","opcoes":[{"letra":"A","texto":"O simples fato de existir um CNPJ segurando os bens da família"},{"letra":"B","texto":"As cláusulas de incomunicabilidade, impenhorabilidade e reversão nas doações"},{"letra":"C","texto":"Transferir todo o patrimônio apenas depois do inventário"},{"letra":"D","texto":"Registrar a holding no estado com menor imposto"}],"gabarito":"B","explicacao":"A proteção em vida está nas cláusulas das doações, não na existência da holding. Sem incomunicabilidade, impenhorabilidade e reversão, o patrimônio segue exposto a divórcio e execução."};
+  var alvo = document.getElementById("qv");
+  var texto = function (l) {
+    for (var i = 0; i < q.opcoes.length; i++) if (q.opcoes[i].letra === l) return q.opcoes[i].texto;
+    return "";
+  };
+  var escolha = new URLSearchParams(location.search).get("o");
+  var certa = q.gabarito + ") " + texto(q.gabarito);
+  if (escolha && texto(escolha)) {
+    var acertou = escolha === q.gabarito;
+    alvo.textContent = acertou
+      ? "Você marcou " + certa + ". É essa."
+      : "Você marcou " + escolha + ") " + texto(escolha) + ". A resposta é " + certa + ".";
+    alvo.className = "quiz-veredito " + (acertou ? "certo" : "errado");
+  } else {
+    alvo.textContent = "A resposta é " + certa + ".";
+  }
+})();
+</script>
+<hr class="quiz-sep">
+<div class="marca">Doctor Invest</div>
+<h1>Roteiro de conferência da sua holding</h1>
+<p>Marque cada item com base no seu contrato social atual ou na proposta que recebeu. Item em branco é flanco aberto.</p>
+<ul>
+<li><input disabled="" type="checkbox"> A doação de cotas aos filhos tem cláusula de <strong>incomunicabilidade</strong> (não entra em divórcio deles).</li>
+<li><input disabled="" type="checkbox"> A doação tem cláusula de <strong>impenhorabilidade</strong> (não responde por dívidas dos herdeiros).</li>
+<li><input disabled="" type="checkbox"> Existe cláusula de <strong>reversão</strong> (o bem volta a você se o herdeiro falecer antes).</li>
+<li><input disabled="" type="checkbox"> Você mantém <strong>usufruto</strong> das cotas (controle e renda seguem com você em vida).</li>
+<li><input disabled="" type="checkbox"> A PJ da clínica tem <strong>acordo de sócios</strong> com regra de saída, entrada e morte de sócio.</li>
+<li><input disabled="" type="checkbox"> O patrimônio pessoal está <strong>separado</strong> do patrimônio ligado à atividade médica.</li>
+<li><input disabled="" type="checkbox"> A estrutura foi desenhada para o <strong>seu</strong> perfil de exposição, não copiada de um modelo padrão.</li>
+</ul>
+<p>Quatro ou menos marcados: sua holding organiza a herança, mas não te blinda em vida.</p>
+
+<hr>
+<footer>Hélio Barros · Doctor Invest · esta página acompanha a newsletter “A jornada do médico investidor”.</footer>
+</body>
+</html>
