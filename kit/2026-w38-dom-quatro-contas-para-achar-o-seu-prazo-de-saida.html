@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Quatro contas para achar o seu prazo de saída | Doctor Invest</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0 auto; padding: 40px 24px 64px; max-width: 720px;
+         font: 17px/1.65 Georgia, "Times New Roman", serif; color: #1a1a1a; background: #fff; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 20px; margin: 32px 0 8px; }
+  .marca { font: 600 13px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+           text-transform: uppercase; color: #8a6d3b; margin-bottom: 24px; }
+  ol, ul { padding-left: 24px; }
+  li { margin-bottom: 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 24px 0; }
+  th, td { border: 1px solid #e0dcd4; padding: 8px 10px; text-align: left; font-size: 15px; }
+  hr { border: 0; border-top: 1px solid #e0dcd4; margin: 40px 0 24px; }
+  footer { font: 14px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .quiz { background: #faf8f4; border: 1px solid #e0dcd4; border-radius: 6px;
+          padding: 20px 22px; }
+  .quiz-tag { font: 600 12px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+              text-transform: uppercase; color: #8a6d3b; margin-bottom: 10px; }
+  .quiz-pergunta { font-weight: 700; margin: 0 0 10px; }
+  .quiz-veredito { margin: 0 0 10px; font: 16px/1.5 -apple-system, system-ui, sans-serif; }
+  .quiz-veredito.certo { color: #1d6b3f; }
+  .quiz-veredito.errado { color: #8a2f2f; }
+  .quiz-exp { margin: 0; font-size: 16px; color: #4a4a4a; }
+  .quiz-sep { margin: 32px 0 28px; }
+  .nps { margin: 14px 0 0; font: 15px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .nps-q { margin-right: 10px; }
+  .nps-b { font: inherit; color: #8a6d3b; background: #fff; border: 1px solid #e0dcd4;
+           border-radius: 4px; min-width: 34px; padding: 5px 0; margin-right: 6px; cursor: pointer; }
+  .nps-b:hover { background: #f3efe7; }
+  /* Checklists costam trazer tabela, e a 375px uma tabela de 3 colunas já fica
+     no limite. Aperta o padding em vez de deixar estourar a largura. */
+  @media (max-width: 480px) {
+    body { padding: 28px 18px 48px; }
+    th, td { padding: 6px 8px; font-size: 14px; }
+    .quiz { padding: 16px; }
+  }
+  /* O quiz é do e-mail, não da folha: quem imprime leva a ferramenta, não o
+     jogo. */
+  @media print {
+    body { padding: 0; max-width: none; font-size: 12pt; }
+    .marca { color: #000; }
+    footer, .quiz, .quiz-sep, .nps { display: none; }
+  }
+</style>
+</head>
+<body>
+<section class="quiz">
+  <div class="quiz-tag">Quiz da edição</div>
+  <p class="quiz-pergunta">Um médico carrega um saldo antecipado de R$ 46.200 a 2% ao mês. Ele consegue destinar R$ 900 por mês para sair. Em quanto tempo ele quita?</p>
+  <p class="quiz-veredito" id="qv"></p>
+  <p class="quiz-exp">O deságio mensal desse saldo é de R$ 924. Com R$ 900, o dinheiro paga parte do custo do mês e nada vai para o principal, então o saldo nunca cai. É a mesma armadilha do rotativo: existe um pagamento mínimo abaixo do qual a dívida não tem prazo de saída. Acima dele o prazo aparece rápido: R$ 1.200 tiram em 74 meses, R$ 1.500 em 48.</p>
+<div class="nps" id="nps" hidden></div>
+<script>
+(function () {
+  var cfg = {"endpoint":"https://docs.google.com/forms/d/e/1FAIpQLSejpxIzt3TjWYVPgRk6PYDCRKRibcHkZouGIPtJCjyk9-ypfg/formResponse?entry.1457604422={e}&entry.631805460={n}&submit=Submit","edicao":"2026-W38-dom"};
+  var box = document.getElementById("nps");
+  var q = document.createElement("span");
+  q.className = "nps-q";
+  q.textContent = "Essa edição te serviu?";
+  box.appendChild(q);
+  var votou = false;
+  var voto = function (nota) {
+    return function () {
+      if (votou) return;
+      votou = true;
+      var e = encodeURIComponent(cfg.edicao);
+      new Image().src = cfg.endpoint.indexOf("{n}") < 0
+        ? cfg.endpoint + (cfg.endpoint.indexOf("?") < 0 ? "?" : "&") + "e=" + e + "&n=" + nota
+        : cfg.endpoint.replace("{e}", e).replace("{n}", nota);
+      box.textContent = "Obrigado.";
+    };
+  };
+  for (var n = 1; n <= 5; n++) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "nps-b";
+    b.textContent = String(n);
+    b.setAttribute("aria-label", n + " de 5");
+    b.onclick = voto(n);
+    box.appendChild(b);
+  }
+  box.hidden = false;
+})();
+</script>
+</section>
+<script>
+(function () {
+  var q = {"pergunta":"Um médico carrega um saldo antecipado de R$ 46.200 a 2% ao mês. Ele consegue destinar R$ 900 por mês para sair. Em quanto tempo ele quita?","opcoes":[{"letra":"A","texto":"Em 51 meses, pouco mais de quatro anos"},{"letra":"B","texto":"Em 74 meses, porque o saldo cai devagar no começo"},{"letra":"C","texto":"Nunca, porque R$ 900 não cobrem nem o deságio do mês"},{"letra":"D","texto":"Depende do prazo do contratante, que não foi informado"}],"gabarito":"C","explicacao":"O deságio mensal desse saldo é de R$ 924. Com R$ 900, o dinheiro paga parte do custo do mês e nada vai para o principal, então o saldo nunca cai. É a mesma armadilha do rotativo: existe um pagamento mínimo abaixo do qual a dívida não tem prazo de saída. Acima dele o prazo aparece rápido: R$ 1.200 tiram em 74 meses, R$ 1.500 em 48."};
+  var alvo = document.getElementById("qv");
+  var texto = function (l) {
+    for (var i = 0; i < q.opcoes.length; i++) if (q.opcoes[i].letra === l) return q.opcoes[i].texto;
+    return "";
+  };
+  var escolha = new URLSearchParams(location.search).get("o");
+  var certa = q.gabarito + ") " + texto(q.gabarito);
+  if (escolha && texto(escolha)) {
+    var acertou = escolha === q.gabarito;
+    alvo.textContent = acertou
+      ? "Você marcou " + certa + ". É essa."
+      : "Você marcou " + escolha + ") " + texto(escolha) + ". A resposta é " + certa + ".";
+    alvo.className = "quiz-veredito " + (acertou ? "certo" : "errado");
+  } else {
+    alvo.textContent = "A resposta é " + certa + ".";
+  }
+})();
+</script>
+<hr class="quiz-sep">
+<div class="marca">Doctor Invest</div>
+<h1>Quatro contas para achar o seu prazo de saída</h1>
+<p>A carta mostra que quem antecipa todo mês carrega um saldo, não um custo. Esta folha calcula o seu, com números que você já tem no extrato.</p>
+<p><strong>Conta 1: o tamanho do buraco</strong>
+Multiplique o seu faturamento médio mensal em plantões pelo prazo de pagamento em meses. Recebendo em 45 dias, o multiplicador é 1,5. Faturando R$ 30.800, o buraco é de R$ 46.200. Esse é o saldo que você rola, e ele não muda com o tempo.</p>
+<p><strong>Conta 2: o custo de rolar</strong>
+Multiplique o buraco pela taxa mensal que você paga. R$ 46.200 a 2% ao mês dão R$ 924 por mês. Esse é o piso: qualquer esforço mensal igual ou menor que ele paga só o deságio, e o saldo não cai nunca.</p>
+<p><strong>Conta 3: o seu excedente real</strong>
+Some tudo que entra num mês e subtraia tudo que sai, incluindo o que costuma ser esquecido: imposto, contador, seguros anuais rateados, manutenção. O número que sobra é o único que resolve. Se ele estiver abaixo da conta 2, o problema não é a antecipação, é o orçamento.</p>
+<p><strong>Conta 4: os meses até sair</strong>
+Com o excedente da conta 3 acima do piso da conta 2, o prazo aparece na tabela da carta. R$ 1.500 por mês tiram você em 48 meses. R$ 2.500, em 23. A diferença entre as duas linhas é de R$ 30.806 em deságio e de quatro anos de vida.</p>
+<p><strong>A checagem que vale mais que as quatro</strong>
+Compare dois caminhos com o mesmo esforço: negociar a taxa para baixo, ou encontrar excedente sem mexer na taxa. No caso-base o segundo caminho chega dezoito meses antes e economiza mais. E há uma assimetria que nenhuma tabela mostra: negociada a taxa, o ganho termina quando a dívida termina. Encontrado o excedente, ele continua existindo depois.</p>
+<p><strong>Antes de arquivar esta folha:</strong> anote as quatro respostas num papel só e guarde com a data. Refaça daqui a seis meses. Se o buraco não tiver mudado de tamanho, você está rolando, não saindo.</p>
+<p><strong>Este bloco é anexo, não faz parte do corpo do e-mail.</strong></p>
+
+<hr>
+<footer>Hélio Barros · Doctor Invest · esta página acompanha a newsletter “A jornada do médico investidor”.</footer>
+</body>
+</html>
