@@ -608,13 +608,21 @@ let _rz; window.addEventListener('resize', ()=>{ clearTimeout(_rz); _rz=setTimeo
   var API = "https://webhook.drheliobarros.com.br/api/funnel/events";
   var live = /drheliobarros\.com\.br$/.test(location.hostname);
   var utm = new URLSearchParams(location.search);
+  // UTM sobrevive ao redirect do formulario: obrigado.html chega sem query string,
+  // e sem isto o evento de conversao nasce sem fonte e todo lead parece trafego
+  // direto. So utm_*, zero PII (4.4).
+  function u(k) {
+    var v = utm.get(k) || "";
+    try { if (v) { sessionStorage.setItem("u_" + k, v); } else { v = sessionStorage.getItem("u_" + k) || ""; } } catch (e) {}
+    return v;
+  }
   function send(event){
     if(!live) return;                       /* não polui o funil com teste local */
     var payload = JSON.stringify({
       page: "estudo", event: event,
-      utm_source: utm.get("utm_source") || "",
-      utm_campaign: utm.get("utm_campaign") || "",
-      utm_content: utm.get("utm_content") || ""
+      utm_source: u("utm_source"),
+      utm_campaign: u("utm_campaign"),
+      utm_content: u("utm_content")
     });
     if(navigator.sendBeacon) navigator.sendBeacon(API, new Blob([payload],{type:"application/json"}));
     else fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:payload,keepalive:true});
