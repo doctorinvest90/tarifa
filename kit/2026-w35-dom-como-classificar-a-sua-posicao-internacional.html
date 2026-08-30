@@ -31,9 +31,12 @@
   .quiz-sep { margin: 32px 0 28px; }
   .nps { margin: 14px 0 0; font: 15px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
   .nps-q { margin-right: 10px; }
-  .nps-b { font: inherit; color: #8a6d3b; background: #fff; border: 1px solid #e0dcd4;
-           border-radius: 4px; min-width: 34px; padding: 5px 0; margin-right: 6px; cursor: pointer; }
-  .nps-b:hover { background: #f3efe7; }
+  /* Estrela, e não o número 1–5: cinco caixinhas numeradas não dizem sozinhas
+     qual ponta é a boa, e o leitor tem que adivinhar se 1 é "péssimo" ou
+     "primeiro lugar". A régua de estrela já carrega a direção. */
+  .nps-b { font-size: 22px; line-height: 1; color: #d8d2c6; background: none; border: 0;
+           padding: 0 1px; cursor: pointer; vertical-align: middle; }
+  .nps-b.on { color: #8a6d3b; }
   /* Checklists costam trazer tabela, e a 375px uma tabela de 3 colunas já fica
      no limite. Aperta o padding em vez de deixar estourar a largura. */
   @media (max-width: 480px) {
@@ -77,15 +80,32 @@
       box.textContent = "Obrigado.";
     };
   };
+  var estrelas = [];
+  var pinta = function (ate) {
+    for (var i = 0; i < estrelas.length; i++) {
+      estrelas[i].className = i < ate ? "nps-b on" : "nps-b";
+    }
+  };
+  var passa = function (ate) {
+    return function () {
+      pinta(ate);
+    };
+  };
   for (var n = 1; n <= 5; n++) {
     var b = document.createElement("button");
     b.type = "button";
     b.className = "nps-b";
-    b.textContent = String(n);
+    b.textContent = "★";
     b.setAttribute("aria-label", n + " de 5");
     b.onclick = voto(n);
+    b.onmouseover = passa(n);
+    b.onfocus = passa(n);
+    estrelas.push(b);
     box.appendChild(b);
   }
+  box.onmouseleave = function () {
+    pinta(0);
+  };
   box.hidden = false;
 })();
 </script>
@@ -155,6 +175,8 @@
 <li>Some quanto do total da carteira está na faixa 3. Esse é o seu risco internacional real, não o que a lâmina diz.</li>
 </ol>
 <p>Nota de método: medir em dólar esconde exatamente a variável que importa para quem recebe e gasta em real.</p>
+
+<p><strong>O estudo completo:</strong> <a href="https://estudos.drheliobarros.com.br/alocacao/?utm_source=kit&amp;utm_content=2026-W35-dom">https://estudos.drheliobarros.com.br/alocacao/</a></p>
 
 <hr>
 <footer>Hélio Barros · Doctor Invest · esta página acompanha a newsletter “A jornada do médico investidor”.</footer>
