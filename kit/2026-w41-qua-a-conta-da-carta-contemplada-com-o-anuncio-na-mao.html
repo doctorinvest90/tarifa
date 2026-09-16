@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A conta da carta contemplada, com o anúncio na mão | Doctor Invest</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0 auto; padding: 40px 24px 64px; max-width: 720px;
+         font: 17px/1.65 Georgia, "Times New Roman", serif; color: #1a1a1a; background: #fff; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 20px; margin: 32px 0 8px; }
+  .marca { font: 600 13px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+           text-transform: uppercase; color: #8a6d3b; margin-bottom: 24px; }
+  ol, ul { padding-left: 24px; }
+  li { margin-bottom: 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 24px 0; }
+  th, td { border: 1px solid #e0dcd4; padding: 8px 10px; text-align: left; font-size: 15px; }
+  hr { border: 0; border-top: 1px solid #e0dcd4; margin: 40px 0 24px; }
+  footer { font: 14px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .quiz { background: #faf8f4; border: 1px solid #e0dcd4; border-radius: 6px;
+          padding: 20px 22px; }
+  .quiz-tag { font: 600 12px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+              text-transform: uppercase; color: #8a6d3b; margin-bottom: 10px; }
+  .quiz-pergunta { font-weight: 700; margin: 0 0 10px; }
+  .quiz-veredito { margin: 0 0 10px; font: 16px/1.5 -apple-system, system-ui, sans-serif; }
+  .quiz-veredito.certo { color: #1d6b3f; }
+  .quiz-veredito.errado { color: #8a2f2f; }
+  .quiz-exp { margin: 0; font-size: 16px; color: #4a4a4a; }
+  .quiz-sep { margin: 32px 0 28px; }
+  .nps { margin: 14px 0 0; font: 15px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .nps-q { margin-right: 10px; }
+  /* Estrela, e não o número 1–5: cinco caixinhas numeradas não dizem sozinhas
+     qual ponta é a boa, e o leitor tem que adivinhar se 1 é "péssimo" ou
+     "primeiro lugar". A régua de estrela já carrega a direção. */
+  .nps-b { font-size: 22px; line-height: 1; color: #d8d2c6; background: none; border: 0;
+           padding: 0 1px; cursor: pointer; vertical-align: middle; }
+  .nps-b.on { color: #8a6d3b; }
+  /* Checklists costam trazer tabela, e a 375px uma tabela de 3 colunas já fica
+     no limite. Aperta o padding em vez de deixar estourar a largura. */
+  @media (max-width: 480px) {
+    body { padding: 28px 18px 48px; }
+    th, td { padding: 6px 8px; font-size: 14px; }
+    .quiz { padding: 16px; }
+  }
+  /* O quiz é do e-mail, não da folha: quem imprime leva a ferramenta, não o
+     jogo. */
+  @media print {
+    body { padding: 0; max-width: none; font-size: 12pt; }
+    .marca { color: #000; }
+    footer, .quiz, .quiz-sep, .nps { display: none; }
+  }
+</style>
+</head>
+<body>
+<section class="quiz">
+  <div class="quiz-tag">Quiz da edição</div>
+  <p class="quiz-pergunta">Na lista de 148 cartas contempladas, quantas vencem quem financia e amortiza com a sobra, se as parcelas forem reajustadas pelo INCC dos últimos doze meses?</p>
+  <p class="quiz-veredito" id="qv"></p>
+  <p class="quiz-exp">Com o reajuste acompanhando o IPCA são 31. Com o INCC dos últimos doze meses, sobram 3. Contra quem paga o financiamento até o fim, seriam 50 e 8.</p>
+<div class="nps" id="nps" hidden></div>
+<script>
+(function () {
+  var cfg = {"endpoint":"https://docs.google.com/forms/d/e/1FAIpQLSejpxIzt3TjWYVPgRk6PYDCRKRibcHkZouGIPtJCjyk9-ypfg/formResponse?entry.1457604422={e}&entry.631805460={n}&submit=Submit","edicao":"2026-W41-qua"};
+  var box = document.getElementById("nps");
+  var q = document.createElement("span");
+  q.className = "nps-q";
+  q.textContent = "Essa edição te serviu?";
+  box.appendChild(q);
+  var votou = false;
+  var voto = function (nota) {
+    return function () {
+      if (votou) return;
+      votou = true;
+      var e = encodeURIComponent(cfg.edicao);
+      new Image().src = cfg.endpoint.indexOf("{n}") < 0
+        ? cfg.endpoint + (cfg.endpoint.indexOf("?") < 0 ? "?" : "&") + "e=" + e + "&n=" + nota
+        : cfg.endpoint.replace("{e}", e).replace("{n}", nota);
+      box.textContent = "Obrigado.";
+    };
+  };
+  var estrelas = [];
+  var pinta = function (ate) {
+    for (var i = 0; i < estrelas.length; i++) {
+      estrelas[i].className = i < ate ? "nps-b on" : "nps-b";
+    }
+  };
+  var passa = function (ate) {
+    return function () {
+      pinta(ate);
+    };
+  };
+  for (var n = 1; n <= 5; n++) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "nps-b";
+    b.textContent = "★";
+    b.setAttribute("aria-label", n + " de 5");
+    b.onclick = voto(n);
+    b.onmouseover = passa(n);
+    b.onfocus = passa(n);
+    estrelas.push(b);
+    box.appendChild(b);
+  }
+  box.onmouseleave = function () {
+    pinta(0);
+  };
+  box.hidden = false;
+})();
+</script>
+</section>
+<script>
+(function () {
+  var q = {"pergunta":"Na lista de 148 cartas contempladas, quantas vencem quem financia e amortiza com a sobra, se as parcelas forem reajustadas pelo INCC dos últimos doze meses?","opcoes":[{"letra":"A","texto":"Todas, porque carta contemplada não tem juro"},{"letra":"B","texto":"31"},{"letra":"C","texto":"3"},{"letra":"D","texto":"50"}],"gabarito":"C","explicacao":"Com o reajuste acompanhando o IPCA são 31. Com o INCC dos últimos doze meses, sobram 3. Contra quem paga o financiamento até o fim, seriam 50 e 8."};
+  var alvo = document.getElementById("qv");
+  var texto = function (l) {
+    for (var i = 0; i < q.opcoes.length; i++) if (q.opcoes[i].letra === l) return q.opcoes[i].texto;
+    return "";
+  };
+  var escolha = new URLSearchParams(location.search).get("o");
+  var certa = q.gabarito + ") " + texto(q.gabarito);
+  if (escolha && texto(escolha)) {
+    var acertou = escolha === q.gabarito;
+    alvo.textContent = acertou
+      ? "Você marcou " + certa + ". É essa."
+      : "Você marcou " + escolha + ") " + texto(escolha) + ". A resposta é " + certa + ".";
+    alvo.className = "quiz-veredito " + (acertou ? "certo" : "errado");
+  } else {
+    alvo.textContent = "A resposta é " + certa + ".";
+  }
+})();
+</script>
+<hr class="quiz-sep">
+<div class="marca">Doctor Invest</div>
+<h1>A conta da carta contemplada, com o anúncio na mão</h1>
+<p><strong>1. O crédito que a carta de fato entrega</strong>
+Crédito da carta menos a entrada pedida. No anúncio aberto no apêndice: R$ 261.000 − R$ 129.890 = R$ 131.110.</p>
+<p><strong>2. O índice de reajuste das parcelas</strong>
+Está no regulamento do grupo, não no anúncio: peça à administradora. O apêndice testa dois cenários: IPCA + 0,09 ponto, o contrato do estudo principal, e o INCC dos últimos doze meses, 6,40% ao ano.</p>
+<p><strong>3. O seu orçamento e a sua sobra</strong>
+O orçamento da comparação é a maior parcela que a carta ou o financiamento exigem. Decida antes o que faria com o que sobra todo mês: investir ou amortizar o financiamento.</p>
+<p><strong>4. A conta na calculadora</strong>
+Coloque crédito, entrada, parcelas, índice e a folga do seu orçamento na calculadora do apêndice. Ela devolve com quanto patrimônio você termina em cada caminho, pagando o financiamento até o fim ou amortizando, e o ágio de empate: a maior entrada que ainda empata.</p>
+<p><strong>5. Os números do anúncio aberto, para conferir a sua conta</strong></p>
+<table>
+<thead>
+<tr>
+<th>Anúncio 1 · reajuste IPCA + 0,09</th>
+<th>Financiamento pago até o fim</th>
+<th>Financiamento amortizado</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Orçamento mensal nos dois caminhos</td>
+<td>R$ 1.917</td>
+<td>R$ 1.917</td>
+</tr>
+<tr>
+<td>Financiamento quitado em</td>
+<td>175 meses</td>
+<td>95 meses</td>
+</tr>
+<tr>
+<td>Custo real implícito da carta</td>
+<td>16,3%</td>
+<td>16,3%</td>
+</tr>
+<tr>
+<td>Ágio de empate</td>
+<td>R$ 70.934</td>
+<td>R$ 65.634</td>
+</tr>
+<tr>
+<td>Patrimônio a menos com a carta</td>
+<td>R$ 68.092</td>
+<td>R$ 74.784</td>
+</tr>
+</tbody></table>
+<p><strong>6. Antes de pagar</strong>
+Confirme grupo, cota, titular e crédito liberado com a administradora, pelo canal oficial. Pergunte a taxa de transferência e quem paga. Desconfie de pressa: reserva com prazo de horas, carta anunciada como a última e desconto fora da curva são os sinais mais comuns de fraude.</p>
+
+<p class="estudo"><strong>O estudo completo:</strong> <a href="https://estudos.drheliobarros.com.br/consorcio/carta-contemplada/?utm_source=kit&amp;utm_content=2026-W41-qua">https://estudos.drheliobarros.com.br/consorcio/carta-contemplada/</a></p>
+<hr>
+<footer>Hélio Barros · Doctor Invest · esta página acompanha a newsletter “A jornada do médico investidor”.</footer>
+</body>
+</html>
