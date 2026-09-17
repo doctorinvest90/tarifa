@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A base do imposto mínimo, numa folha | Doctor Invest</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0 auto; padding: 40px 24px 64px; max-width: 720px;
+         font: 17px/1.65 Georgia, "Times New Roman", serif; color: #1a1a1a; background: #fff; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 20px; margin: 32px 0 8px; }
+  .marca { font: 600 13px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+           text-transform: uppercase; color: #8a6d3b; margin-bottom: 24px; }
+  ol, ul { padding-left: 24px; }
+  li { margin-bottom: 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 24px 0; }
+  th, td { border: 1px solid #e0dcd4; padding: 8px 10px; text-align: left; font-size: 15px; }
+  hr { border: 0; border-top: 1px solid #e0dcd4; margin: 40px 0 24px; }
+  footer { font: 14px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .quiz { background: #faf8f4; border: 1px solid #e0dcd4; border-radius: 6px;
+          padding: 20px 22px; }
+  .quiz-tag { font: 600 12px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+              text-transform: uppercase; color: #8a6d3b; margin-bottom: 10px; }
+  .quiz-pergunta { font-weight: 700; margin: 0 0 10px; }
+  .quiz-veredito { margin: 0 0 10px; font: 16px/1.5 -apple-system, system-ui, sans-serif; }
+  .quiz-veredito.certo { color: #1d6b3f; }
+  .quiz-veredito.errado { color: #8a2f2f; }
+  .quiz-exp { margin: 0; font-size: 16px; color: #4a4a4a; }
+  .quiz-sep { margin: 32px 0 28px; }
+  .nps { margin: 14px 0 0; font: 15px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .nps-q { margin-right: 10px; }
+  /* Estrela, e não o número 1–5: cinco caixinhas numeradas não dizem sozinhas
+     qual ponta é a boa, e o leitor tem que adivinhar se 1 é "péssimo" ou
+     "primeiro lugar". A régua de estrela já carrega a direção. */
+  .nps-b { font-size: 22px; line-height: 1; color: #d8d2c6; background: none; border: 0;
+           padding: 0 1px; cursor: pointer; vertical-align: middle; }
+  .nps-b.on { color: #8a6d3b; }
+  /* Checklists costam trazer tabela, e a 375px uma tabela de 3 colunas já fica
+     no limite. Aperta o padding em vez de deixar estourar a largura. */
+  @media (max-width: 480px) {
+    body { padding: 28px 18px 48px; }
+    th, td { padding: 6px 8px; font-size: 14px; }
+    .quiz { padding: 16px; }
+  }
+  /* O quiz é do e-mail, não da folha: quem imprime leva a ferramenta, não o
+     jogo. */
+  @media print {
+    body { padding: 0; max-width: none; font-size: 12pt; }
+    .marca { color: #000; }
+    footer, .quiz, .quiz-sep, .nps { display: none; }
+  }
+</style>
+</head>
+<body>
+<section class="quiz">
+  <div class="quiz-tag">Quiz da edição</div>
+  <p class="quiz-pergunta">No estudo, o que acontece com os R$ 80.759 retidos no ano do médico que fatura R$ 100 mil por mês?</p>
+  <p class="quiz-veredito" id="qv"></p>
+  <p class="quiz-exp">A retenção é adiantamento. Dos R$ 80.759 retidos, R$ 49.172 cobrem o que a lei acrescenta ao imposto dele e R$ 31.587 voltam no ajuste anual.</p>
+<div class="nps" id="nps" hidden></div>
+<script>
+(function () {
+  var cfg = {"endpoint":"https://docs.google.com/forms/d/e/1FAIpQLSejpxIzt3TjWYVPgRk6PYDCRKRibcHkZouGIPtJCjyk9-ypfg/formResponse?entry.1457604422={e}&entry.631805460={n}&submit=Submit","edicao":"2026-W42-qua"};
+  var box = document.getElementById("nps");
+  var q = document.createElement("span");
+  q.className = "nps-q";
+  q.textContent = "Essa edição te serviu?";
+  box.appendChild(q);
+  var votou = false;
+  var voto = function (nota) {
+    return function () {
+      if (votou) return;
+      votou = true;
+      var e = encodeURIComponent(cfg.edicao);
+      new Image().src = cfg.endpoint.indexOf("{n}") < 0
+        ? cfg.endpoint + (cfg.endpoint.indexOf("?") < 0 ? "?" : "&") + "e=" + e + "&n=" + nota
+        : cfg.endpoint.replace("{e}", e).replace("{n}", nota);
+      box.textContent = "Obrigado.";
+    };
+  };
+  var estrelas = [];
+  var pinta = function (ate) {
+    for (var i = 0; i < estrelas.length; i++) {
+      estrelas[i].className = i < ate ? "nps-b on" : "nps-b";
+    }
+  };
+  var passa = function (ate) {
+    return function () {
+      pinta(ate);
+    };
+  };
+  for (var n = 1; n <= 5; n++) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "nps-b";
+    b.textContent = "★";
+    b.setAttribute("aria-label", n + " de 5");
+    b.onclick = voto(n);
+    b.onmouseover = passa(n);
+    b.onfocus = passa(n);
+    estrelas.push(b);
+    box.appendChild(b);
+  }
+  box.onmouseleave = function () {
+    pinta(0);
+  };
+  box.hidden = false;
+})();
+</script>
+</section>
+<script>
+(function () {
+  var q = {"pergunta":"No estudo, o que acontece com os R$ 80.759 retidos no ano do médico que fatura R$ 100 mil por mês?","opcoes":[{"letra":"A","texto":"Ficam todos com a Receita, porque a retenção é definitiva"},{"letra":"B","texto":"R$ 49.172 ficam com a Receita e R$ 31.587 voltam no ajuste"},{"letra":"C","texto":"Voltam todos na declaração, porque ele já tem créditos"},{"letra":"D","texto":"Somam-se ao imposto mínimo, e ele paga R$ 129.931 a mais"}],"gabarito":"B","explicacao":"A retenção é adiantamento. Dos R$ 80.759 retidos, R$ 49.172 cobrem o que a lei acrescenta ao imposto dele e R$ 31.587 voltam no ajuste anual."};
+  var alvo = document.getElementById("qv");
+  var texto = function (l) {
+    for (var i = 0; i < q.opcoes.length; i++) if (q.opcoes[i].letra === l) return q.opcoes[i].texto;
+    return "";
+  };
+  var escolha = new URLSearchParams(location.search).get("o");
+  var certa = q.gabarito + ") " + texto(q.gabarito);
+  if (escolha && texto(escolha)) {
+    var acertou = escolha === q.gabarito;
+    alvo.textContent = acertou
+      ? "Você marcou " + certa + ". É essa."
+      : "Você marcou " + escolha + ") " + texto(escolha) + ". A resposta é " + certa + ".";
+    alvo.className = "quiz-veredito " + (acertou ? "certo" : "errado");
+  } else {
+    alvo.textContent = "A resposta é " + certa + ".";
+  }
+})();
+</script>
+<hr class="quiz-sep">
+<div class="marca">Doctor Invest</div>
+<h1>A base do imposto mínimo, numa folha</h1>
+<p><strong>1. O que entra na base</strong>
+Pró-labore, salários e aluguéis. Lucros e dividendos da PJ, inclusive os abaixo de R$ 50 mil por mês. Dividendos e JCP de ações. Rendimento de CDB, Tesouro e fundos. Resgates de previdência: no PGBL, o valor total; no VGBL, o rendimento.</p>
+<p><strong>2. O que fica fora</strong>
+Poupança, LCI, LCA, CRI, CRA e debêntures incentivadas. Distribuições de fundos imobiliários negociados em bolsa com pelo menos 100 cotistas. Ganho de capital fora de bolsa. Herança e doação em adiantamento de legítima. Lucros apurados até 2025, aprovados até 31/12/2025 e pagos até 2028.</p>
+<p><strong>3. As duas contas da sua base</strong>
+Alíquota efetiva, em %: base ÷ 60.000 − 10. Em R$ 900 mil, 5%.
+Alíquota marginal, em %: base ÷ 30.000 − 10. Em R$ 900 mil, 20%.
+As duas valem entre R$ 600 mil e R$ 1,2 milhão. Acima disso, ficam em 10%.</p>
+<p><strong>4. A tabela do estudo</strong></p>
+<table>
+<thead>
+<tr>
+<th>Perfil</th>
+<th>Base</th>
+<th>Mínimo bruto</th>
+<th>Créditos</th>
+<th>Adicional</th>
+<th>Marginal</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>R$ 40 mil por mês</td>
+<td>R$ 410.015</td>
+<td>R$ 0</td>
+<td>R$ 21.359</td>
+<td>R$ 0</td>
+<td>0,0%</td>
+</tr>
+<tr>
+<td>R$ 70 mil por mês</td>
+<td>R$ 743.087</td>
+<td>R$ 17.721</td>
+<td>R$ 28.730</td>
+<td>R$ 0</td>
+<td>0,0%</td>
+</tr>
+<tr>
+<td>R$ 100 mil por mês</td>
+<td>R$ 1.085.099</td>
+<td>R$ 87.730</td>
+<td>R$ 38.558</td>
+<td>R$ 49.172</td>
+<td>26,2%</td>
+</tr>
+</tbody></table>
+<p><strong>5. A conferência</strong>
+Créditos = IR devido na declaração + IR retido na renda fixa. Se o mínimo bruto passa dos créditos, a marginal da linha 3 vale para cada real a mais de dividendo ou de CDB.</p>
+
+<p class="estudo"><strong>O estudo completo:</strong> <a href="https://estudos.drheliobarros.com.br/dividendos/?utm_source=kit&amp;utm_content=2026-W42-qua">https://estudos.drheliobarros.com.br/dividendos/</a></p>
+<hr>
+<footer>Hélio Barros · Doctor Invest · esta página acompanha a newsletter “A jornada do médico investidor”.</footer>
+</body>
+</html>
