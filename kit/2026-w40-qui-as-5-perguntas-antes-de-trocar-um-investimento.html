@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>As 5 perguntas antes de trocar um investimento | Doctor Invest</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0 auto; padding: 40px 24px 64px; max-width: 720px;
+         font: 17px/1.65 Georgia, "Times New Roman", serif; color: #1a1a1a; background: #fff; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 20px; margin: 32px 0 8px; }
+  .marca { font: 600 13px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+           text-transform: uppercase; color: #8a6d3b; margin-bottom: 24px; }
+  ol, ul { padding-left: 24px; }
+  li { margin-bottom: 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 24px 0; }
+  th, td { border: 1px solid #e0dcd4; padding: 8px 10px; text-align: left; font-size: 15px; }
+  hr { border: 0; border-top: 1px solid #e0dcd4; margin: 40px 0 24px; }
+  footer { font: 14px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .quiz { background: #faf8f4; border: 1px solid #e0dcd4; border-radius: 6px;
+          padding: 20px 22px; }
+  .quiz-tag { font: 600 12px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+              text-transform: uppercase; color: #8a6d3b; margin-bottom: 10px; }
+  .quiz-pergunta { font-weight: 700; margin: 0 0 10px; }
+  .quiz-veredito { margin: 0 0 10px; font: 16px/1.5 -apple-system, system-ui, sans-serif; }
+  .quiz-veredito.certo { color: #1d6b3f; }
+  .quiz-veredito.errado { color: #8a2f2f; }
+  .quiz-exp { margin: 0; font-size: 16px; color: #4a4a4a; }
+  .quiz-sep { margin: 32px 0 28px; }
+  .nps { margin: 14px 0 0; font: 15px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .nps-q { margin-right: 10px; }
+  /* Estrela, e não o número 1–5: cinco caixinhas numeradas não dizem sozinhas
+     qual ponta é a boa, e o leitor tem que adivinhar se 1 é "péssimo" ou
+     "primeiro lugar". A régua de estrela já carrega a direção. */
+  .nps-b { font-size: 22px; line-height: 1; color: #d8d2c6; background: none; border: 0;
+           padding: 0 1px; cursor: pointer; vertical-align: middle; }
+  .nps-b.on { color: #8a6d3b; }
+  /* Checklists costam trazer tabela, e a 375px uma tabela de 3 colunas já fica
+     no limite. Aperta o padding em vez de deixar estourar a largura. */
+  @media (max-width: 480px) {
+    body { padding: 28px 18px 48px; }
+    th, td { padding: 6px 8px; font-size: 14px; }
+    .quiz { padding: 16px; }
+  }
+  /* O quiz é do e-mail, não da folha: quem imprime leva a ferramenta, não o
+     jogo. */
+  @media print {
+    body { padding: 0; max-width: none; font-size: 12pt; }
+    .marca { color: #000; }
+    footer, .quiz, .quiz-sep, .nps { display: none; }
+  }
+</style>
+</head>
+<body>
+<section class="quiz">
+  <div class="quiz-tag">Quiz da edição</div>
+  <p class="quiz-pergunta">Na renda fixa, qual é a alíquota de IR sobre o rendimento de um título vendido 14 meses depois da compra?</p>
+  <p class="quiz-veredito" id="qv"></p>
+  <p class="quiz-exp">Entre 361 e 720 dias, a tabela regressiva cobra 17,5%, e só depois de dois anos cai para 15%. No exemplo da edição, vender com 14 meses tirou R$ 7 mil da carteira de uma vez.</p>
+</section>
+<script>
+(function () {
+  var q = {"pergunta":"Na renda fixa, qual é a alíquota de IR sobre o rendimento de um título vendido 14 meses depois da compra?","opcoes":[{"letra":"A","texto":"22,5%"},{"letra":"B","texto":"20%"},{"letra":"C","texto":"17,5%"},{"letra":"D","texto":"15%"}],"gabarito":"C","explicacao":"Entre 361 e 720 dias, a tabela regressiva cobra 17,5%, e só depois de dois anos cai para 15%. No exemplo da edição, vender com 14 meses tirou R$ 7 mil da carteira de uma vez."};
+  var alvo = document.getElementById("qv");
+  var texto = function (l) {
+    for (var i = 0; i < q.opcoes.length; i++) if (q.opcoes[i].letra === l) return q.opcoes[i].texto;
+    return "";
+  };
+  var escolha = new URLSearchParams(location.search).get("o");
+  var certa = q.gabarito + ") " + texto(q.gabarito);
+  if (escolha && texto(escolha)) {
+    var acertou = escolha === q.gabarito;
+    alvo.textContent = acertou
+      ? "Você marcou " + certa + ". É essa."
+      : "Você marcou " + escolha + ") " + texto(escolha) + ". A resposta é " + certa + ".";
+    alvo.className = "quiz-veredito " + (acertou ? "certo" : "errado");
+  } else {
+    alvo.textContent = "A resposta é " + certa + ".";
+  }
+})();
+</script>
+<hr class="quiz-sep">
+<div class="marca">Doctor Invest</div>
+<h1>As 5 perguntas antes de trocar um investimento</h1>
+<ol>
+<li><strong>Quanto de imposto sai nesta venda?</strong> Na renda fixa, veja há quantos dias o dinheiro está aplicado. Nas ações, some tudo o que você já vendeu no mês.</li>
+<li><strong>Qual a diferença entre o preço de compra e o de venda hoje?</strong> Peça o valor em reais.</li>
+<li><strong>Qual a alíquota do ativo novo, e quando ela cai?</strong> Na renda fixa, o prazo recomeça em 22,5%.</li>
+<li><strong>O que mudou desde a compra?</strong> Objetivo, prazo ou risco. Se nada mudou, anote e espere.</li>
+<li><strong>O motivo cabe em uma linha?</strong> Se não cabe, a troca ainda não está decidida.</li>
+</ol>
+<p><strong>Tabela de referência</strong></p>
+<table>
+<thead>
+<tr>
+<th>Situação</th>
+<th>Regra</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Renda fixa, até 180 dias</td>
+<td>22,5% sobre o rendimento</td>
+</tr>
+<tr>
+<td>Renda fixa, de 181 a 360 dias</td>
+<td>20%</td>
+</tr>
+<tr>
+<td>Renda fixa, de 361 a 720 dias</td>
+<td>17,5%</td>
+</tr>
+<tr>
+<td>Renda fixa, acima de 720 dias</td>
+<td>15%</td>
+</tr>
+<tr>
+<td>Fundos (come-cotas)</td>
+<td>Último dia útil de maio e novembro, 15% no longo prazo e 20% no curto; complemento no resgate</td>
+</tr>
+<tr>
+<td>Ações, mercado à vista</td>
+<td>15% sobre o ganho; isento se as vendas do mês somarem até R$ 20 mil</td>
+</tr>
+<tr>
+<td>Taxas da bolsa em ações</td>
+<td>Cerca de 0,03% por operação</td>
+</tr>
+</tbody></table>
+<p><strong>Regra de bolso:</strong> somando imposto adiantado, spread e taxas, duas trocas num ano podem tirar mais de 1,5% de uma carteira de R$ 1 milhão. Confirme com o seu contador como cada regra se aplica ao seu caso.</p>
+
+<hr>
+<footer>Hélio Barros · Doctor Invest · esta página acompanha a newsletter “A jornada do médico investidor”.</footer>
+</body>
+</html>
