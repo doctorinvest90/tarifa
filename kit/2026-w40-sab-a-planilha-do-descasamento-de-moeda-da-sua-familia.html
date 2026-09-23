@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A planilha do descasamento de moeda da sua família | Doctor Invest</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0 auto; padding: 40px 24px 64px; max-width: 720px;
+         font: 17px/1.65 Georgia, "Times New Roman", serif; color: #1a1a1a; background: #fff; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 20px; margin: 32px 0 8px; }
+  .marca { font: 600 13px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+           text-transform: uppercase; color: #8a6d3b; margin-bottom: 24px; }
+  ol, ul { padding-left: 24px; }
+  li { margin-bottom: 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 24px 0; }
+  th, td { border: 1px solid #e0dcd4; padding: 8px 10px; text-align: left; font-size: 15px; }
+  hr { border: 0; border-top: 1px solid #e0dcd4; margin: 40px 0 24px; }
+  footer { font: 14px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .quiz { background: #faf8f4; border: 1px solid #e0dcd4; border-radius: 6px;
+          padding: 20px 22px; }
+  .quiz-tag { font: 600 12px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+              text-transform: uppercase; color: #8a6d3b; margin-bottom: 10px; }
+  .quiz-pergunta { font-weight: 700; margin: 0 0 10px; }
+  .quiz-veredito { margin: 0 0 10px; font: 16px/1.5 -apple-system, system-ui, sans-serif; }
+  .quiz-veredito.certo { color: #1d6b3f; }
+  .quiz-veredito.errado { color: #8a2f2f; }
+  .quiz-exp { margin: 0; font-size: 16px; color: #4a4a4a; }
+  .quiz-sep { margin: 32px 0 28px; }
+  .nps { margin: 14px 0 0; font: 15px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .nps-q { margin-right: 10px; }
+  /* Estrela, e não o número 1–5: cinco caixinhas numeradas não dizem sozinhas
+     qual ponta é a boa, e o leitor tem que adivinhar se 1 é "péssimo" ou
+     "primeiro lugar". A régua de estrela já carrega a direção. */
+  .nps-b { font-size: 22px; line-height: 1; color: #d8d2c6; background: none; border: 0;
+           padding: 0 1px; cursor: pointer; vertical-align: middle; }
+  .nps-b.on { color: #8a6d3b; }
+  /* Checklists costam trazer tabela, e a 375px uma tabela de 3 colunas já fica
+     no limite. Aperta o padding em vez de deixar estourar a largura. */
+  @media (max-width: 480px) {
+    body { padding: 28px 18px 48px; }
+    th, td { padding: 6px 8px; font-size: 14px; }
+    .quiz { padding: 16px; }
+  }
+  /* O quiz é do e-mail, não da folha: quem imprime leva a ferramenta, não o
+     jogo. */
+  @media print {
+    body { padding: 0; max-width: none; font-size: 12pt; }
+    .marca { color: #000; }
+    footer, .quiz, .quiz-sep, .nps { display: none; }
+  }
+</style>
+</head>
+<body>
+<section class="quiz">
+  <div class="quiz-tag">Quiz da edição</div>
+  <p class="quiz-pergunta">Um médico tem a faculdade do filho nos Estados Unidos orçada em dólar e toda a carteira em real. Como se chama o risco que ele está correndo?</p>
+  <p class="quiz-veredito" id="qv"></p>
+  <p class="quiz-exp">Quando a despesa está numa moeda e o dinheiro que vai pagá-la está em outra, é o câmbio do dia do pagamento que decide o custo. O mesmo curso de US$ 260 mil custava R$ 835 mil ao dólar médio de agosto de 2016 e R$ 1,34 milhão ao de agosto de 2026.</p>
+</section>
+<script>
+(function () {
+  var q = {"pergunta":"Um médico tem a faculdade do filho nos Estados Unidos orçada em dólar e toda a carteira em real. Como se chama o risco que ele está correndo?","opcoes":[{"letra":"A","texto":"Risco de crédito"},{"letra":"B","texto":"Risco de liquidez"},{"letra":"C","texto":"Descasamento de moeda"},{"letra":"D","texto":"Risco de concentração em ações"}],"gabarito":"C","explicacao":"Quando a despesa está numa moeda e o dinheiro que vai pagá-la está em outra, é o câmbio do dia do pagamento que decide o custo. O mesmo curso de US$ 260 mil custava R$ 835 mil ao dólar médio de agosto de 2016 e R$ 1,34 milhão ao de agosto de 2026."};
+  var alvo = document.getElementById("qv");
+  var texto = function (l) {
+    for (var i = 0; i < q.opcoes.length; i++) if (q.opcoes[i].letra === l) return q.opcoes[i].texto;
+    return "";
+  };
+  var escolha = new URLSearchParams(location.search).get("o");
+  var certa = q.gabarito + ") " + texto(q.gabarito);
+  if (escolha && texto(escolha)) {
+    var acertou = escolha === q.gabarito;
+    alvo.textContent = acertou
+      ? "Você marcou " + certa + ". É essa."
+      : "Você marcou " + escolha + ") " + texto(escolha) + ". A resposta é " + certa + ".";
+    alvo.className = "quiz-veredito " + (acertou ? "certo" : "errado");
+  } else {
+    alvo.textContent = "A resposta é " + certa + ".";
+  }
+})();
+</script>
+<hr class="quiz-sep">
+<div class="marca">Doctor Invest</div>
+<h1>A planilha do descasamento de moeda da sua família</h1>
+<p><strong>1. Liste cada despesa futura em moeda estrangeira</strong></p>
+<table>
+<thead>
+<tr>
+<th>Despesa</th>
+<th>Moeda</th>
+<th>Ano de início</th>
+<th>Duração</th>
+<th>Valor total estimado na moeda</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Graduação no exterior</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Intercâmbio ou ano fora</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Pós-graduação ou residência fora</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>Viagens programadas</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Total em moeda forte</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p><strong>2. Anote quanto do patrimônio já está em moeda forte hoje:</strong> ____________</p>
+<p><strong>3. Faça a subtração:</strong> despesa futura em moeda forte menos patrimônio já em moeda forte. Se o resultado é positivo, essa diferença está hoje apostada no câmbio.</p>
+<p><strong>Referências para preencher</strong></p>
+<table>
+<thead>
+<tr>
+<th>Dado</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Orçamento anual médio, universidade privada americana, 2025-26</td>
+<td>US$ 65.470</td>
+</tr>
+<tr>
+<td>Orçamento anual médio, universidade pública americana, aluno de fora do estado, 2025-26</td>
+<td>US$ 50.920</td>
+</tr>
+<tr>
+<td>Dólar médio de agosto de 2016</td>
+<td>R$ 3,21</td>
+</tr>
+<tr>
+<td>Dólar médio de dezembro de 2024</td>
+<td>R$ 6,10</td>
+</tr>
+<tr>
+<td>Dólar médio de agosto de 2026</td>
+<td>R$ 5,15</td>
+</tr>
+<tr>
+<td>IOF sobre remessa para mensalidade ou manutenção de estudante</td>
+<td>3,5%</td>
+</tr>
+</tbody></table>
+<p><strong>Regra de bolso:</strong> cada US$ 100 mil de despesa futura muda R$ 100 mil de custo em reais a cada R$ 1,00 de variação do dólar. O IOF da remessa é regra geral; confirme o enquadramento da sua operação com a instituição de câmbio.</p>
+
+<hr>
+<footer>Hélio Barros · Doctor Invest · esta página acompanha a newsletter “A jornada do médico investidor”.</footer>
+</body>
+</html>
