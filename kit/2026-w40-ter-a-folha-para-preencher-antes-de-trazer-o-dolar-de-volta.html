@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A folha para preencher antes de trazer o dólar de volta | Doctor Invest</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0 auto; padding: 40px 24px 64px; max-width: 720px;
+         font: 17px/1.65 Georgia, "Times New Roman", serif; color: #1a1a1a; background: #fff; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 20px; margin: 32px 0 8px; }
+  .marca { font: 600 13px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+           text-transform: uppercase; color: #8a6d3b; margin-bottom: 24px; }
+  ol, ul { padding-left: 24px; }
+  li { margin-bottom: 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 24px 0; }
+  th, td { border: 1px solid #e0dcd4; padding: 8px 10px; text-align: left; font-size: 15px; }
+  hr { border: 0; border-top: 1px solid #e0dcd4; margin: 40px 0 24px; }
+  footer { font: 14px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .quiz { background: #faf8f4; border: 1px solid #e0dcd4; border-radius: 6px;
+          padding: 20px 22px; }
+  .quiz-tag { font: 600 12px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+              text-transform: uppercase; color: #8a6d3b; margin-bottom: 10px; }
+  .quiz-pergunta { font-weight: 700; margin: 0 0 10px; }
+  .quiz-veredito { margin: 0 0 10px; font: 16px/1.5 -apple-system, system-ui, sans-serif; }
+  .quiz-veredito.certo { color: #1d6b3f; }
+  .quiz-veredito.errado { color: #8a2f2f; }
+  .quiz-exp { margin: 0; font-size: 16px; color: #4a4a4a; }
+  .quiz-sep { margin: 32px 0 28px; }
+  .nps { margin: 14px 0 0; font: 15px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .nps-q { margin-right: 10px; }
+  /* Estrela, e não o número 1–5: cinco caixinhas numeradas não dizem sozinhas
+     qual ponta é a boa, e o leitor tem que adivinhar se 1 é "péssimo" ou
+     "primeiro lugar". A régua de estrela já carrega a direção. */
+  .nps-b { font-size: 22px; line-height: 1; color: #d8d2c6; background: none; border: 0;
+           padding: 0 1px; cursor: pointer; vertical-align: middle; }
+  .nps-b.on { color: #8a6d3b; }
+  /* Checklists costam trazer tabela, e a 375px uma tabela de 3 colunas já fica
+     no limite. Aperta o padding em vez de deixar estourar a largura. */
+  @media (max-width: 480px) {
+    body { padding: 28px 18px 48px; }
+    th, td { padding: 6px 8px; font-size: 14px; }
+    .quiz { padding: 16px; }
+  }
+  /* O quiz é do e-mail, não da folha: quem imprime leva a ferramenta, não o
+     jogo. */
+  @media print {
+    body { padding: 0; max-width: none; font-size: 12pt; }
+    .marca { color: #000; }
+    footer, .quiz, .quiz-sep, .nps { display: none; }
+  }
+</style>
+</head>
+<body>
+<section class="quiz">
+  <div class="quiz-tag">Quiz da edição</div>
+  <p class="quiz-pergunta">Pela Lei 14.754, quando nasce o imposto de 15% sobre uma aplicação financeira no exterior?</p>
+  <p class="quiz-veredito" id="qv"></p>
+  <p class="quiz-exp">O ganho é realizado na venda, no resgate ou no vencimento, e vai para a declaração anual daquele ano, com a alta do dólar dentro da base.</p>
+</section>
+<script>
+(function () {
+  var q = {"pergunta":"Pela Lei 14.754, quando nasce o imposto de 15% sobre uma aplicação financeira no exterior?","opcoes":[{"letra":"A","texto":"No dia em que o dinheiro é remetido ao Brasil"},{"letra":"B","texto":"Na venda, no resgate ou no vencimento da aplicação, mesmo que o dinheiro continue lá fora"},{"letra":"C","texto":"Só quando o dólar sobe mais de 10% no ano"},{"letra":"D","texto":"Todo mês, por DARF, sobre a valorização acumulada"}],"gabarito":"B","explicacao":"O ganho é realizado na venda, no resgate ou no vencimento, e vai para a declaração anual daquele ano, com a alta do dólar dentro da base."};
+  var alvo = document.getElementById("qv");
+  var texto = function (l) {
+    for (var i = 0; i < q.opcoes.length; i++) if (q.opcoes[i].letra === l) return q.opcoes[i].texto;
+    return "";
+  };
+  var escolha = new URLSearchParams(location.search).get("o");
+  var certa = q.gabarito + ") " + texto(q.gabarito);
+  if (escolha && texto(escolha)) {
+    var acertou = escolha === q.gabarito;
+    alvo.textContent = acertou
+      ? "Você marcou " + certa + ". É essa."
+      : "Você marcou " + escolha + ") " + texto(escolha) + ". A resposta é " + certa + ".";
+    alvo.className = "quiz-veredito " + (acertou ? "certo" : "errado");
+  } else {
+    alvo.textContent = "A resposta é " + certa + ".";
+  }
+})();
+</script>
+<hr class="quiz-sep">
+<div class="marca">Doctor Invest</div>
+<h1>A folha para preencher antes de trazer o dólar de volta</h1>
+<ol>
+<li><strong>Para que é o dinheiro em reais, e quando?</strong> Sem destino com data, a venda pode esperar.</li>
+<li><strong>Custo em reais de cada aplicação:</strong> valor pago em dólar × cotação do dia da compra.</li>
+<li><strong>Valor atual em reais:</strong> valor de hoje em dólar × cotação de hoje.</li>
+<li><strong>Imposto estimado:</strong> (valor atual menos custo em reais) × 15%, pago na declaração do ano seguinte.</li>
+<li><strong>Perdas realizadas lá fora no mesmo ano:</strong> a lei permite compensá-las com os ganhos.</li>
+<li><strong>IOF da ida e da possível volta:</strong> use a tabela abaixo.</li>
+</ol>
+<p><strong>IOF de câmbio de referência</strong></p>
+<table>
+<thead>
+<tr>
+<th>Operação</th>
+<th>Alíquota</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Entrada de recursos do exterior (regra geral)</td>
+<td>0,38%</td>
+</tr>
+<tr>
+<td>Saída para investimento no exterior</td>
+<td>1,1%</td>
+</tr>
+<tr>
+<td>Saída para conta própria no exterior, sem finalidade de investimento</td>
+<td>3,5%</td>
+</tr>
+</tbody></table>
+<p><strong>Regra de bolso:</strong> saldo parado em conta corrente lá fora, sem rendimento, tem a variação cambial fora do imposto. Aplicação paga 15% sobre o ganho em reais, câmbio incluído, no ano da venda. Confirme o seu caso com o contador antes de vender.</p>
+
+<hr>
+<footer>Hélio Barros · Doctor Invest · esta página acompanha a newsletter “A jornada do médico investidor”.</footer>
+</body>
+</html>
