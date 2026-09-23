@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>As 3 perguntas para responder à próxima oferta de investimento | Doctor Invest</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0 auto; padding: 40px 24px 64px; max-width: 720px;
+         font: 17px/1.65 Georgia, "Times New Roman", serif; color: #1a1a1a; background: #fff; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 20px; margin: 32px 0 8px; }
+  .marca { font: 600 13px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+           text-transform: uppercase; color: #8a6d3b; margin-bottom: 24px; }
+  ol, ul { padding-left: 24px; }
+  li { margin-bottom: 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 24px 0; }
+  th, td { border: 1px solid #e0dcd4; padding: 8px 10px; text-align: left; font-size: 15px; }
+  hr { border: 0; border-top: 1px solid #e0dcd4; margin: 40px 0 24px; }
+  footer { font: 14px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .quiz { background: #faf8f4; border: 1px solid #e0dcd4; border-radius: 6px;
+          padding: 20px 22px; }
+  .quiz-tag { font: 600 12px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+              text-transform: uppercase; color: #8a6d3b; margin-bottom: 10px; }
+  .quiz-pergunta { font-weight: 700; margin: 0 0 10px; }
+  .quiz-veredito { margin: 0 0 10px; font: 16px/1.5 -apple-system, system-ui, sans-serif; }
+  .quiz-veredito.certo { color: #1d6b3f; }
+  .quiz-veredito.errado { color: #8a2f2f; }
+  .quiz-exp { margin: 0; font-size: 16px; color: #4a4a4a; }
+  .quiz-sep { margin: 32px 0 28px; }
+  .nps { margin: 14px 0 0; font: 15px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .nps-q { margin-right: 10px; }
+  /* Estrela, e não o número 1–5: cinco caixinhas numeradas não dizem sozinhas
+     qual ponta é a boa, e o leitor tem que adivinhar se 1 é "péssimo" ou
+     "primeiro lugar". A régua de estrela já carrega a direção. */
+  .nps-b { font-size: 22px; line-height: 1; color: #d8d2c6; background: none; border: 0;
+           padding: 0 1px; cursor: pointer; vertical-align: middle; }
+  .nps-b.on { color: #8a6d3b; }
+  /* Checklists costam trazer tabela, e a 375px uma tabela de 3 colunas já fica
+     no limite. Aperta o padding em vez de deixar estourar a largura. */
+  @media (max-width: 480px) {
+    body { padding: 28px 18px 48px; }
+    th, td { padding: 6px 8px; font-size: 14px; }
+    .quiz { padding: 16px; }
+  }
+  /* O quiz é do e-mail, não da folha: quem imprime leva a ferramenta, não o
+     jogo. */
+  @media print {
+    body { padding: 0; max-width: none; font-size: 12pt; }
+    .marca { color: #000; }
+    footer, .quiz, .quiz-sep, .nps { display: none; }
+  }
+</style>
+</head>
+<body>
+<section class="quiz">
+  <div class="quiz-tag">Quiz da edição</div>
+  <p class="quiz-pergunta">Desde novembro de 2024, o que o distribuidor é obrigado a informar no momento em que você dá a ordem de investimento?</p>
+  <p class="quiz-veredito" id="qv"></p>
+  <p class="quiz-exp">A Resolução CVM 179 exige que o distribuidor mostre, no momento da ordem, como e quanto ganha com o produto, estimando quando a remuneração vem de spread. No exemplo hipotético de R$ 500 mil, um spread de 0,8 ponto ao ano passa de R$ 25 mil em cinco anos.</p>
+</section>
+<script>
+(function () {
+  var q = {"pergunta":"Desde novembro de 2024, o que o distribuidor é obrigado a informar no momento em que você dá a ordem de investimento?","opcoes":[{"letra":"A","texto":"Apenas a rentabilidade esperada do produto"},{"letra":"B","texto":"A forma de remuneração dele e o valor ou percentual cobrado naquele produto"},{"letra":"C","texto":"Nada; a informação só aparece na declaração de Imposto de Renda"},{"letra":"D","texto":"A lista dos outros clientes que receberam a mesma oferta"}],"gabarito":"B","explicacao":"A Resolução CVM 179 exige que o distribuidor mostre, no momento da ordem, como e quanto ganha com o produto, estimando quando a remuneração vem de spread. No exemplo hipotético de R$ 500 mil, um spread de 0,8 ponto ao ano passa de R$ 25 mil em cinco anos."};
+  var alvo = document.getElementById("qv");
+  var texto = function (l) {
+    for (var i = 0; i < q.opcoes.length; i++) if (q.opcoes[i].letra === l) return q.opcoes[i].texto;
+    return "";
+  };
+  var escolha = new URLSearchParams(location.search).get("o");
+  var certa = q.gabarito + ") " + texto(q.gabarito);
+  if (escolha && texto(escolha)) {
+    var acertou = escolha === q.gabarito;
+    alvo.textContent = acertou
+      ? "Você marcou " + certa + ". É essa."
+      : "Você marcou " + escolha + ") " + texto(escolha) + ". A resposta é " + certa + ".";
+    alvo.className = "quiz-veredito " + (acertou ? "certo" : "errado");
+  } else {
+    alvo.textContent = "A resposta é " + certa + ".";
+  }
+})();
+</script>
+<hr class="quiz-sep">
+<div class="marca">Doctor Invest</div>
+<h1>As 3 perguntas para responder à próxima oferta de investimento</h1>
+<ol>
+<li><strong>Quanto a instituição e o assessor recebem por esta operação, em percentual e em reais?</strong> Se a remuneração vier de spread, peça a estimativa. A Resolução CVM 179 obriga o distribuidor a informá-la no momento da ordem.</li>
+<li><strong>Por que esta oferta chegou para mim agora, e a mesma condição vale para qualquer cliente?</strong> Pergunte se o produto está em campanha ou meta de distribuição neste mês.</li>
+<li><strong>Qual é o meu perfil de suitability registrado, com data, e por que este produto é adequado a ele considerando o custo?</strong> A Resolução CVM 30 veda recomendar produto inadequado ao perfil ou com perfil desatualizado.</li>
+</ol>
+<p><strong>O que a norma já te garante</strong></p>
+<table>
+<thead>
+<tr>
+<th>Informação</th>
+<th>Onde aparece</th>
+<th>Prazo</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Descrição de como o distribuidor é remunerado e dos conflitos de interesse</td>
+<td>Página do distribuidor na internet</td>
+<td>Desde 1º/06/2023</td>
+</tr>
+<tr>
+<td>Forma e valor da remuneração do produto ofertado</td>
+<td>Na tela ou no canal da ordem</td>
+<td>No momento da ordem</td>
+</tr>
+<tr>
+<td>Ordem dada na agência ou por telefone</td>
+<td>Informe da remuneração</td>
+<td>Até 3 dias úteis (Código ANBIMA)</td>
+</tr>
+<tr>
+<td>Extrato com tudo o que o distribuidor ganhou com você</td>
+<td>Enviado ao cliente</td>
+<td>Até 30 dias após cada trimestre</td>
+</tr>
+</tbody></table>
+<p><strong>Fica de fora:</strong> títulos de captação bancária (CDB, LCI, LCA) e quem assinou o termo de investidor profissional.</p>
+<p><strong>Regra de bolso:</strong> 0,8 ponto ao ano sobre R$ 500 mil são R$ 4 mil no primeiro ano e mais de R$ 25 mil em cinco anos.</p>
+
+<hr>
+<footer>Hélio Barros · Doctor Invest · esta página acompanha a newsletter “A jornada do médico investidor”.</footer>
+</body>
+</html>
