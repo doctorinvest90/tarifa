@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>As 5 linhas da sua apólice de doenças graves | Doctor Invest</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0 auto; padding: 40px 24px 64px; max-width: 720px;
+         font: 17px/1.65 Georgia, "Times New Roman", serif; color: #1a1a1a; background: #fff; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 20px; margin: 32px 0 8px; }
+  .marca { font: 600 13px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+           text-transform: uppercase; color: #8a6d3b; margin-bottom: 24px; }
+  ol, ul { padding-left: 24px; }
+  li { margin-bottom: 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 24px 0; }
+  th, td { border: 1px solid #e0dcd4; padding: 8px 10px; text-align: left; font-size: 15px; }
+  hr { border: 0; border-top: 1px solid #e0dcd4; margin: 40px 0 24px; }
+  footer { font: 14px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .quiz { background: #faf8f4; border: 1px solid #e0dcd4; border-radius: 6px;
+          padding: 20px 22px; }
+  .quiz-tag { font: 600 12px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+              text-transform: uppercase; color: #8a6d3b; margin-bottom: 10px; }
+  .quiz-pergunta { font-weight: 700; margin: 0 0 10px; }
+  .quiz-veredito { margin: 0 0 10px; font: 16px/1.5 -apple-system, system-ui, sans-serif; }
+  .quiz-veredito.certo { color: #1d6b3f; }
+  .quiz-veredito.errado { color: #8a2f2f; }
+  .quiz-exp { margin: 0; font-size: 16px; color: #4a4a4a; }
+  .quiz-sep { margin: 32px 0 28px; }
+  .nps { margin: 14px 0 0; font: 15px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .nps-q { margin-right: 10px; }
+  /* Estrela, e não o número 1–5: cinco caixinhas numeradas não dizem sozinhas
+     qual ponta é a boa, e o leitor tem que adivinhar se 1 é "péssimo" ou
+     "primeiro lugar". A régua de estrela já carrega a direção. */
+  .nps-b { font-size: 22px; line-height: 1; color: #d8d2c6; background: none; border: 0;
+           padding: 0 1px; cursor: pointer; vertical-align: middle; }
+  .nps-b.on { color: #8a6d3b; }
+  /* Checklists costam trazer tabela, e a 375px uma tabela de 3 colunas já fica
+     no limite. Aperta o padding em vez de deixar estourar a largura. */
+  @media (max-width: 480px) {
+    body { padding: 28px 18px 48px; }
+    th, td { padding: 6px 8px; font-size: 14px; }
+    .quiz { padding: 16px; }
+  }
+  /* O quiz é do e-mail, não da folha: quem imprime leva a ferramenta, não o
+     jogo. */
+  @media print {
+    body { padding: 0; max-width: none; font-size: 12pt; }
+    .marca { color: #000; }
+    footer, .quiz, .quiz-sep, .nps { display: none; }
+  }
+</style>
+</head>
+<body>
+<section class="quiz">
+  <div class="quiz-tag">Quiz da edição</div>
+  <p class="quiz-pergunta">Como a cobertura de doenças graves paga a indenização?</p>
+  <p class="quiz-veredito" id="qv"></p>
+  <p class="quiz-exp">A SUSEP proíbe vincular o valor dessa cobertura às despesas médicas: ele é fechado e pago no diagnóstico confirmado, respeitada a carência.</p>
+</section>
+<script>
+(function () {
+  var q = {"pergunta":"Como a cobertura de doenças graves paga a indenização?","opcoes":[{"letra":"A","texto":"Reembolsa as despesas do tratamento mediante nota fiscal"},{"letra":"B","texto":"Paga um valor fechado, de uma vez, quando o diagnóstico de doença prevista na apólice é confirmado"},{"letra":"C","texto":"Paga à família apenas em caso de morte"},{"letra":"D","texto":"Paga uma renda mensal enquanto durar o afastamento"}],"gabarito":"B","explicacao":"A SUSEP proíbe vincular o valor dessa cobertura às despesas médicas: ele é fechado e pago no diagnóstico confirmado, respeitada a carência."};
+  var alvo = document.getElementById("qv");
+  var texto = function (l) {
+    for (var i = 0; i < q.opcoes.length; i++) if (q.opcoes[i].letra === l) return q.opcoes[i].texto;
+    return "";
+  };
+  var escolha = new URLSearchParams(location.search).get("o");
+  var certa = q.gabarito + ") " + texto(q.gabarito);
+  if (escolha && texto(escolha)) {
+    var acertou = escolha === q.gabarito;
+    alvo.textContent = acertou
+      ? "Você marcou " + certa + ". É essa."
+      : "Você marcou " + escolha + ") " + texto(escolha) + ". A resposta é " + certa + ".";
+    alvo.className = "quiz-veredito " + (acertou ? "certo" : "errado");
+  } else {
+    alvo.textContent = "A resposta é " + certa + ".";
+  }
+})();
+</script>
+<hr class="quiz-sep">
+<div class="marca">Doctor Invest</div>
+<h1>As 5 linhas da sua apólice de doenças graves</h1>
+<table>
+<thead>
+<tr>
+<th>O que procurar</th>
+<th>Onde costuma estar</th>
+<th>O que anotar</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Cobertura de doenças graves</td>
+<td>Certificado ou apólice, quadro de coberturas</td>
+<td>Se existe e qual é o capital segurado</td>
+</tr>
+<tr>
+<td>Lista e critérios</td>
+<td>Condições gerais, capítulo das coberturas</td>
+<td>Doenças cobertas e como o câncer é classificado (in situ, estágio inicial)</td>
+</tr>
+<tr>
+<td>Carência</td>
+<td>Condições gerais, item &quot;carência&quot;</td>
+<td>Prazo em dias e data em que termina</td>
+</tr>
+<tr>
+<td>Modelo de pagamento</td>
+<td>Condições gerais ou especiais</td>
+<td>Antecipa o seguro de morte ou é independente</td>
+</tr>
+<tr>
+<td>Sobrevivência mínima</td>
+<td>Condições gerais</td>
+<td>Dias que o segurado precisa sobreviver após o diagnóstico, se houver exigência</td>
+</tr>
+</tbody></table>
+<p><strong>Conta do capital:</strong> (meses de afastamento × custo de vida mensal) + gastos fora do plano, menos a reserva líquida, menos o auxílio do INSS no período. No exemplo: R$ 180 mil + R$ 70 mil, menos R$ 90 mil, menos R$ 10 mil = R$ 150 mil.</p>
+<p><strong>Regras de bolso:</strong></p>
+<ul>
+<li>Apólice nova, carência nova. Só cancele a antiga depois que a nova passar da carência.</li>
+<li>Preencha a declaração de saúde completa. Doença preexistente conhecida e não declarada aparece entre as exclusões das condições gerais.</li>
+<li>O valor da cobertura de doenças graves é fechado e não depende das despesas do tratamento.</li>
+</ul>
+
+<hr>
+<footer>Hélio Barros · Doctor Invest · esta página acompanha a newsletter “A jornada do médico investidor”.</footer>
+</body>
+</html>
