@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>O teste de caixa da sucessão: seu patrimônio paga a própria transferência? | Doctor Invest</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0 auto; padding: 40px 24px 64px; max-width: 720px;
+         font: 17px/1.65 Georgia, "Times New Roman", serif; color: #1a1a1a; background: #fff; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 20px; margin: 32px 0 8px; }
+  .marca { font: 600 13px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+           text-transform: uppercase; color: #8a6d3b; margin-bottom: 24px; }
+  ol, ul { padding-left: 24px; }
+  li { margin-bottom: 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 24px 0; }
+  th, td { border: 1px solid #e0dcd4; padding: 8px 10px; text-align: left; font-size: 15px; }
+  hr { border: 0; border-top: 1px solid #e0dcd4; margin: 40px 0 24px; }
+  footer { font: 14px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .quiz { background: #faf8f4; border: 1px solid #e0dcd4; border-radius: 6px;
+          padding: 20px 22px; }
+  .quiz-tag { font: 600 12px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+              text-transform: uppercase; color: #8a6d3b; margin-bottom: 10px; }
+  .quiz-pergunta { font-weight: 700; margin: 0 0 10px; }
+  .quiz-veredito { margin: 0 0 10px; font: 16px/1.5 -apple-system, system-ui, sans-serif; }
+  .quiz-veredito.certo { color: #1d6b3f; }
+  .quiz-veredito.errado { color: #8a2f2f; }
+  .quiz-exp { margin: 0; font-size: 16px; color: #4a4a4a; }
+  .quiz-sep { margin: 32px 0 28px; }
+  .nps { margin: 14px 0 0; font: 15px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .nps-q { margin-right: 10px; }
+  /* Estrela, e não o número 1–5: cinco caixinhas numeradas não dizem sozinhas
+     qual ponta é a boa, e o leitor tem que adivinhar se 1 é "péssimo" ou
+     "primeiro lugar". A régua de estrela já carrega a direção. */
+  .nps-b { font-size: 22px; line-height: 1; color: #d8d2c6; background: none; border: 0;
+           padding: 0 1px; cursor: pointer; vertical-align: middle; }
+  .nps-b.on { color: #8a6d3b; }
+  /* Checklists costam trazer tabela, e a 375px uma tabela de 3 colunas já fica
+     no limite. Aperta o padding em vez de deixar estourar a largura. */
+  @media (max-width: 480px) {
+    body { padding: 28px 18px 48px; }
+    th, td { padding: 6px 8px; font-size: 14px; }
+    .quiz { padding: 16px; }
+  }
+  /* O quiz é do e-mail, não da folha: quem imprime leva a ferramenta, não o
+     jogo. */
+  @media print {
+    body { padding: 0; max-width: none; font-size: 12pt; }
+    .marca { color: #000; }
+    footer, .quiz, .quiz-sep, .nps { display: none; }
+  }
+</style>
+</head>
+<body>
+<section class="quiz">
+  <div class="quiz-tag">Quiz da edição</div>
+  <p class="quiz-pergunta">Por que R$ 1 milhão em imóvel e R$ 1 milhão em carteira líquida chegam de formas diferentes aos herdeiros, mesmo com a mesma alíquota de ITCMD?</p>
+  <p class="quiz-veredito" id="qv"></p>
+  <p class="quiz-exp">Os dois pagam ITCMD e os dois entram no inventário. A diferença é a liquidez: a carteira paga o próprio imposto e se divide sozinha, enquanto o imóvel exige que o herdeiro tire caixa do bolso ou venda sob pressão, muitas vezes com desconto.</p>
+</section>
+<script>
+(function () {
+  var q = {"pergunta":"Por que R$ 1 milhão em imóvel e R$ 1 milhão em carteira líquida chegam de formas diferentes aos herdeiros, mesmo com a mesma alíquota de ITCMD?","opcoes":[{"letra":"A","texto":"Porque imóvel não paga ITCMD, só aplicação financeira paga"},{"letra":"B","texto":"Porque a carteira líquida escapa do inventário e o imóvel não"},{"letra":"C","texto":"Porque a carteira líquida paga o próprio imposto e divide em partes exatas, e o imóvel exige caixa de fora, é indivisível e gera despesa durante o inventário"},{"letra":"D","texto":"Porque o imóvel sempre vale mais na hora da partilha"}],"gabarito":"C","explicacao":"Os dois pagam ITCMD e os dois entram no inventário. A diferença é a liquidez: a carteira paga o próprio imposto e se divide sozinha, enquanto o imóvel exige que o herdeiro tire caixa do bolso ou venda sob pressão, muitas vezes com desconto."};
+  var alvo = document.getElementById("qv");
+  var texto = function (l) {
+    for (var i = 0; i < q.opcoes.length; i++) if (q.opcoes[i].letra === l) return q.opcoes[i].texto;
+    return "";
+  };
+  var escolha = new URLSearchParams(location.search).get("o");
+  var certa = q.gabarito + ") " + texto(q.gabarito);
+  if (escolha && texto(escolha)) {
+    var acertou = escolha === q.gabarito;
+    alvo.textContent = acertou
+      ? "Você marcou " + certa + ". É essa."
+      : "Você marcou " + escolha + ") " + texto(escolha) + ". A resposta é " + certa + ".";
+    alvo.className = "quiz-veredito " + (acertou ? "certo" : "errado");
+  } else {
+    alvo.textContent = "A resposta é " + certa + ".";
+  }
+})();
+</script>
+<hr class="quiz-sep">
+<div class="marca">Doctor Invest</div>
+<h1>O teste de caixa da sucessão: seu patrimônio paga a própria transferência?</h1>
+<p>Preencha com os valores de hoje. O objetivo é uma única resposta: no dia do inventário, a parte líquida cobre o custo de transferir o resto?</p>
+<table>
+<thead>
+<tr>
+<th>Coluna</th>
+<th>O que entra</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Líquido</strong></td>
+<td>Aplicações financeiras, saldo em conta, o que vira dinheiro em dias</td>
+<td>R$</td>
+</tr>
+<tr>
+<td><strong>Ilíquido</strong></td>
+<td>Imóveis, participação na clínica, bens que levam meses para vender</td>
+<td>R$</td>
+</tr>
+<tr>
+<td><strong>Patrimônio total</strong></td>
+<td>Soma das duas colunas</td>
+<td>R$</td>
+</tr>
+</tbody></table>
+<p><strong>Estime o custo da transferência</strong></p>
+<table>
+<thead>
+<tr>
+<th>Linha</th>
+<th>Como calcular</th>
+<th>Valor</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ITCMD</td>
+<td>Alíquota do seu estado (4% a 8%) × patrimônio total</td>
+<td>R$</td>
+</tr>
+<tr>
+<td>Margem para custas do inventário</td>
+<td>Cartório e honorários (varia; extrajudicial é mais barato)</td>
+<td>R$</td>
+</tr>
+<tr>
+<td><strong>Custo total da transferência</strong></td>
+<td>ITCMD + custas</td>
+<td>R$</td>
+</tr>
+<tr>
+<td><strong>Sobra ou falta de caixa</strong></td>
+<td>Coluna Líquido menos o custo total</td>
+<td>R$</td>
+</tr>
+</tbody></table>
+<p>Se a última linha for negativa, seus herdeiros teriam que vender um bem ilíquido para pagar o imposto dos outros bens.</p>
+<p><strong>Regras de bolso:</strong></p>
+<ul>
+<li>Aplicação financeira e imóvel entram os dois no inventário. O que os diferencia é a liquidez para pagar o próprio imposto, a divisibilidade entre os herdeiros e a despesa de posse durante o processo.</li>
+<li>O ITCMD é pago antes de a partilha ser homologada e o bem registrado. Sem caixa, não há como o herdeiro receber.</li>
+<li>Imóvel indivisível partilhado entre herdeiros vira condomínio: um só não vende, e o desacordo trava o bem.</li>
+<li>Venda de imóvel sob prazo de inventário costuma sair abaixo da avaliação. O desconto da pressa pode superar o imposto que motivou a venda.</li>
+</ul>
+
+<hr>
+<footer>Hélio Barros · Doctor Invest · esta página acompanha a newsletter “A jornada do médico investidor”.</footer>
+</body>
+</html>
