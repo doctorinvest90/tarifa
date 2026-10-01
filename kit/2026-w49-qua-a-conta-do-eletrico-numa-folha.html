@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A conta do elétrico, numa folha | Doctor Invest</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0 auto; padding: 40px 24px 64px; max-width: 720px;
+         font: 17px/1.65 Georgia, "Times New Roman", serif; color: #1a1a1a; background: #fff; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 20px; margin: 32px 0 8px; }
+  .marca { font: 600 13px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+           text-transform: uppercase; color: #8a6d3b; margin-bottom: 24px; }
+  ol, ul { padding-left: 24px; }
+  li { margin-bottom: 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 24px 0; }
+  th, td { border: 1px solid #e0dcd4; padding: 8px 10px; text-align: left; font-size: 15px; }
+  hr { border: 0; border-top: 1px solid #e0dcd4; margin: 40px 0 24px; }
+  footer { font: 14px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .quiz { background: #faf8f4; border: 1px solid #e0dcd4; border-radius: 6px;
+          padding: 20px 22px; }
+  .quiz-tag { font: 600 12px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+              text-transform: uppercase; color: #8a6d3b; margin-bottom: 10px; }
+  .quiz-pergunta { font-weight: 700; margin: 0 0 10px; }
+  .quiz-veredito { margin: 0 0 10px; font: 16px/1.5 -apple-system, system-ui, sans-serif; }
+  .quiz-veredito.certo { color: #1d6b3f; }
+  .quiz-veredito.errado { color: #8a2f2f; }
+  .quiz-exp { margin: 0; font-size: 16px; color: #4a4a4a; }
+  .quiz-sep { margin: 32px 0 28px; }
+  .nps { margin: 14px 0 0; font: 15px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .nps-q { margin-right: 10px; }
+  /* Estrela, e não o número 1–5: cinco caixinhas numeradas não dizem sozinhas
+     qual ponta é a boa, e o leitor tem que adivinhar se 1 é "péssimo" ou
+     "primeiro lugar". A régua de estrela já carrega a direção. */
+  .nps-b { font-size: 22px; line-height: 1; color: #d8d2c6; background: none; border: 0;
+           padding: 0 1px; cursor: pointer; vertical-align: middle; }
+  .nps-b.on { color: #8a6d3b; }
+  /* Checklists costam trazer tabela, e a 375px uma tabela de 3 colunas já fica
+     no limite. Aperta o padding em vez de deixar estourar a largura. */
+  @media (max-width: 480px) {
+    body { padding: 28px 18px 48px; }
+    th, td { padding: 6px 8px; font-size: 14px; }
+    .quiz { padding: 16px; }
+  }
+  /* O quiz é do e-mail, não da folha: quem imprime leva a ferramenta, não o
+     jogo. */
+  @media print {
+    body { padding: 0; max-width: none; font-size: 12pt; }
+    .marca { color: #000; }
+    footer, .quiz, .quiz-sep, .nps { display: none; }
+  }
+</style>
+</head>
+<body>
+<section class="quiz">
+  <div class="quiz-tag">Quiz da edição</div>
+  <p class="quiz-pergunta">No estudo, rodando 15 mil km por ano em São Paulo por cinco anos, quanto a mais vale pagar pelo elétrico para empatar com o rival, se os dois perderem o mesmo percentual ao ano?</p>
+  <p class="quiz-veredito" id="qv"></p>
+  <p class="quiz-exp">A economia de energia de cinco anos paga uns R$ 27 mil de diferença de preço. Os R$ 64 mil são quanto o dono do Yuan Plus de 2023 terminou atrás do Compass. E rodar muito ajuda menos do que parece: para empatar, aquele Yuan Plus precisaria ter rodado 45 mil km por ano.</p>
+<div class="nps" id="nps" hidden></div>
+<script>
+(function () {
+  var cfg = {"endpoint":"https://docs.google.com/forms/d/e/1FAIpQLSejpxIzt3TjWYVPgRk6PYDCRKRibcHkZouGIPtJCjyk9-ypfg/formResponse?entry.1457604422={e}&entry.631805460={n}&submit=Submit","edicao":"2026-W49-qua"};
+  var box = document.getElementById("nps");
+  var q = document.createElement("span");
+  q.className = "nps-q";
+  q.textContent = "Essa edição te serviu?";
+  box.appendChild(q);
+  var votou = false;
+  var voto = function (nota) {
+    return function () {
+      if (votou) return;
+      votou = true;
+      var e = encodeURIComponent(cfg.edicao);
+      new Image().src = cfg.endpoint.indexOf("{n}") < 0
+        ? cfg.endpoint + (cfg.endpoint.indexOf("?") < 0 ? "?" : "&") + "e=" + e + "&n=" + nota
+        : cfg.endpoint.replace("{e}", e).replace("{n}", nota);
+      box.textContent = "Obrigado.";
+    };
+  };
+  var estrelas = [];
+  var pinta = function (ate) {
+    for (var i = 0; i < estrelas.length; i++) {
+      estrelas[i].className = i < ate ? "nps-b on" : "nps-b";
+    }
+  };
+  var passa = function (ate) {
+    return function () {
+      pinta(ate);
+    };
+  };
+  for (var n = 1; n <= 5; n++) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "nps-b";
+    b.textContent = "★";
+    b.setAttribute("aria-label", n + " de 5");
+    b.onclick = voto(n);
+    b.onmouseover = passa(n);
+    b.onfocus = passa(n);
+    estrelas.push(b);
+    box.appendChild(b);
+  }
+  box.onmouseleave = function () {
+    pinta(0);
+  };
+  box.hidden = false;
+})();
+</script>
+</section>
+<script>
+(function () {
+  var q = {"pergunta":"No estudo, rodando 15 mil km por ano em São Paulo por cinco anos, quanto a mais vale pagar pelo elétrico para empatar com o rival, se os dois perderem o mesmo percentual ao ano?","opcoes":[{"letra":"A","texto":"Nada: o elétrico sempre compensa"},{"letra":"B","texto":"Uns R$ 27 mil"},{"letra":"C","texto":"Uns R$ 64 mil"},{"letra":"D","texto":"Qualquer valor, desde que você rode muito"}],"gabarito":"B","explicacao":"A economia de energia de cinco anos paga uns R$ 27 mil de diferença de preço. Os R$ 64 mil são quanto o dono do Yuan Plus de 2023 terminou atrás do Compass. E rodar muito ajuda menos do que parece: para empatar, aquele Yuan Plus precisaria ter rodado 45 mil km por ano."};
+  var alvo = document.getElementById("qv");
+  var texto = function (l) {
+    for (var i = 0; i < q.opcoes.length; i++) if (q.opcoes[i].letra === l) return q.opcoes[i].texto;
+    return "";
+  };
+  var escolha = new URLSearchParams(location.search).get("o");
+  var certa = q.gabarito + ") " + texto(q.gabarito);
+  if (escolha && texto(escolha)) {
+    var acertou = escolha === q.gabarito;
+    alvo.textContent = acertou
+      ? "Você marcou " + certa + ". É essa."
+      : "Você marcou " + escolha + ") " + texto(escolha) + ". A resposta é " + certa + ".";
+    alvo.className = "quiz-veredito " + (acertou ? "certo" : "errado");
+  } else {
+    alvo.textContent = "A resposta é " + certa + ".";
+  }
+})();
+</script>
+<hr class="quiz-sep">
+<div class="marca">Doctor Invest</div>
+<h1>A conta do elétrico, numa folha</h1>
+<p><strong>1. Quanto a mais vale pagar pelo elétrico</strong>
+Ágio máximo sobre o rival a combustão que a economia de energia paga, com os dois carros perdendo o mesmo percentual ao ano. SUV médio (Yuan Plus × Compass), recarga em casa, dinheiro rendendo IPCA + 6% ao ano.</p>
+<table>
+<thead>
+<tr>
+<th>Km por ano</th>
+<th>3 anos · SP</th>
+<th>5 anos · SP</th>
+<th>3 anos · Brasília</th>
+<th>5 anos · Brasília</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>8 mil</td>
+<td>R$ 9.025</td>
+<td>R$ 11.092</td>
+<td>R$ 36.312</td>
+<td>R$ 38.830</td>
+</tr>
+<tr>
+<td>15 mil</td>
+<td>R$ 22.083</td>
+<td>R$ 26.946</td>
+<td>R$ 52.216</td>
+<td>R$ 58.092</td>
+</tr>
+<tr>
+<td>25 mil</td>
+<td>R$ 43.476</td>
+<td>R$ 49.621</td>
+<td>R$ 78.137</td>
+<td>R$ 85.639</td>
+</tr>
+</tbody></table>
+<p><strong>2. A diferença de preço hoje, pela FIPE 0 km</strong>
+Yuan Plus: R$ 37.229 a mais que o Compass. Dolphin: R$ 29.892 a menos que o T-Cross. Dolphin Mini: R$ 4.985 a menos que o Polo. Seal: R$ 88.544 a menos que o BMW 320i.</p>
+<p><strong>3. Três ajustes para o seu caso</strong>
+Recarga na rua, em carregador rápido: a economia mensal cai para R$ 234 a R$ 316. Rival abastecido com etanol: cai para R$ 353 a R$ 408. Seguro: peça as duas cotações, porque o elétrico paga um percentual maior do valor do carro.</p>
+<p><strong>4. A pergunta que o vendedor não responde</strong>
+&quot;Qual foi o preço de tabela deste modelo nos últimos dois anos?&quot; Se ele já caiu e estabilizou, o risco de o seu usado cair junto é menor.</p>
+
+<p class="estudo"><strong>O estudo completo:</strong> <a href="https://estudos.drheliobarros.com.br/carro-eletrico/?utm_source=kit&amp;utm_content=2026-W49-qua">https://estudos.drheliobarros.com.br/carro-eletrico/</a></p>
+<hr>
+<footer>Hélio Barros · Doctor Invest · esta página acompanha a newsletter “A jornada do médico investidor”.</footer>
+</body>
+</html>
