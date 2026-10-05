@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>O pedágio de cada troca: calcule antes de apertar vender | Doctor Invest</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0 auto; padding: 40px 24px 64px; max-width: 720px;
+         font: 17px/1.65 Georgia, "Times New Roman", serif; color: #1a1a1a; background: #fff; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 20px; margin: 32px 0 8px; }
+  .marca { font: 600 13px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+           text-transform: uppercase; color: #8a6d3b; margin-bottom: 24px; }
+  ol, ul { padding-left: 24px; }
+  li { margin-bottom: 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 24px 0; }
+  th, td { border: 1px solid #e0dcd4; padding: 8px 10px; text-align: left; font-size: 15px; }
+  hr { border: 0; border-top: 1px solid #e0dcd4; margin: 40px 0 24px; }
+  footer { font: 14px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .quiz { background: #faf8f4; border: 1px solid #e0dcd4; border-radius: 6px;
+          padding: 20px 22px; }
+  .quiz-tag { font: 600 12px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+              text-transform: uppercase; color: #8a6d3b; margin-bottom: 10px; }
+  .quiz-pergunta { font-weight: 700; margin: 0 0 10px; }
+  .quiz-veredito { margin: 0 0 10px; font: 16px/1.5 -apple-system, system-ui, sans-serif; }
+  .quiz-veredito.certo { color: #1d6b3f; }
+  .quiz-veredito.errado { color: #8a2f2f; }
+  .quiz-exp { margin: 0; font-size: 16px; color: #4a4a4a; }
+  .quiz-sep { margin: 32px 0 28px; }
+  .nps { margin: 14px 0 0; font: 15px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .nps-q { margin-right: 10px; }
+  /* Estrela, e não o número 1–5: cinco caixinhas numeradas não dizem sozinhas
+     qual ponta é a boa, e o leitor tem que adivinhar se 1 é "péssimo" ou
+     "primeiro lugar". A régua de estrela já carrega a direção. */
+  .nps-b { font-size: 22px; line-height: 1; color: #d8d2c6; background: none; border: 0;
+           padding: 0 1px; cursor: pointer; vertical-align: middle; }
+  .nps-b.on { color: #8a6d3b; }
+  /* Checklists costam trazer tabela, e a 375px uma tabela de 3 colunas já fica
+     no limite. Aperta o padding em vez de deixar estourar a largura. */
+  @media (max-width: 480px) {
+    body { padding: 28px 18px 48px; }
+    th, td { padding: 6px 8px; font-size: 14px; }
+    .quiz { padding: 16px; }
+  }
+  /* O quiz é do e-mail, não da folha: quem imprime leva a ferramenta, não o
+     jogo. */
+  @media print {
+    body { padding: 0; max-width: none; font-size: 12pt; }
+    .marca { color: #000; }
+    footer, .quiz, .quiz-sep, .nps { display: none; }
+  }
+</style>
+</head>
+<body>
+<section class="quiz">
+  <div class="quiz-tag">Quiz da edição</div>
+  <p class="quiz-pergunta">Numa aplicação de renda fixa com R$ 100 mil de ganho, qual a diferença de imposto entre resgatar no primeiro ano e esperar a aplicação passar de dois anos?</p>
+  <p class="quiz-veredito" id="qv"></p>
+  <p class="quiz-exp">Pela tabela regressiva, o ganho resgatado até 180 dias paga 22,5% e o resgatado acima de 720 dias paga 15%. Sobre R$ 100 mil de ganho, isso separa R$ 22,5 mil de R$ 15 mil, e o imposto antecipado ainda deixa de render até você precisar do dinheiro.</p>
+</section>
+<script>
+(function () {
+  var q = {"pergunta":"Numa aplicação de renda fixa com R$ 100 mil de ganho, qual a diferença de imposto entre resgatar no primeiro ano e esperar a aplicação passar de dois anos?","opcoes":[{"letra":"A","texto":"Nenhuma, a alíquota é sempre a mesma"},{"letra":"B","texto":"R$ 7,5 mil, porque a alíquota cai de 22,5% para 15%"},{"letra":"C","texto":"R$ 20 mil, por causa da isenção mensal"},{"letra":"D","texto":"Depende da sua renda no ano do resgate"}],"gabarito":"B","explicacao":"Pela tabela regressiva, o ganho resgatado até 180 dias paga 22,5% e o resgatado acima de 720 dias paga 15%. Sobre R$ 100 mil de ganho, isso separa R$ 22,5 mil de R$ 15 mil, e o imposto antecipado ainda deixa de render até você precisar do dinheiro."};
+  var alvo = document.getElementById("qv");
+  var texto = function (l) {
+    for (var i = 0; i < q.opcoes.length; i++) if (q.opcoes[i].letra === l) return q.opcoes[i].texto;
+    return "";
+  };
+  var escolha = new URLSearchParams(location.search).get("o");
+  var certa = q.gabarito + ") " + texto(q.gabarito);
+  if (escolha && texto(escolha)) {
+    var acertou = escolha === q.gabarito;
+    alvo.textContent = acertou
+      ? "Você marcou " + certa + ". É essa."
+      : "Você marcou " + escolha + ") " + texto(escolha) + ". A resposta é " + certa + ".";
+    alvo.className = "quiz-veredito " + (acertou ? "certo" : "errado");
+  } else {
+    alvo.textContent = "A resposta é " + certa + ".";
+  }
+})();
+</script>
+<hr class="quiz-sep">
+<div class="marca">Doctor Invest</div>
+<h1>O pedágio de cada troca: calcule antes de apertar vender</h1>
+<p>Antes de confirmar qualquer venda para rebalancear ou trocar de ativo, responda:</p>
+<ol>
+<li><strong>Qual é o ganho que vou realizar nesta venda?</strong> É sobre ele que o imposto incide.</li>
+<li><strong>Há quanto tempo a aplicação está comprada?</strong> Na renda fixa e nos fundos, o tempo define a alíquota pela tabela abaixo. Esperar passar de dois anos troca 22,5% por 15%.</li>
+<li><strong>Se for ação, estou dentro dos R$ 20 mil de vendas no mês?</strong> Acima disso, o ganho que seria isento passa a pagar 15%.</li>
+<li><strong>Qual o custo de executar?</strong> Spread entre compra e venda, corretagem e emolumentos, contados duas vezes na ida e na volta.</li>
+<li><strong>A vantagem que espero do ativo novo cobre tudo isso com folga?</strong> Se não cobre, a troca empata ou perde.</li>
+</ol>
+<p><strong>Tabela regressiva de IR (renda fixa e fundos, exceto fundos de ações)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Prazo da aplicação</th>
+<th>Alíquota</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Até 180 dias</td>
+<td>22,5%</td>
+</tr>
+<tr>
+<td>De 181 a 360 dias</td>
+<td>20%</td>
+</tr>
+<tr>
+<td>De 361 a 720 dias</td>
+<td>17,5%</td>
+</tr>
+<tr>
+<td>Acima de 720 dias</td>
+<td>15%</td>
+</tr>
+</tbody></table>
+<p><strong>Regras de bolso:</strong></p>
+<ul>
+<li>Em ações compradas direto, a alíquota é 15% nas operações comuns, com isenção para vendas de até R$ 20 mil no mês.</li>
+<li>Fundos de renda fixa e multimercado já antecipam parte do imposto a cada semestre, no come-cotas, então o benefício de adiar a venda pesa mais em ações, ETFs e títulos mantidos direto.</li>
+<li>O imposto só cai quando você vende. Enquanto a posição fica parada, o que você deveria à Receita continua rendendo para você.</li>
+</ul>
+
+<hr>
+<footer>Hélio Barros · Doctor Invest · esta página acompanha a newsletter “A jornada do médico investidor”.</footer>
+</body>
+</html>
