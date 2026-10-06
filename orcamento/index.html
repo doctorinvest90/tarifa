@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-cDs4QKZKkpA4mOD3Q2/2Lwyfi0CdIXbv5Mk8EcDCaEc='; style-src 'unsafe-inline'; connect-src https://api.pluggy.ai; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-p/b1+9S3tO1W3fL4xrwhfu3iJleJtmu5AhzHgovtFfA='; style-src 'unsafe-inline'; connect-src https://api.pluggy.ai; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <title>Diagnóstico de orçamento</title>
 <style>
@@ -23,7 +23,31 @@ td.valor { text-align: right; white-space: nowrap; }
 .aviso { color: #9a2a2a; }
 .acima { color: var(--destaque); font-size: .9rem; }
 #resumo { display: none; }
-@media print { body > *:not(#resumo) { display: none !important; } #resumo { display: block !important; } }
+/* Print = the house PDF standard (src/sofia/reports/theme.ts): navy full-bleed cover, white sheet.
+   The screen layout (760px column, nowrap values) must not reach the paper: a sentence in a
+   nowrap cell ran ~120px past an A4 page. */
+@media print {
+  @page { size: A4; margin: 20mm 0 18mm; }
+  @page :first { margin: 0; }
+  body { max-width: none; margin: 0; padding: 0; background: #ffffff; }
+  body > *:not(#resumo) { display: none !important; }
+  #resumo, #resumo * { box-sizing: border-box; }
+  #resumo { display: block !important; color: #1a1f2b; font-family: -apple-system, "Helvetica Neue", Arial, sans-serif; font-size: 12.5px; line-height: 1.5; }
+  #resumo .capa { background: #0D1B2A; color: #F7F5F0; height: 297mm; padding: 34mm 26mm 26mm; display: flex; flex-direction: column; justify-content: space-between; break-after: page; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  #resumo .marca { font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: #C9A84C; font-weight: 500; }
+  #resumo .regua { width: 42px; height: 2px; background: #C9A84C; margin: 26mm 0 12mm; }
+  #resumo .kicker { font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: #cbd5e1; }
+  #resumo h1 { font-family: Georgia, "Times New Roman", serif; font-size: 40px; line-height: 1.08; margin: 8px 0 0; color: #F7F5F0; font-weight: 600; }
+  #resumo h1 span { color: #C9A84C; }
+  #resumo .meta { font-size: 11px; color: #94a3b8; display: flex; justify-content: space-between; border-top: 1px solid #1e3247; padding-top: 10px; }
+  #resumo .folha { padding: 0 24mm; }
+  #resumo table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+  #resumo tr { break-inside: avoid; }
+  #resumo td { padding: 7px 8px; border-bottom: 1px solid #e7e3d8; vertical-align: top; white-space: normal; overflow-wrap: break-word; }
+  #resumo td:first-child { width: 58%; color: #64748b; }
+  #resumo td.valor { text-align: right; font-variant-numeric: tabular-nums; color: #0D1B2A; }
+  #resumo .consentimento { margin: 14px 0 0; padding: 4px 0 4px 14px; border-left: 3px solid #C9A84C; font-size: 11.5px; color: #475569; max-width: none; }
+}
 </style>
 </head>
 <body>
@@ -292,7 +316,9 @@ td.valor { text-align: right; white-space: nowrap; }
           zerar: "Dá para zerar (por ano)",
           naoUso: "Recorrências marcadas como não uso (por ano)",
           aporte: "Aporte sugerido",
-          dia: "Dia sugerido"
+          dia: "Dia sugerido",
+          capaMarca: "Doctor Invest",
+          capaRodape: "Confidencial"
         }
       };
     }
@@ -5103,6 +5129,10 @@ td.valor { text-align: right; white-space: nowrap; }
       consentimento: r.consentimento
     };
   }
+  function dividirTitulo(titulo) {
+    const i = titulo.lastIndexOf(" de ");
+    return i > 0 ? [titulo.slice(0, i), titulo.slice(i + 1)] : [titulo, ""];
+  }
   var FORMATO;
   var init_resumo = __esm({
     "src/orcamento/resumo.ts"() {
@@ -5340,11 +5370,27 @@ td.valor { text-align: right; white-space: nowrap; }
         );
       }
       function renderResumo(r) {
+        const [linha1, linha2] = dividirTitulo(r.titulo);
         resumoEl.replaceChildren(
-          el("h1", {}, r.titulo),
-          el("p", {}, r.data),
-          el("table", {}, el("tbody", {}, ...r.linhas.map(([k, v]) => el("tr", {}, el("td", {}, k), el("td", { class: "valor" }, v))))),
-          el("p", {}, r.consentimento)
+          el(
+            "div",
+            { class: "capa" },
+            el(
+              "div",
+              {},
+              el("div", { class: "marca" }, TEXTOS.resumo.capaMarca),
+              el("div", { class: "regua" }),
+              el("div", { class: "kicker" }, TEXTOS.titulo),
+              el("h1", {}, linha1, el("br"), el("span", {}, linha2))
+            ),
+            el("div", { class: "meta" }, el("span", {}, r.data), el("span", {}, TEXTOS.resumo.capaRodape))
+          ),
+          el(
+            "div",
+            { class: "folha" },
+            el("table", {}, el("tbody", {}, ...r.linhas.map(([k, v]) => el("tr", {}, el("td", {}, k), el("td", { class: "valor" }, v))))),
+            el("p", { class: "consentimento" }, r.consentimento)
+          )
         );
       }
       if (demo) {
