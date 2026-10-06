@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-p/b1+9S3tO1W3fL4xrwhfu3iJleJtmu5AhzHgovtFfA='; style-src 'unsafe-inline'; connect-src https://api.pluggy.ai; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-sttwNqg9bqilwHlHcdqNMBhITywxRfNHdjskZz0zhQg='; style-src 'unsafe-inline'; connect-src https://api.pluggy.ai; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <title>Diagnóstico de orçamento</title>
 <style>
@@ -22,6 +22,10 @@ td { padding: 6px 4px; border-bottom: 1px solid var(--linha); vertical-align: to
 td.valor { text-align: right; white-space: nowrap; }
 .aviso { color: #9a2a2a; }
 .acima { color: var(--destaque); font-size: .9rem; }
+label.oquee { display: block; margin: 6px 0 0; font-weight: 400; font-size: .85rem; color: var(--tinta); }
+label.oquee input { margin-top: 2px; }
+details { margin-top: 20px; }
+summary { cursor: pointer; font-weight: 600; }
 #resumo { display: none; }
 /* Print = the house PDF standard (src/sofia/reports/theme.ts): navy full-bleed cover, white sheet.
    The screen layout (760px column, nowrap values) must not reach the paper: a sentence in a
@@ -76,18 +80,18 @@ td.valor { text-align: right; white-space: nowrap; }
     }
   });
 
-  // src/pluggy/fees.ts
+  // ../../../src/pluggy/fees.ts
   function normalizeDescription(s) {
     return s.normalize("NFD").replace(/\p{Mn}/gu, "").toLowerCase();
   }
   var init_fees = __esm({
-    "src/pluggy/fees.ts"() {
+    "../../../src/pluggy/fees.ts"() {
       "use strict";
       init_define_process_env();
     }
   });
 
-  // src/pluggy/recurring.ts
+  // ../../../src/pluggy/recurring.ts
   function median(values) {
     if (values.length === 0) return 0;
     const sorted = [...values].sort((a, b) => a - b);
@@ -122,14 +126,14 @@ td.valor { text-align: right; white-space: nowrap; }
     }).sort((a, b) => b.annualized - a.annualized);
   }
   var init_recurring = __esm({
-    "src/pluggy/recurring.ts"() {
+    "../../../src/pluggy/recurring.ts"() {
       "use strict";
       init_define_process_env();
       init_fees();
     }
   });
 
-  // src/pluggy/aggregate.ts
+  // ../../../src/pluggy/aggregate.ts
   function flowWindowMonths(rows) {
     let first = Infinity;
     let last = -Infinity;
@@ -207,7 +211,7 @@ td.valor { text-align: right; white-space: nowrap; }
   }
   var NO_CATEGORY, DAYS_PER_MONTH, MIN_MONTHS_PER_HALF;
   var init_aggregate = __esm({
-    "src/pluggy/aggregate.ts"() {
+    "../../../src/pluggy/aggregate.ts"() {
       "use strict";
       init_define_process_env();
       init_recurring();
@@ -217,7 +221,7 @@ td.valor { text-align: right; white-space: nowrap; }
     }
   });
 
-  // src/orcamento/textos.ts
+  // ../../../src/orcamento/textos.ts
   function preenche(modelo, vars) {
     return modelo.replace(/\{(\w+)\}/g, (_, chave) => {
       const v = vars[chave];
@@ -227,7 +231,7 @@ td.valor { text-align: right; white-space: nowrap; }
   }
   var TEXTOS;
   var init_textos = __esm({
-    "src/orcamento/textos.ts"() {
+    "../../../src/orcamento/textos.ts"() {
       "use strict";
       init_define_process_env();
       TEXTOS = {
@@ -267,7 +271,10 @@ td.valor { text-align: right; white-space: nowrap; }
           entrou: "Entrou",
           continuar: "Ver o diagnóstico",
           errado: "Isso está errado",
-          revisar: "Revisar marcações"
+          revisar: "Revisar marcações",
+          oQueE: "O que é?",
+          separados: "Separados: não contam como gasto nem renda",
+          separadosDica: "Mude a marcação se algum destes for gasto ou renda de verdade."
         },
         marcas: {
           gasto: "Gasto da casa",
@@ -324,7 +331,7 @@ td.valor { text-align: right; white-space: nowrap; }
     }
   });
 
-  // src/orcamento/calibragem.ts
+  // ../../../src/orcamento/calibragem.ts
   function chaveDestinatario(description) {
     const normalizada = normalizeDescription(description).trim();
     const semCodigos = normalizada.split(/\s+/).filter((t) => t !== "" && !/\d/.test(t)).join(" ");
@@ -359,22 +366,26 @@ td.valor { text-align: right; white-space: nowrap; }
         direction: r.direction,
         total: 0,
         ocorrencias: 0,
-        kinds: /* @__PURE__ */ new Map()
+        kinds: /* @__PURE__ */ new Map(),
+        cats: /* @__PURE__ */ new Map()
       };
       g.total += r.value;
       g.ocorrencias += 1;
       g.kinds.set(r.kind, (g.kinds.get(r.kind) ?? 0) + 1);
+      g.cats.set(r.category, (g.cats.get(r.category) ?? 0) + 1);
       grupos.set(chave, g);
     }
     const todos = [...grupos.entries()].map(([chave, g]) => {
       const kind = [...g.kinds.entries()].sort((a, b) => b[1] - a[1])[0][0];
+      const categoria = [...g.cats.entries()].sort((a, b) => b[1] - a[1])[0]?.[0] ?? "";
       return {
         chave,
         amostra: g.amostra,
         direction: g.direction,
         total: g.total,
         ocorrencias: g.ocorrencias,
-        padrao: marcaPadrao(kind, g.direction)
+        padrao: marcaPadrao(kind, g.direction),
+        categoria
       };
     }).sort((a, b) => b.total - a.total);
     return todos.filter((d, i) => i < n || extras.has(d.chave));
@@ -418,9 +429,43 @@ td.valor { text-align: right; white-space: nowrap; }
         return m[marca];
     }
   }
-  var OPCOES, FORA_DA_CALIBRAGEM;
+  function separaConferencia(rows, marcas, n = 20, extras = /* @__PURE__ */ new Set()) {
+    const todos = topDestinatarios(rows, Number.POSITIVE_INFINITY);
+    const marcaDe = (d) => marcas.get(d.chave) ?? d.padrao;
+    const noFluxo = todos.filter((d) => NO_FLUXO.has(marcaDe(d)));
+    return {
+      lista: noFluxo.filter((d, i) => i < n || extras.has(d.chave)),
+      separados: todos.filter((d) => !NO_FLUXO.has(marcaDe(d))).slice(0, n)
+    };
+  }
+  function chaveCategoria(nome) {
+    return normalizeDescription(nome).trim().replace(/\s+/g, " ");
+  }
+  function aplicaCategorias(rows, nomesPluggy, digitadas) {
+    const canonico = /* @__PURE__ */ new Map();
+    const nome = (bruto) => {
+      const limpo = bruto.trim();
+      const k = chaveCategoria(limpo);
+      if (k === "") return limpo;
+      const ja = canonico.get(k);
+      if (ja !== void 0) return ja;
+      canonico.set(k, limpo);
+      return limpo;
+    };
+    return rows.map((r) => {
+      if (r.kind !== "gasto") return r;
+      const digitada = digitadas.get(chaveDaLinha(r))?.trim();
+      const base = digitada ? digitada : nomesPluggy.get(r.category) ?? r.category;
+      return { ...r, category: nome(base) };
+    });
+  }
+  function sugestoesCategoria(rows, nomesPluggy, digitadas) {
+    const nomes = aplicaCategorias(rows, nomesPluggy, digitadas).filter((r) => r.kind === "gasto" && r.category !== "").map((r) => r.category);
+    return [...new Set(nomes)].sort((a, b) => a.localeCompare(b, "pt-BR"));
+  }
+  var OPCOES, FORA_DA_CALIBRAGEM, NO_FLUXO;
   var init_calibragem = __esm({
-    "src/orcamento/calibragem.ts"() {
+    "../../../src/orcamento/calibragem.ts"() {
       "use strict";
       init_define_process_env();
       init_fees();
@@ -430,10 +475,11 @@ td.valor { text-align: right; white-space: nowrap; }
         in: ["renda", "investimento", "minhas_contas", "emprestimo"]
       };
       FORA_DA_CALIBRAGEM = /* @__PURE__ */ new Set(["pagamento_fatura", "estorno"]);
+      NO_FLUXO = /* @__PURE__ */ new Set(["gasto", "renda"]);
     }
   });
 
-  // src/orcamento/camadas.ts
+  // ../../../src/orcamento/camadas.ts
   function ehDesperdicio(r, naoSao = /* @__PURE__ */ new Set()) {
     if (r.kind !== "gasto" || !r.description) return false;
     if (naoSao.has(chaveDestinatario(r.description))) return false;
@@ -476,7 +522,7 @@ td.valor { text-align: right; white-space: nowrap; }
   }
   var TERMOS_DE_DESPERDICIO, NAO_E_TARIFA, LIMITE_ASSINATURA, MAX_COBRANCAS_POR_MES, ALTA_RELATIVA, ALTA_MINIMA;
   var init_camadas = __esm({
-    "src/orcamento/camadas.ts"() {
+    "../../../src/orcamento/camadas.ts"() {
       "use strict";
       init_define_process_env();
       init_aggregate();
@@ -492,10 +538,10 @@ td.valor { text-align: right; white-space: nowrap; }
     }
   });
 
-  // node_modules/zod/v3/helpers/util.js
+  // ../../../node_modules/zod/v3/helpers/util.js
   var util, objectUtil, ZodParsedType, getParsedType;
   var init_util = __esm({
-    "node_modules/zod/v3/helpers/util.js"() {
+    "../../../node_modules/zod/v3/helpers/util.js"() {
       init_define_process_env();
       (function(util2) {
         util2.assertEqual = (_) => {
@@ -630,10 +676,10 @@ td.valor { text-align: right; white-space: nowrap; }
     }
   });
 
-  // node_modules/zod/v3/ZodError.js
+  // ../../../node_modules/zod/v3/ZodError.js
   var ZodIssueCode, quotelessJson, ZodError;
   var init_ZodError = __esm({
-    "node_modules/zod/v3/ZodError.js"() {
+    "../../../node_modules/zod/v3/ZodError.js"() {
       init_define_process_env();
       init_util();
       ZodIssueCode = util.arrayToEnum([
@@ -755,10 +801,10 @@ td.valor { text-align: right; white-space: nowrap; }
     }
   });
 
-  // node_modules/zod/v3/locales/en.js
+  // ../../../node_modules/zod/v3/locales/en.js
   var errorMap, en_default;
   var init_en = __esm({
-    "node_modules/zod/v3/locales/en.js"() {
+    "../../../node_modules/zod/v3/locales/en.js"() {
       init_define_process_env();
       init_ZodError();
       init_util();
@@ -866,7 +912,7 @@ td.valor { text-align: right; white-space: nowrap; }
     }
   });
 
-  // node_modules/zod/v3/errors.js
+  // ../../../node_modules/zod/v3/errors.js
   function setErrorMap(map) {
     overrideErrorMap = map;
   }
@@ -875,14 +921,14 @@ td.valor { text-align: right; white-space: nowrap; }
   }
   var overrideErrorMap;
   var init_errors = __esm({
-    "node_modules/zod/v3/errors.js"() {
+    "../../../node_modules/zod/v3/errors.js"() {
       init_define_process_env();
       init_en();
       overrideErrorMap = en_default;
     }
   });
 
-  // node_modules/zod/v3/helpers/parseUtil.js
+  // ../../../node_modules/zod/v3/helpers/parseUtil.js
   function addIssueToContext(ctx, issueData) {
     const overrideMap = getErrorMap();
     const issue = makeIssue({
@@ -904,7 +950,7 @@ td.valor { text-align: right; white-space: nowrap; }
   }
   var makeIssue, EMPTY_PATH, ParseStatus, INVALID, DIRTY, OK, isAborted, isDirty, isValid, isAsync;
   var init_parseUtil = __esm({
-    "node_modules/zod/v3/helpers/parseUtil.js"() {
+    "../../../node_modules/zod/v3/helpers/parseUtil.js"() {
       init_define_process_env();
       init_errors();
       init_en();
@@ -1000,17 +1046,17 @@ td.valor { text-align: right; white-space: nowrap; }
     }
   });
 
-  // node_modules/zod/v3/helpers/typeAliases.js
+  // ../../../node_modules/zod/v3/helpers/typeAliases.js
   var init_typeAliases = __esm({
-    "node_modules/zod/v3/helpers/typeAliases.js"() {
+    "../../../node_modules/zod/v3/helpers/typeAliases.js"() {
       init_define_process_env();
     }
   });
 
-  // node_modules/zod/v3/helpers/errorUtil.js
+  // ../../../node_modules/zod/v3/helpers/errorUtil.js
   var errorUtil;
   var init_errorUtil = __esm({
-    "node_modules/zod/v3/helpers/errorUtil.js"() {
+    "../../../node_modules/zod/v3/helpers/errorUtil.js"() {
       init_define_process_env();
       (function(errorUtil2) {
         errorUtil2.errToObj = (message) => typeof message === "string" ? { message } : message || {};
@@ -1019,7 +1065,7 @@ td.valor { text-align: right; white-space: nowrap; }
     }
   });
 
-  // node_modules/zod/v3/types.js
+  // ../../../node_modules/zod/v3/types.js
   function processCreateParams(params) {
     if (!params)
       return {};
@@ -1213,7 +1259,7 @@ td.valor { text-align: right; white-space: nowrap; }
   }
   var ParseInputLazyPath, handleResult, ZodType, cuidRegex, cuid2Regex, ulidRegex, uuidRegex, nanoidRegex, jwtRegex, durationRegex, emailRegex, _emojiRegex, emojiRegex, ipv4Regex, ipv4CidrRegex, ipv6Regex, ipv6CidrRegex, base64Regex, base64urlRegex, dateRegexSource, dateRegex, ZodString, ZodNumber, ZodBigInt, ZodBoolean, ZodDate, ZodSymbol, ZodUndefined, ZodNull, ZodAny, ZodUnknown, ZodNever, ZodVoid, ZodArray, ZodObject, ZodUnion, getDiscriminator, ZodDiscriminatedUnion, ZodIntersection, ZodTuple, ZodRecord, ZodMap, ZodSet, ZodFunction, ZodLazy, ZodLiteral, ZodEnum, ZodNativeEnum, ZodPromise, ZodEffects, ZodOptional, ZodNullable, ZodDefault, ZodCatch, ZodNaN, BRAND, ZodBranded, ZodPipeline, ZodReadonly, late, ZodFirstPartyTypeKind, instanceOfType, stringType, numberType, nanType, bigIntType, booleanType, dateType, symbolType, undefinedType, nullType, anyType, unknownType, neverType, voidType, arrayType, objectType, strictObjectType, unionType, discriminatedUnionType, intersectionType, tupleType, recordType, mapType, setType, functionType, lazyType, literalType, enumType, nativeEnumType, promiseType, effectsType, optionalType, nullableType, preprocessType, pipelineType, ostring, onumber, oboolean, coerce, NEVER;
   var init_types = __esm({
-    "node_modules/zod/v3/types.js"() {
+    "../../../node_modules/zod/v3/types.js"() {
       init_define_process_env();
       init_ZodError();
       init_errors();
@@ -4476,7 +4522,7 @@ td.valor { text-align: right; white-space: nowrap; }
     }
   });
 
-  // node_modules/zod/v3/external.js
+  // ../../../node_modules/zod/v3/external.js
   var external_exports = {};
   __export(external_exports, {
     BRAND: () => BRAND,
@@ -4588,7 +4634,7 @@ td.valor { text-align: right; white-space: nowrap; }
     void: () => voidType
   });
   var init_external = __esm({
-    "node_modules/zod/v3/external.js"() {
+    "../../../node_modules/zod/v3/external.js"() {
       init_define_process_env();
       init_errors();
       init_parseUtil();
@@ -4599,19 +4645,19 @@ td.valor { text-align: right; white-space: nowrap; }
     }
   });
 
-  // node_modules/zod/index.js
+  // ../../../node_modules/zod/index.js
   var init_zod = __esm({
-    "node_modules/zod/index.js"() {
+    "../../../node_modules/zod/index.js"() {
       init_define_process_env();
       init_external();
       init_external();
     }
   });
 
-  // src/pluggy/schemas.ts
+  // ../../../src/pluggy/schemas.ts
   var PluggyAuthSchema, PluggyItemSchema, PluggyAccountSchema, PluggyTransactionSchema, PluggyInvestmentSchema;
   var init_schemas = __esm({
-    "src/pluggy/schemas.ts"() {
+    "../../../src/pluggy/schemas.ts"() {
       "use strict";
       init_define_process_env();
       init_zod();
@@ -4676,7 +4722,7 @@ td.valor { text-align: right; white-space: nowrap; }
     }
   });
 
-  // src/pluggy/client.ts
+  // ../../../src/pluggy/client.ts
   async function authWith(clientId, clientSecret) {
     const res = await fetch(`${PLUGGY_BASE}/auth`, {
       method: "POST",
@@ -4737,7 +4783,7 @@ td.valor { text-align: right; white-space: nowrap; }
   }
   var PLUGGY_BASE, OUT_DIR, PluggyCategorySchema;
   var init_client = __esm({
-    "src/pluggy/client.ts"() {
+    "../../../src/pluggy/client.ts"() {
       "use strict";
       init_define_process_env();
       init_zod();
@@ -4751,7 +4797,7 @@ td.valor { text-align: right; white-space: nowrap; }
     }
   });
 
-  // src/pluggy/collect.ts
+  // ../../../src/pluggy/collect.ts
   function flagEmptyItems(bundles) {
     return bundles.map((b) => {
       if (b.accounts.length > 0) return b;
@@ -4760,14 +4806,14 @@ td.valor { text-align: right; white-space: nowrap; }
     });
   }
   var init_collect = __esm({
-    "src/pluggy/collect.ts"() {
+    "../../../src/pluggy/collect.ts"() {
       "use strict";
       init_define_process_env();
       init_client();
     }
   });
 
-  // src/pluggy/ledger-core.ts
+  // ../../../src/pluggy/ledger-core.ts
   function isCard(account) {
     return (account.type ?? "").toUpperCase() === "CREDIT";
   }
@@ -4828,7 +4874,7 @@ td.valor { text-align: right; white-space: nowrap; }
   }
   var INVESTMENT_CATEGORIES, SELF_TRANSFER_CATEGORY, CARD_BILL_CATEGORY, CREDIT_TAKEN, CARD_BILL_DESCRIPTORS, BOLETO_BANCO_XP_TERMS, REGRAS_GENERICAS;
   var init_ledger_core = __esm({
-    "src/pluggy/ledger-core.ts"() {
+    "../../../src/pluggy/ledger-core.ts"() {
       "use strict";
       init_define_process_env();
       init_fees();
@@ -4862,7 +4908,7 @@ td.valor { text-align: right; white-space: nowrap; }
     }
   });
 
-  // src/orcamento/coleta.ts
+  // ../../../src/orcamento/coleta.ts
   function parseItemIds(texto) {
     return [...new Set(texto.split(/[\s,;]+/).map((s) => s.trim()).filter(Boolean))];
   }
@@ -4947,7 +4993,7 @@ td.valor { text-align: right; white-space: nowrap; }
   }
   var MESES_DE_COLETA, ErroDeAcesso;
   var init_coleta = __esm({
-    "src/orcamento/coleta.ts"() {
+    "../../../src/orcamento/coleta.ts"() {
       "use strict";
       init_define_process_env();
       init_client();
@@ -4960,7 +5006,7 @@ td.valor { text-align: right; white-space: nowrap; }
     }
   });
 
-  // src/orcamento/regua.ts
+  // ../../../src/orcamento/regua.ts
   function somaMes(mes, n) {
     const [ano, m] = mes.split("-").map(Number);
     return mesDe(new Date(Date.UTC(ano, m - 1 + n, 1)));
@@ -5077,7 +5123,7 @@ td.valor { text-align: right; white-space: nowrap; }
   }
   var MESES_JANELA, MESES_MINIMOS, FRACAO_MAXIMA_DE_FORA, MULTIPLO, DIAS_UTEIS_DEPOIS, DIA_MAXIMO, mesDe, DIAS_PAREAMENTO_FATURA;
   var init_regua = __esm({
-    "src/orcamento/regua.ts"() {
+    "../../../src/orcamento/regua.ts"() {
       "use strict";
       init_define_process_env();
       init_aggregate();
@@ -5094,7 +5140,7 @@ td.valor { text-align: right; white-space: nowrap; }
     }
   });
 
-  // src/orcamento/resumo.ts
+  // ../../../src/orcamento/resumo.ts
   function brl(v) {
     return FORMATO.format(v);
   }
@@ -5135,7 +5181,7 @@ td.valor { text-align: right; white-space: nowrap; }
   }
   var FORMATO;
   var init_resumo = __esm({
-    "src/orcamento/resumo.ts"() {
+    "../../../src/orcamento/resumo.ts"() {
       "use strict";
       init_define_process_env();
       init_textos();
@@ -5143,7 +5189,7 @@ td.valor { text-align: right; white-space: nowrap; }
     }
   });
 
-  // src/orcamento/pagina/demo.ts
+  // ../../../src/orcamento/pagina/demo.ts
   function coletaDemo(hoje) {
     const rows = [];
     const add = (kind, direction, description, category, date, value2) => {
@@ -5180,15 +5226,15 @@ td.valor { text-align: right; white-space: nowrap; }
     };
   }
   var init_demo = __esm({
-    "src/orcamento/pagina/demo.ts"() {
+    "../../../src/orcamento/pagina/demo.ts"() {
       "use strict";
       init_define_process_env();
     }
   });
 
-  // src/orcamento/pagina/main.ts
+  // ../../../src/orcamento/pagina/main.ts
   var require_main = __commonJS({
-    "src/orcamento/pagina/main.ts"() {
+    "../../../src/orcamento/pagina/main.ts"() {
       init_define_process_env();
       init_aggregate();
       init_calibragem();
@@ -5206,6 +5252,8 @@ td.valor { text-align: right; white-space: nowrap; }
       var marcas = /* @__PURE__ */ new Map();
       var naoUso = /* @__PURE__ */ new Set();
       var extras = /* @__PURE__ */ new Set();
+      var categorias = /* @__PURE__ */ new Map();
+      var separadosAbertos = false;
       var naoEhDesperdicio = /* @__PURE__ */ new Set();
       function el(tag, attrs = {}, ...filhos) {
         const e = document.createElement(tag);
@@ -5267,23 +5315,51 @@ td.valor { text-align: right; white-space: nowrap; }
       }
       function telaCalibragem() {
         const c = coleta;
-        const corpo = el("tbody");
-        for (const d of topDestinatarios(naJanela(c.rows, hoje), 20, extras)) {
+        const janela = naJanela(c.rows, hoje);
+        const { lista, separados } = separaConferencia(janela, marcas, 20, extras);
+        const sugestoes = el(
+          "datalist",
+          { id: "categorias-sugeridas" },
+          ...sugestoesCategoria(aplicaMarcas(janela, marcas), c.nomesCategoria, categorias).map((s) => el("option", { value: s }))
+        );
+        const linha = (d) => {
           const sel = el("select", { "aria-label": d.amostra });
           for (const m of OPCOES[d.direction]) sel.append(el("option", { value: m }, rotuloMarca(m, d.direction)));
           sel.value = marcas.get(d.chave) ?? d.padrao;
           marcas.set(d.chave, sel.value);
-          sel.addEventListener("change", () => marcas.set(d.chave, sel.value));
-          corpo.append(
-            el(
-              "tr",
-              {},
-              el("td", {}, d.amostra),
-              el("td", {}, d.direction === "out" ? TEXTOS.calibragem.saiu : TEXTOS.calibragem.entrou),
-              el("td", { class: "valor" }, brl(d.total)),
-              el("td", {}, sel)
-            )
+          sel.addEventListener("change", () => {
+            marcas.set(d.chave, sel.value);
+            telaCalibragem();
+          });
+          const celula = el("td", {}, sel);
+          if (sel.value === "gasto") {
+            const campo = el("input", { list: "categorias-sugeridas", autocomplete: "off" });
+            campo.value = categorias.get(d.chave) ?? c.nomesCategoria.get(d.categoria) ?? d.categoria;
+            campo.addEventListener("input", () => categorias.set(d.chave, campo.value));
+            celula.append(el("label", { class: "oquee" }, TEXTOS.calibragem.oQueE, campo));
+          }
+          return el(
+            "tr",
+            {},
+            el("td", {}, d.amostra),
+            el("td", {}, d.direction === "out" ? TEXTOS.calibragem.saiu : TEXTOS.calibragem.entrou),
+            el("td", { class: "valor" }, brl(d.total)),
+            celula
           );
+        };
+        const blocoSeparados = [];
+        if (separados.length > 0) {
+          const det = el(
+            "details",
+            separadosAbertos ? { open: "" } : {},
+            el("summary", {}, TEXTOS.calibragem.separados),
+            el("p", {}, TEXTOS.calibragem.separadosDica),
+            el("table", {}, el("tbody", {}, ...separados.map(linha)))
+          );
+          det.addEventListener("toggle", () => {
+            separadosAbertos = det.open;
+          });
+          blocoSeparados.push(det);
         }
         const continuar = el("button", { type: "button" }, TEXTOS.calibragem.continuar);
         continuar.addEventListener("click", telaResultado);
@@ -5292,7 +5368,9 @@ td.valor { text-align: right; white-space: nowrap; }
           ...c.problemas.map((p) => el("p", { class: "aviso" }, p)),
           el("h2", {}, TEXTOS.calibragem.titulo),
           el("p", {}, TEXTOS.calibragem.explicacao),
-          el("table", {}, corpo),
+          el("table", {}, el("tbody", {}, ...lista.map(linha))),
+          ...blocoSeparados,
+          sugestoes,
           continuar
         );
       }
@@ -5315,11 +5393,11 @@ td.valor { text-align: right; white-space: nowrap; }
       function telaResultado() {
         const c = coleta;
         const marcadas = aplicaMarcas(c.rows, marcas);
-        const linhas = naJanela(marcadas, hoje);
+        const linhas = aplicaCategorias(naJanela(marcadas, hoje), c.nomesCategoria, categorias);
         const meses = flowWindowMonths(linhas);
         const c1 = camada1(linhas, meses, naoEhDesperdicio);
         const c2 = camada2(linhas, meses, naoEhDesperdicio);
-        const c3 = camada3(linhas, c.nomesCategoria, mesCorteRecente(hoje), naoEhDesperdicio);
+        const c3 = camada3(linhas, /* @__PURE__ */ new Map(), mesCorteRecente(hoje), naoEhDesperdicio);
         const naoUsoAnual = c2.filter((r) => naoUso.has(r.key)).reduce((s, r) => s + r.annualized, 0);
         const sugestao = sugereAporte({ rows: marcadas, hoje, camada1Anual: c1.anual, naoUsoAnual, coletaIncompleta: c.problemas.length > 0 });
         const tabela1 = el("tbody");
