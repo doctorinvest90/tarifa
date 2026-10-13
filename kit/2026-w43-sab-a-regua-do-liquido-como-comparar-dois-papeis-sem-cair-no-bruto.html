@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A régua do líquido: como comparar dois papéis sem cair no bruto | Doctor Invest</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0 auto; padding: 40px 24px 64px; max-width: 720px;
+         font: 17px/1.65 Georgia, "Times New Roman", serif; color: #1a1a1a; background: #fff; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 20px; margin: 32px 0 8px; }
+  .marca { font: 600 13px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+           text-transform: uppercase; color: #8a6d3b; margin-bottom: 24px; }
+  ol, ul { padding-left: 24px; }
+  li { margin-bottom: 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 24px 0; }
+  th, td { border: 1px solid #e0dcd4; padding: 8px 10px; text-align: left; font-size: 15px; }
+  hr { border: 0; border-top: 1px solid #e0dcd4; margin: 40px 0 24px; }
+  footer { font: 14px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .quiz { background: #faf8f4; border: 1px solid #e0dcd4; border-radius: 6px;
+          padding: 20px 22px; }
+  .quiz-tag { font: 600 12px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+              text-transform: uppercase; color: #8a6d3b; margin-bottom: 10px; }
+  .quiz-pergunta { font-weight: 700; margin: 0 0 10px; }
+  .quiz-veredito { margin: 0 0 10px; font: 16px/1.5 -apple-system, system-ui, sans-serif; }
+  .quiz-veredito.certo { color: #1d6b3f; }
+  .quiz-veredito.errado { color: #8a2f2f; }
+  .quiz-exp { margin: 0; font-size: 16px; color: #4a4a4a; }
+  .quiz-sep { margin: 32px 0 28px; }
+  .nps { margin: 14px 0 0; font: 15px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .nps-q { margin-right: 10px; }
+  /* Estrela, e não o número 1–5: cinco caixinhas numeradas não dizem sozinhas
+     qual ponta é a boa, e o leitor tem que adivinhar se 1 é "péssimo" ou
+     "primeiro lugar". A régua de estrela já carrega a direção. */
+  .nps-b { font-size: 22px; line-height: 1; color: #d8d2c6; background: none; border: 0;
+           padding: 0 1px; cursor: pointer; vertical-align: middle; }
+  .nps-b.on { color: #8a6d3b; }
+  /* Checklists costam trazer tabela, e a 375px uma tabela de 3 colunas já fica
+     no limite. Aperta o padding em vez de deixar estourar a largura. */
+  @media (max-width: 480px) {
+    body { padding: 28px 18px 48px; }
+    th, td { padding: 6px 8px; font-size: 14px; }
+    .quiz { padding: 16px; }
+  }
+  /* O quiz é do e-mail, não da folha: quem imprime leva a ferramenta, não o
+     jogo. */
+  @media print {
+    body { padding: 0; max-width: none; font-size: 12pt; }
+    .marca { color: #000; }
+    footer, .quiz, .quiz-sep, .nps { display: none; }
+  }
+</style>
+</head>
+<body>
+<section class="quiz">
+  <div class="quiz-tag">Quiz da edição</div>
+  <p class="quiz-pergunta">Uma LCI e um CDB do mesmo banco, mesmo risco e prazo de três anos, mostram o mesmo rendimento bruto no app. Qual deixa mais dinheiro no seu bolso?</p>
+  <p class="quiz-veredito" id="qv"></p>
+  <p class="quiz-exp">Com o mesmo bruto, a LCI isenta entrega o ganho inteiro e o CDB deixa 15% com a Receita acima de dois anos. Para empatar, o CDB precisaria render cerca de 17,6% a mais no bruto, pelo mesmo risco.</p>
+</section>
+<script>
+(function () {
+  var q = {"pergunta":"Uma LCI e um CDB do mesmo banco, mesmo risco e prazo de três anos, mostram o mesmo rendimento bruto no app. Qual deixa mais dinheiro no seu bolso?","opcoes":[{"letra":"A","texto":"O CDB, porque CDB sempre rende mais"},{"letra":"B","texto":"A LCI, porque é isenta e o CDB paga 15% de imposto sobre o ganho nesse prazo"},{"letra":"C","texto":"Os dois deixam o mesmo valor líquido"},{"letra":"D","texto":"Depende do seu faturamento na PJ"}],"gabarito":"B","explicacao":"Com o mesmo bruto, a LCI isenta entrega o ganho inteiro e o CDB deixa 15% com a Receita acima de dois anos. Para empatar, o CDB precisaria render cerca de 17,6% a mais no bruto, pelo mesmo risco."};
+  var alvo = document.getElementById("qv");
+  var texto = function (l) {
+    for (var i = 0; i < q.opcoes.length; i++) if (q.opcoes[i].letra === l) return q.opcoes[i].texto;
+    return "";
+  };
+  var escolha = new URLSearchParams(location.search).get("o");
+  var certa = q.gabarito + ") " + texto(q.gabarito);
+  if (escolha && texto(escolha)) {
+    var acertou = escolha === q.gabarito;
+    alvo.textContent = acertou
+      ? "Você marcou " + certa + ". É essa."
+      : "Você marcou " + escolha + ") " + texto(escolha) + ". A resposta é " + certa + ".";
+    alvo.className = "quiz-veredito " + (acertou ? "certo" : "errado");
+  } else {
+    alvo.textContent = "A resposta é " + certa + ".";
+  }
+})();
+</script>
+<hr class="quiz-sep">
+<div class="marca">Doctor Invest</div>
+<h1>A régua do líquido: como comparar dois papéis sem cair no bruto</h1>
+<p><strong>Passo a passo, com o extrato aberto:</strong></p>
+<ol>
+<li><strong>Liste cada papel de renda fixa</strong>, na pessoa física e na PJ ou holding.</li>
+<li><strong>Marque I ou T.</strong> I para isento (LCI, LCA, CRI, CRA, debênture incentivada, rendimento de FII). T para tributado (CDB, Tesouro, debênture comum, fundos com come-cotas).</li>
+<li><strong>Confira o lugar.</strong> Papel I dentro da PJ perdeu a isenção que teria na pessoa física. Leve ao contador antes do próximo vencimento.</li>
+<li><strong>Na próxima compra, compare o líquido.</strong> Bruto do tributado ÷ (1 − alíquota) = o bruto que ele precisaria ter para empatar com o isento de mesmo risco.</li>
+</ol>
+<p><strong>Tabela regressiva do imposto de renda (renda fixa tributada)</strong></p>
+<table>
+<thead>
+<tr>
+<th>Prazo da aplicação</th>
+<th>Alíquota sobre o ganho</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Até 180 dias</td>
+<td>22,5%</td>
+</tr>
+<tr>
+<td>De 181 a 360 dias</td>
+<td>20%</td>
+</tr>
+<tr>
+<td>De 361 a 720 dias</td>
+<td>17,5%</td>
+</tr>
+<tr>
+<td>Acima de 720 dias</td>
+<td>15%</td>
+</tr>
+</tbody></table>
+<p><strong>Régua de bolso:</strong> para empatar com um isento, o papel tributado de mesmo risco precisa render, no bruto, cerca de 17,6% a mais acima de dois anos (15% de imposto) e quase 29% a mais em menos de seis meses (22,5%). A isenção de LCI, LCA e rendimento de FII vale para a pessoa física; dentro da PJ, o rendimento é tributado como receita da empresa.</p>
+
+<hr>
+<footer>Hélio Barros · Doctor Invest · esta página acompanha a newsletter “A jornada do médico investidor”.</footer>
+</body>
+</html>
