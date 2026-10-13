@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>As 3 perguntas que desarmam o &quot;produto exclusivo&quot; | Doctor Invest</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0 auto; padding: 40px 24px 64px; max-width: 720px;
+         font: 17px/1.65 Georgia, "Times New Roman", serif; color: #1a1a1a; background: #fff; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 20px; margin: 32px 0 8px; }
+  .marca { font: 600 13px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+           text-transform: uppercase; color: #8a6d3b; margin-bottom: 24px; }
+  ol, ul { padding-left: 24px; }
+  li { margin-bottom: 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 24px 0; }
+  th, td { border: 1px solid #e0dcd4; padding: 8px 10px; text-align: left; font-size: 15px; }
+  hr { border: 0; border-top: 1px solid #e0dcd4; margin: 40px 0 24px; }
+  footer { font: 14px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .quiz { background: #faf8f4; border: 1px solid #e0dcd4; border-radius: 6px;
+          padding: 20px 22px; }
+  .quiz-tag { font: 600 12px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+              text-transform: uppercase; color: #8a6d3b; margin-bottom: 10px; }
+  .quiz-pergunta { font-weight: 700; margin: 0 0 10px; }
+  .quiz-veredito { margin: 0 0 10px; font: 16px/1.5 -apple-system, system-ui, sans-serif; }
+  .quiz-veredito.certo { color: #1d6b3f; }
+  .quiz-veredito.errado { color: #8a2f2f; }
+  .quiz-exp { margin: 0; font-size: 16px; color: #4a4a4a; }
+  .quiz-sep { margin: 32px 0 28px; }
+  .nps { margin: 14px 0 0; font: 15px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .nps-q { margin-right: 10px; }
+  /* Estrela, e não o número 1–5: cinco caixinhas numeradas não dizem sozinhas
+     qual ponta é a boa, e o leitor tem que adivinhar se 1 é "péssimo" ou
+     "primeiro lugar". A régua de estrela já carrega a direção. */
+  .nps-b { font-size: 22px; line-height: 1; color: #d8d2c6; background: none; border: 0;
+           padding: 0 1px; cursor: pointer; vertical-align: middle; }
+  .nps-b.on { color: #8a6d3b; }
+  /* Checklists costam trazer tabela, e a 375px uma tabela de 3 colunas já fica
+     no limite. Aperta o padding em vez de deixar estourar a largura. */
+  @media (max-width: 480px) {
+    body { padding: 28px 18px 48px; }
+    th, td { padding: 6px 8px; font-size: 14px; }
+    .quiz { padding: 16px; }
+  }
+  /* O quiz é do e-mail, não da folha: quem imprime leva a ferramenta, não o
+     jogo. */
+  @media print {
+    body { padding: 0; max-width: none; font-size: 12pt; }
+    .marca { color: #000; }
+    footer, .quiz, .quiz-sep, .nps { display: none; }
+  }
+</style>
+</head>
+<body>
+<section class="quiz">
+  <div class="quiz-tag">Quiz da edição</div>
+  <p class="quiz-pergunta">Por que o custo de um produto &quot;exclusivo&quot; do banco costuma não aparecer como linha no seu extrato?</p>
+  <p class="quiz-veredito" id="qv"></p>
+  <p class="quiz-exp">A taxa de administração, a performance e os spreads são abatidos antes de o valor da cota chegar até você, então o extrato mostra o líquido e esconde o pedaço que remunera quem distribuiu. Por isso a comparação que resolve é o custo total por ano, com a rentabilidade projetada ficando em segundo plano.</p>
+</section>
+<script>
+(function () {
+  var q = {"pergunta":"Por que o custo de um produto \"exclusivo\" do banco costuma não aparecer como linha no seu extrato?","opcoes":[{"letra":"A","texto":"Porque a lei proíbe o banco de cobrar taxa de clientes selecionados"},{"letra":"B","texto":"Porque ele já vem descontado do valor da cota, e você só vê o resultado líquido"},{"letra":"C","texto":"Porque esse tipo de produto não tem nenhum custo embutido"},{"letra":"D","texto":"Porque o custo só é cobrado no resgate, nunca durante a aplicação"}],"gabarito":"B","explicacao":"A taxa de administração, a performance e os spreads são abatidos antes de o valor da cota chegar até você, então o extrato mostra o líquido e esconde o pedaço que remunera quem distribuiu. Por isso a comparação que resolve é o custo total por ano, com a rentabilidade projetada ficando em segundo plano."};
+  var alvo = document.getElementById("qv");
+  var texto = function (l) {
+    for (var i = 0; i < q.opcoes.length; i++) if (q.opcoes[i].letra === l) return q.opcoes[i].texto;
+    return "";
+  };
+  var escolha = new URLSearchParams(location.search).get("o");
+  var certa = q.gabarito + ") " + texto(q.gabarito);
+  if (escolha && texto(escolha)) {
+    var acertou = escolha === q.gabarito;
+    alvo.textContent = acertou
+      ? "Você marcou " + certa + ". É essa."
+      : "Você marcou " + escolha + ") " + texto(escolha) + ". A resposta é " + certa + ".";
+    alvo.className = "quiz-veredito " + (acertou ? "certo" : "errado");
+  } else {
+    alvo.textContent = "A resposta é " + certa + ".";
+  }
+})();
+</script>
+<hr class="quiz-sep">
+<div class="marca">Doctor Invest</div>
+<h1>As 3 perguntas que desarmam o &quot;produto exclusivo&quot;</h1>
+<p>Copie e cole na resposta ao gerente ou assessor, antes de assinar qualquer coisa:</p>
+<ol>
+<li><strong>Qual é o nome completo e o código (ou CNPJ) do produto?</strong> Preciso para pesquisar por fora.</li>
+<li><strong>Qual é o custo total por ano?</strong> Some taxa de administração, taxa de performance e qualquer spread ou deságio. Quero o número cheio.</li>
+<li><strong>Como você e a instituição são remunerados por esse produto específico?</strong> Peço por escrito.</li>
+</ol>
+<p><strong>Os 3 sinais de oferta empurrada por meta, não por você:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Sinal</th>
+<th>O que costuma significar</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Prazo curto (&quot;fecha sexta&quot;)</td>
+<td>A pressa é da campanha de vendas, não da sua decisão</td>
+</tr>
+<tr>
+<td>&quot;Exclusivo&quot; ou &quot;só para alguns clientes&quot;</td>
+<td>A mesma oferta chegou a muita gente na mesma semana</td>
+</tr>
+<tr>
+<td>Custo total não aparece na frente</td>
+<td>A remuneração de quem vende está no que ficou de fora</td>
+</tr>
+</tbody></table>
+<p><strong>Regra de bolso:</strong> o custo não cai no extrato porque já vem descontado do valor da cota. Numa carteira de R$ 500 mil, cada 1% de custo por ano é R$ 5 mil, e em dez anos são R$ 50 mil antes dos juros que esse dinheiro deixou de render. Compare sempre o custo total do produto exclusivo com o custo de chegar na mesma exposição pelo caminho mais simples.</p>
+
+<hr>
+<footer>Hélio Barros · Doctor Invest · esta página acompanha a newsletter “A jornada do médico investidor”.</footer>
+</body>
+</html>
