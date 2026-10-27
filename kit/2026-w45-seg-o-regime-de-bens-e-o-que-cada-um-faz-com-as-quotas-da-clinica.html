@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>O regime de bens e o que cada um faz com as quotas da clínica | Doctor Invest</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0 auto; padding: 40px 24px 64px; max-width: 720px;
+         font: 17px/1.65 Georgia, "Times New Roman", serif; color: #1a1a1a; background: #fff; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 20px; margin: 32px 0 8px; }
+  .marca { font: 600 13px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+           text-transform: uppercase; color: #8a6d3b; margin-bottom: 24px; }
+  ol, ul { padding-left: 24px; }
+  li { margin-bottom: 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 24px 0; }
+  th, td { border: 1px solid #e0dcd4; padding: 8px 10px; text-align: left; font-size: 15px; }
+  hr { border: 0; border-top: 1px solid #e0dcd4; margin: 40px 0 24px; }
+  footer { font: 14px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .quiz { background: #faf8f4; border: 1px solid #e0dcd4; border-radius: 6px;
+          padding: 20px 22px; }
+  .quiz-tag { font: 600 12px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+              text-transform: uppercase; color: #8a6d3b; margin-bottom: 10px; }
+  .quiz-pergunta { font-weight: 700; margin: 0 0 10px; }
+  .quiz-veredito { margin: 0 0 10px; font: 16px/1.5 -apple-system, system-ui, sans-serif; }
+  .quiz-veredito.certo { color: #1d6b3f; }
+  .quiz-veredito.errado { color: #8a2f2f; }
+  .quiz-exp { margin: 0; font-size: 16px; color: #4a4a4a; }
+  .quiz-sep { margin: 32px 0 28px; }
+  .nps { margin: 14px 0 0; font: 15px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .nps-q { margin-right: 10px; }
+  /* Estrela, e não o número 1–5: cinco caixinhas numeradas não dizem sozinhas
+     qual ponta é a boa, e o leitor tem que adivinhar se 1 é "péssimo" ou
+     "primeiro lugar". A régua de estrela já carrega a direção. */
+  .nps-b { font-size: 22px; line-height: 1; color: #d8d2c6; background: none; border: 0;
+           padding: 0 1px; cursor: pointer; vertical-align: middle; }
+  .nps-b.on { color: #8a6d3b; }
+  /* Checklists costam trazer tabela, e a 375px uma tabela de 3 colunas já fica
+     no limite. Aperta o padding em vez de deixar estourar a largura. */
+  @media (max-width: 480px) {
+    body { padding: 28px 18px 48px; }
+    th, td { padding: 6px 8px; font-size: 14px; }
+    .quiz { padding: 16px; }
+  }
+  /* O quiz é do e-mail, não da folha: quem imprime leva a ferramenta, não o
+     jogo. */
+  @media print {
+    body { padding: 0; max-width: none; font-size: 12pt; }
+    .marca { color: #000; }
+    footer, .quiz, .quiz-sep, .nps { display: none; }
+  }
+</style>
+</head>
+<body>
+<section class="quiz">
+  <div class="quiz-tag">Quiz da edição</div>
+  <p class="quiz-pergunta">No regime legal brasileiro (comunhão parcial, sem pacto antenupcial), o que o cônjuge recebe ao se divorciar de um sócio de clínica, quanto às quotas compradas durante o casamento?</p>
+  <p class="quiz-veredito" id="qv"></p>
+  <p class="quiz-exp">As quotas adquiridas durante o casamento entram na meação, então o cônjuge tem direito à metade do valor. Pelo artigo 1.027 do Código Civil, ele não se torna sócio: recebe o valor, que pode ser pago por apuração de haveres.</p>
+</section>
+<script>
+(function () {
+  var q = {"pergunta":"No regime legal brasileiro (comunhão parcial, sem pacto antenupcial), o que o cônjuge recebe ao se divorciar de um sócio de clínica, quanto às quotas compradas durante o casamento?","opcoes":[{"letra":"A","texto":"Vira sócio da clínica, com direito a voto nas decisões"},{"letra":"B","texto":"Metade do valor das quotas, sem entrar na sociedade"},{"letra":"C","texto":"Nada, porque quota de sociedade é sempre bem particular"},{"letra":"D","texto":"A clínica inteira, por ser bem comum do casal"}],"gabarito":"B","explicacao":"As quotas adquiridas durante o casamento entram na meação, então o cônjuge tem direito à metade do valor. Pelo artigo 1.027 do Código Civil, ele não se torna sócio: recebe o valor, que pode ser pago por apuração de haveres."};
+  var alvo = document.getElementById("qv");
+  var texto = function (l) {
+    for (var i = 0; i < q.opcoes.length; i++) if (q.opcoes[i].letra === l) return q.opcoes[i].texto;
+    return "";
+  };
+  var escolha = new URLSearchParams(location.search).get("o");
+  var certa = q.gabarito + ") " + texto(q.gabarito);
+  if (escolha && texto(escolha)) {
+    var acertou = escolha === q.gabarito;
+    alvo.textContent = acertou
+      ? "Você marcou " + certa + ". É essa."
+      : "Você marcou " + escolha + ") " + texto(escolha) + ". A resposta é " + certa + ".";
+    alvo.className = "quiz-veredito " + (acertou ? "certo" : "errado");
+  } else {
+    alvo.textContent = "A resposta é " + certa + ".";
+  }
+})();
+</script>
+<hr class="quiz-sep">
+<div class="marca">Doctor Invest</div>
+<h1>O regime de bens e o que cada um faz com as quotas da clínica</h1>
+<p><strong>Os quatro regimes e as quotas adquiridas durante o casamento</strong></p>
+<table>
+<thead>
+<tr>
+<th>Regime</th>
+<th>O que acontece com a quota da clínica</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Comunhão parcial (padrão, sem pacto)</td>
+<td>Quota adquirida na constância do casamento entra na meação: metade do valor cabe ao cônjuge</td>
+</tr>
+<tr>
+<td>Comunhão universal</td>
+<td>Entram as quotas do casamento e também as que você já tinha antes dele</td>
+</tr>
+<tr>
+<td>Separação total (exige pacto antenupcial)</td>
+<td>As quotas ficam fora da partilha</td>
+</tr>
+<tr>
+<td>Participação final nos aquestos</td>
+<td>As quotas adquiridas durante o casamento entram na apuração feita ao fim, conforme as regras próprias do regime</td>
+</tr>
+</tbody></table>
+<p><strong>Checklist para esta semana</strong></p>
+<ol>
+<li><strong>Localize o seu regime.</strong> Está escrito na certidão de casamento atualizada. Sem pacto, é comunhão parcial.</li>
+<li><strong>Leia o contrato social e o acordo de sócios.</strong> Procure a cláusula sobre divórcio de sócio e apuração de haveres.</li>
+<li><strong>Verifique a proteção da operação.</strong> O ex-cônjuge fica fora da gestão? O pagamento é por apuração, em prazo, ou pode ser exigido de uma vez?</li>
+<li><strong>Anote o que falta.</strong> Regime exposto ou cláusula ausente são a pauta da conversa com o advogado e com os sócios.</li>
+</ol>
+<p><strong>Regra de bolso:</strong> em comunhão parcial, quota comprada ou integralizada durante o casamento vale meação de metade. O ex-cônjuge recebe o valor, não a condição de sócio (Código Civil, art. 1.027), mas valor se paga em dinheiro, e esse dinheiro pode sair do caixa da clínica se não houver patrimônio pessoal para cobrir.</p>
+
+<hr>
+<footer>Hélio Barros · Doctor Invest · esta página acompanha a newsletter “A jornada do médico investidor”.</footer>
+</body>
+</html>
