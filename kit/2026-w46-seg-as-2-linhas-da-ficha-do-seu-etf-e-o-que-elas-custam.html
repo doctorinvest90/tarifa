@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>As 2 linhas da ficha do seu ETF, e o que elas custam | Doctor Invest</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0 auto; padding: 40px 24px 64px; max-width: 720px;
+         font: 17px/1.65 Georgia, "Times New Roman", serif; color: #1a1a1a; background: #fff; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 20px; margin: 32px 0 8px; }
+  .marca { font: 600 13px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+           text-transform: uppercase; color: #8a6d3b; margin-bottom: 24px; }
+  ol, ul { padding-left: 24px; }
+  li { margin-bottom: 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 24px 0; }
+  th, td { border: 1px solid #e0dcd4; padding: 8px 10px; text-align: left; font-size: 15px; }
+  hr { border: 0; border-top: 1px solid #e0dcd4; margin: 40px 0 24px; }
+  footer { font: 14px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .quiz { background: #faf8f4; border: 1px solid #e0dcd4; border-radius: 6px;
+          padding: 20px 22px; }
+  .quiz-tag { font: 600 12px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+              text-transform: uppercase; color: #8a6d3b; margin-bottom: 10px; }
+  .quiz-pergunta { font-weight: 700; margin: 0 0 10px; }
+  .quiz-veredito { margin: 0 0 10px; font: 16px/1.5 -apple-system, system-ui, sans-serif; }
+  .quiz-veredito.certo { color: #1d6b3f; }
+  .quiz-veredito.errado { color: #8a2f2f; }
+  .quiz-exp { margin: 0; font-size: 16px; color: #4a4a4a; }
+  .quiz-sep { margin: 32px 0 28px; }
+  .nps { margin: 14px 0 0; font: 15px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .nps-q { margin-right: 10px; }
+  /* Estrela, e não o número 1–5: cinco caixinhas numeradas não dizem sozinhas
+     qual ponta é a boa, e o leitor tem que adivinhar se 1 é "péssimo" ou
+     "primeiro lugar". A régua de estrela já carrega a direção. */
+  .nps-b { font-size: 22px; line-height: 1; color: #d8d2c6; background: none; border: 0;
+           padding: 0 1px; cursor: pointer; vertical-align: middle; }
+  .nps-b.on { color: #8a6d3b; }
+  /* Checklists costam trazer tabela, e a 375px uma tabela de 3 colunas já fica
+     no limite. Aperta o padding em vez de deixar estourar a largura. */
+  @media (max-width: 480px) {
+    body { padding: 28px 18px 48px; }
+    th, td { padding: 6px 8px; font-size: 14px; }
+    .quiz { padding: 16px; }
+  }
+  /* O quiz é do e-mail, não da folha: quem imprime leva a ferramenta, não o
+     jogo. */
+  @media print {
+    body { padding: 0; max-width: none; font-size: 12pt; }
+    .marca { color: #000; }
+    footer, .quiz, .quiz-sep, .nps { display: none; }
+  }
+</style>
+</head>
+<body>
+<section class="quiz">
+  <div class="quiz-tag">Quiz da edição</div>
+  <p class="quiz-pergunta">Por que um ETF domiciliado na Irlanda sofre retenção de 15% sobre o dividendo americano, enquanto um domiciliado nos Estados Unidos, comprado por um brasileiro, sofre 30%?</p>
+  <p class="quiz-veredito" id="qv"></p>
+  <p class="quiz-exp">A alíquota padrão sobre o dividendo americano pago a estrangeiro é 30%, e cai para 15% quando há acordo entre os Estados Unidos e o país do fundo. A Irlanda tem esse acordo; o Brasil não. Em R$ 15 mil de dividendos ao ano, é a diferença entre R$ 4.500 e R$ 2.250 de imposto na fonte.</p>
+</section>
+<script>
+(function () {
+  var q = {"pergunta":"Por que um ETF domiciliado na Irlanda sofre retenção de 15% sobre o dividendo americano, enquanto um domiciliado nos Estados Unidos, comprado por um brasileiro, sofre 30%?","opcoes":[{"letra":"A","texto":"Porque o ETF irlandês cobra taxa de administração menor"},{"letra":"B","texto":"Porque a Irlanda tem acordo de bitributação com os Estados Unidos e o Brasil não tem"},{"letra":"C","texto":"Porque o ETF irlandês segue um índice diferente"},{"letra":"D","texto":"Porque o Brasil isenta dividendos vindos da Irlanda"}],"gabarito":"B","explicacao":"A alíquota padrão sobre o dividendo americano pago a estrangeiro é 30%, e cai para 15% quando há acordo entre os Estados Unidos e o país do fundo. A Irlanda tem esse acordo; o Brasil não. Em R$ 15 mil de dividendos ao ano, é a diferença entre R$ 4.500 e R$ 2.250 de imposto na fonte."};
+  var alvo = document.getElementById("qv");
+  var texto = function (l) {
+    for (var i = 0; i < q.opcoes.length; i++) if (q.opcoes[i].letra === l) return q.opcoes[i].texto;
+    return "";
+  };
+  var escolha = new URLSearchParams(location.search).get("o");
+  var certa = q.gabarito + ") " + texto(q.gabarito);
+  if (escolha && texto(escolha)) {
+    var acertou = escolha === q.gabarito;
+    alvo.textContent = acertou
+      ? "Você marcou " + certa + ". É essa."
+      : "Você marcou " + escolha + ") " + texto(escolha) + ". A resposta é " + certa + ".";
+    alvo.className = "quiz-veredito " + (acertou ? "certo" : "errado");
+  } else {
+    alvo.textContent = "A resposta é " + certa + ".";
+  }
+})();
+</script>
+<hr class="quiz-sep">
+<div class="marca">Doctor Invest</div>
+<h1>As 2 linhas da ficha do seu ETF, e o que elas custam</h1>
+<p>Para cada ETF da carteira internacional, anote:</p>
+<ol>
+<li><strong>Domicílio (pelo ISIN).</strong> Os dois primeiros caracteres do código.</li>
+<li><strong>Política de distribuição.</strong> Acumulação (reinveste) ou distribuição (paga o dividendo).</li>
+</ol>
+<p><strong>O que o domicílio decide sobre o dividendo americano</strong></p>
+<table>
+<thead>
+<tr>
+<th>Domicílio do fundo</th>
+<th>ISIN começa com</th>
+<th>Retenção na fonte sobre o dividendo americano</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Estados Unidos</td>
+<td>US</td>
+<td>30% (sem acordo Brasil–EUA)</td>
+</tr>
+<tr>
+<td>Irlanda</td>
+<td>IE</td>
+<td>15% (acordo Irlanda–EUA)</td>
+</tr>
+</tbody></table>
+<p><strong>Regras de bolso:</strong></p>
+<ul>
+<li>A retenção na fonte é americana e vem antes de qualquer imposto brasileiro. Confirme a parte brasileira com o seu contador.</li>
+<li>Fundo de acumulação não distribui dividendo: ele reinveste dentro do fundo, já com a retenção descontada.</li>
+<li>O domicílio importa também na herança. Ativos com situação nos Estados Unidos, como ETFs domiciliados lá, expõem o estrangeiro ao imposto americano sobre herança, cuja isenção para não residentes é de apenas US$ 60 mil e a alíquota chega a 40%. O ETF domiciliado na Irlanda não tem situação americana para esse fim. Trate isso com planejamento sucessório.</li>
+<li>Para aporte novo, escolher o domicílio não custa nada. Para trocar posição existente, calcule antes o imposto da realização do ganho.</li>
+</ul>
+
+<hr>
+<footer>Hélio Barros · Doctor Invest · esta página acompanha a newsletter “A jornada do médico investidor”.</footer>
+</body>
+</html>
