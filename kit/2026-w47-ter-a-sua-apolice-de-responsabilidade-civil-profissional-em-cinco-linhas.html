@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A sua apólice de responsabilidade civil profissional em cinco linhas | Doctor Invest</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0 auto; padding: 40px 24px 64px; max-width: 720px;
+         font: 17px/1.65 Georgia, "Times New Roman", serif; color: #1a1a1a; background: #fff; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 20px; margin: 32px 0 8px; }
+  .marca { font: 600 13px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+           text-transform: uppercase; color: #8a6d3b; margin-bottom: 24px; }
+  ol, ul { padding-left: 24px; }
+  li { margin-bottom: 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 24px 0; }
+  th, td { border: 1px solid #e0dcd4; padding: 8px 10px; text-align: left; font-size: 15px; }
+  hr { border: 0; border-top: 1px solid #e0dcd4; margin: 40px 0 24px; }
+  footer { font: 14px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .quiz { background: #faf8f4; border: 1px solid #e0dcd4; border-radius: 6px;
+          padding: 20px 22px; }
+  .quiz-tag { font: 600 12px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+              text-transform: uppercase; color: #8a6d3b; margin-bottom: 10px; }
+  .quiz-pergunta { font-weight: 700; margin: 0 0 10px; }
+  .quiz-veredito { margin: 0 0 10px; font: 16px/1.5 -apple-system, system-ui, sans-serif; }
+  .quiz-veredito.certo { color: #1d6b3f; }
+  .quiz-veredito.errado { color: #8a2f2f; }
+  .quiz-exp { margin: 0; font-size: 16px; color: #4a4a4a; }
+  .quiz-sep { margin: 32px 0 28px; }
+  .nps { margin: 14px 0 0; font: 15px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .nps-q { margin-right: 10px; }
+  /* Estrela, e não o número 1–5: cinco caixinhas numeradas não dizem sozinhas
+     qual ponta é a boa, e o leitor tem que adivinhar se 1 é "péssimo" ou
+     "primeiro lugar". A régua de estrela já carrega a direção. */
+  .nps-b { font-size: 22px; line-height: 1; color: #d8d2c6; background: none; border: 0;
+           padding: 0 1px; cursor: pointer; vertical-align: middle; }
+  .nps-b.on { color: #8a6d3b; }
+  /* Checklists costam trazer tabela, e a 375px uma tabela de 3 colunas já fica
+     no limite. Aperta o padding em vez de deixar estourar a largura. */
+  @media (max-width: 480px) {
+    body { padding: 28px 18px 48px; }
+    th, td { padding: 6px 8px; font-size: 14px; }
+    .quiz { padding: 16px; }
+  }
+  /* O quiz é do e-mail, não da folha: quem imprime leva a ferramenta, não o
+     jogo. */
+  @media print {
+    body { padding: 0; max-width: none; font-size: 12pt; }
+    .marca { color: #000; }
+    footer, .quiz, .quiz-sep, .nps { display: none; }
+  }
+</style>
+</head>
+<body>
+<section class="quiz">
+  <div class="quiz-tag">Quiz da edição</div>
+  <p class="quiz-pergunta">Por que uma holding patrimonial não protege o médico de uma condenação por erro médico?</p>
+  <p class="quiz-veredito" id="qv"></p>
+  <p class="quiz-exp">A responsabilidade pelo ato médico é pessoal (CDC, art. 14, §4º), e as cotas da holding são patrimônio pessoal, penhoráveis pela dívida. Quem cobre o ato médico em si é o seguro de responsabilidade civil profissional.</p>
+</section>
+<script>
+(function () {
+  var q = {"pergunta":"Por que uma holding patrimonial não protege o médico de uma condenação por erro médico?","opcoes":[{"letra":"A","texto":"Porque holding é ilegal para médicos"},{"letra":"B","texto":"Porque a condenação é dívida pessoal do médico, e as cotas da holding são bem pessoal dele, penhoráveis por essa dívida"},{"letra":"C","texto":"Porque a holding só vale para quem tem mais de R$ 10 milhões"},{"letra":"D","texto":"Porque o imposto da holding é maior que a condenação"}],"gabarito":"B","explicacao":"A responsabilidade pelo ato médico é pessoal (CDC, art. 14, §4º), e as cotas da holding são patrimônio pessoal, penhoráveis pela dívida. Quem cobre o ato médico em si é o seguro de responsabilidade civil profissional."};
+  var alvo = document.getElementById("qv");
+  var texto = function (l) {
+    for (var i = 0; i < q.opcoes.length; i++) if (q.opcoes[i].letra === l) return q.opcoes[i].texto;
+    return "";
+  };
+  var escolha = new URLSearchParams(location.search).get("o");
+  var certa = q.gabarito + ") " + texto(q.gabarito);
+  if (escolha && texto(escolha)) {
+    var acertou = escolha === q.gabarito;
+    alvo.textContent = acertou
+      ? "Você marcou " + certa + ". É essa."
+      : "Você marcou " + escolha + ") " + texto(escolha) + ". A resposta é " + certa + ".";
+    alvo.className = "quiz-veredito " + (acertou ? "certo" : "errado");
+  } else {
+    alvo.textContent = "A resposta é " + certa + ".";
+  }
+})();
+</script>
+<hr class="quiz-sep">
+<div class="marca">Doctor Invest</div>
+<h1>A sua apólice de responsabilidade civil profissional em cinco linhas</h1>
+<table>
+<thead>
+<tr>
+<th>O que procurar</th>
+<th>Onde costuma estar</th>
+<th>O que anotar</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Limite de cobertura</td>
+<td>Especificação da apólice, quadro de coberturas</td>
+<td>O teto por reclamação e o teto agregado no ano</td>
+</tr>
+<tr>
+<td>Custos de defesa</td>
+<td>Condições gerais</td>
+<td>Se honorários de advogado e perícia estão dentro ou fora do limite</td>
+</tr>
+<tr>
+<td>Base de cobertura e data retroativa</td>
+<td>Especificação e condições gerais</td>
+<td>Se é &quot;por reclamação&quot; (claims made) ou &quot;por ocorrência&quot;; a partir de que data os atos estão cobertos</td>
+</tr>
+<tr>
+<td>Exclusões</td>
+<td>Condições gerais, item exclusões</td>
+<td>Dolo, procedimento sem habilitação, estética, atos fora da sua especialidade</td>
+</tr>
+<tr>
+<td>Cobertura do seu nome</td>
+<td>Apólice do hospital ou da sociedade</td>
+<td>Se você, pessoa física, é segurado ou se só a instituição está coberta</td>
+</tr>
+</tbody></table>
+<p><strong>Regra de bolso:</strong> a holding cobre sucessão, divórcio e risco de sócio. O seu próprio ato médico, não: esse risco é da apólice de responsabilidade civil profissional. Blindagem montada depois do fato que gera a dívida é desfeita por fraude à execução.</p>
+<p><strong>Conta da exposição:</strong> patrimônio pessoal (incluídas as suas cotas da holding, a distribuição de lucros e o pró-labore) menos o limite da sua apólice de responsabilidade civil. O que sobra é o que responde pela condenação com o seu nome.</p>
+
+<hr>
+<footer>Hélio Barros · Doctor Invest · esta página acompanha a newsletter “A jornada do médico investidor”.</footer>
+</body>
+</html>
