@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>A linha de 2026 em plantões, numa folha | Doctor Invest</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0 auto; padding: 40px 24px 64px; max-width: 720px;
+         font: 17px/1.65 Georgia, "Times New Roman", serif; color: #1a1a1a; background: #fff; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 20px; margin: 32px 0 8px; }
+  .marca { font: 600 13px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+           text-transform: uppercase; color: #8a6d3b; margin-bottom: 24px; }
+  ol, ul { padding-left: 24px; }
+  li { margin-bottom: 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 24px 0; }
+  th, td { border: 1px solid #e0dcd4; padding: 8px 10px; text-align: left; font-size: 15px; }
+  hr { border: 0; border-top: 1px solid #e0dcd4; margin: 40px 0 24px; }
+  footer { font: 14px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .quiz { background: #faf8f4; border: 1px solid #e0dcd4; border-radius: 6px;
+          padding: 20px 22px; }
+  .quiz-tag { font: 600 12px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+              text-transform: uppercase; color: #8a6d3b; margin-bottom: 10px; }
+  .quiz-pergunta { font-weight: 700; margin: 0 0 10px; }
+  .quiz-veredito { margin: 0 0 10px; font: 16px/1.5 -apple-system, system-ui, sans-serif; }
+  .quiz-veredito.certo { color: #1d6b3f; }
+  .quiz-veredito.errado { color: #8a2f2f; }
+  .quiz-exp { margin: 0; font-size: 16px; color: #4a4a4a; }
+  .quiz-sep { margin: 32px 0 28px; }
+  .nps { margin: 14px 0 0; font: 15px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .nps-q { margin-right: 10px; }
+  /* Estrela, e não o número 1–5: cinco caixinhas numeradas não dizem sozinhas
+     qual ponta é a boa, e o leitor tem que adivinhar se 1 é "péssimo" ou
+     "primeiro lugar". A régua de estrela já carrega a direção. */
+  .nps-b { font-size: 22px; line-height: 1; color: #d8d2c6; background: none; border: 0;
+           padding: 0 1px; cursor: pointer; vertical-align: middle; }
+  .nps-b.on { color: #8a6d3b; }
+  /* Checklists costam trazer tabela, e a 375px uma tabela de 3 colunas já fica
+     no limite. Aperta o padding em vez de deixar estourar a largura. */
+  @media (max-width: 480px) {
+    body { padding: 28px 18px 48px; }
+    th, td { padding: 6px 8px; font-size: 14px; }
+    .quiz { padding: 16px; }
+  }
+  /* O quiz é do e-mail, não da folha: quem imprime leva a ferramenta, não o
+     jogo. */
+  @media print {
+    body { padding: 0; max-width: none; font-size: 12pt; }
+    .marca { color: #000; }
+    footer, .quiz, .quiz-sep, .nps { display: none; }
+  }
+</style>
+</head>
+<body>
+<section class="quiz">
+  <div class="quiz-tag">Quiz da edição</div>
+  <p class="quiz-pergunta">Entre 2016 e 2026, o plantão de clínico do estudo foi de R$ 800 para R$ 1.250. Descontada a inflação, ele:</p>
+  <p class="quiz-veredito" id="qv"></p>
+  <p class="quiz-exp">56,2% é a alta sem descontar a inflação. Corrigidos, os R$ 800 de 2016 seriam R$ 1.293 hoje.</p>
+</section>
+<script>
+(function () {
+  var q = {"pergunta":"Entre 2016 e 2026, o plantão de clínico do estudo foi de R$ 800 para R$ 1.250. Descontada a inflação, ele:","opcoes":[{"letra":"A","texto":"Dobrou"},{"letra":"B","texto":"Subiu 56,2%"},{"letra":"C","texto":"Ficou 3,3% abaixo"},{"letra":"D","texto":"Caiu pela metade"}],"gabarito":"C","explicacao":"56,2% é a alta sem descontar a inflação. Corrigidos, os R$ 800 de 2016 seriam R$ 1.293 hoje."};
+  var alvo = document.getElementById("qv");
+  var texto = function (l) {
+    for (var i = 0; i < q.opcoes.length; i++) if (q.opcoes[i].letra === l) return q.opcoes[i].texto;
+    return "";
+  };
+  var escolha = new URLSearchParams(location.search).get("o");
+  var certa = q.gabarito + ") " + texto(q.gabarito);
+  if (escolha && texto(escolha)) {
+    var acertou = escolha === q.gabarito;
+    alvo.textContent = acertou
+      ? "Você marcou " + certa + ". É essa."
+      : "Você marcou " + escolha + ") " + texto(escolha) + ". A resposta é " + certa + ".";
+    alvo.className = "quiz-veredito " + (acertou ? "certo" : "errado");
+  } else {
+    alvo.textContent = "A resposta é " + certa + ".";
+  }
+})();
+</script>
+<hr class="quiz-sep">
+<div class="marca">Doctor Invest</div>
+<h1>A linha de 2026 em plantões, numa folha</h1>
+<p><strong>1. Quantos plantões custa cada modelo</strong>
+Plantão líquido de 12 horas, ponto médio das faixas do estudo. Preço cheio de lançamento na Apple Store do Brasil.</p>
+<table>
+<thead>
+<tr>
+<th>Modelo</th>
+<th>Preço</th>
+<th>Clínico (R$ 1.250)</th>
+<th>Anestesia (R$ 2.250)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>18 Pro Max 256 GB</td>
+<td>R$ 12.999</td>
+<td>10,4</td>
+<td>5,8</td>
+</tr>
+<tr>
+<td>18 Pro Max 1 TB</td>
+<td>R$ 17.499</td>
+<td>14,0</td>
+<td>7,8</td>
+</tr>
+<tr>
+<td>18 Pro Max 2 TB</td>
+<td>R$ 21.999</td>
+<td>17,6</td>
+<td>9,8</td>
+</tr>
+<tr>
+<td>Duo 2 TB</td>
+<td>R$ 30.999</td>
+<td>24,8</td>
+<td>13,8</td>
+</tr>
+</tbody></table>
+<p><strong>2. O seu número</strong>
+Preço do modelo ÷ o que cai na conta por plantão. Se você só sabe o valor da nota, desconte o imposto antes: no lucro presumido em São Paulo, 13,3%.</p>
+<p><strong>3. A pergunta que o estudo não responde</strong>
+O iPhone de 2026 é melhor que o de 2016. O estudo mede o que sai do bolso, não o valor do que se leva para casa.</p>
+
+<p class="estudo"><strong>O estudo completo:</strong> <a href="https://estudos.drheliobarros.com.br/plantoes-iphone/?utm_source=kit&amp;utm_content=2026-W48-qui">https://estudos.drheliobarros.com.br/plantoes-iphone/</a></p>
+<hr>
+<footer>Hélio Barros · Doctor Invest · esta página acompanha a newsletter “A jornada do médico investidor”.</footer>
+</body>
+</html>
