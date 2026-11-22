@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>O desconto que empata, numa folha | Doctor Invest</title>
+<meta name="robots" content="noindex">
+<style>
+  :root { color-scheme: light; }
+  body { margin: 0 auto; padding: 40px 24px 64px; max-width: 720px;
+         font: 17px/1.65 Georgia, "Times New Roman", serif; color: #1a1a1a; background: #fff; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; }
+  h2 { font-size: 20px; margin: 32px 0 8px; }
+  .marca { font: 600 13px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+           text-transform: uppercase; color: #8a6d3b; margin-bottom: 24px; }
+  ol, ul { padding-left: 24px; }
+  li { margin-bottom: 14px; }
+  table { border-collapse: collapse; width: 100%; margin: 24px 0; }
+  th, td { border: 1px solid #e0dcd4; padding: 8px 10px; text-align: left; font-size: 15px; }
+  hr { border: 0; border-top: 1px solid #e0dcd4; margin: 40px 0 24px; }
+  footer { font: 14px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .quiz { background: #faf8f4; border: 1px solid #e0dcd4; border-radius: 6px;
+          padding: 20px 22px; }
+  .quiz-tag { font: 600 12px/1 -apple-system, system-ui, sans-serif; letter-spacing: .08em;
+              text-transform: uppercase; color: #8a6d3b; margin-bottom: 10px; }
+  .quiz-pergunta { font-weight: 700; margin: 0 0 10px; }
+  .quiz-veredito { margin: 0 0 10px; font: 16px/1.5 -apple-system, system-ui, sans-serif; }
+  .quiz-veredito.certo { color: #1d6b3f; }
+  .quiz-veredito.errado { color: #8a2f2f; }
+  .quiz-exp { margin: 0; font-size: 16px; color: #4a4a4a; }
+  .quiz-sep { margin: 32px 0 28px; }
+  .nps { margin: 14px 0 0; font: 15px/1.5 -apple-system, system-ui, sans-serif; color: #6b6b6b; }
+  .nps-q { margin-right: 10px; }
+  /* Estrela, e não o número 1–5: cinco caixinhas numeradas não dizem sozinhas
+     qual ponta é a boa, e o leitor tem que adivinhar se 1 é "péssimo" ou
+     "primeiro lugar". A régua de estrela já carrega a direção. */
+  .nps-b { font-size: 22px; line-height: 1; color: #d8d2c6; background: none; border: 0;
+           padding: 0 1px; cursor: pointer; vertical-align: middle; }
+  .nps-b.on { color: #8a6d3b; }
+  /* Checklists costam trazer tabela, e a 375px uma tabela de 3 colunas já fica
+     no limite. Aperta o padding em vez de deixar estourar a largura. */
+  @media (max-width: 480px) {
+    body { padding: 28px 18px 48px; }
+    th, td { padding: 6px 8px; font-size: 14px; }
+    .quiz { padding: 16px; }
+  }
+  /* O quiz é do e-mail, não da folha: quem imprime leva a ferramenta, não o
+     jogo. */
+  @media print {
+    body { padding: 0; max-width: none; font-size: 12pt; }
+    .marca { color: #000; }
+    footer, .quiz, .quiz-sep, .nps { display: none; }
+  }
+</style>
+</head>
+<body>
+<section class="quiz">
+  <div class="quiz-tag">Quiz da edição</div>
+  <p class="quiz-pergunta">No estudo, com o CDI a 13,65%, qual desconto no Pix empata com 12 parcelas sem juros, para quem deixa o dinheiro aplicado?</p>
+  <p class="quiz-veredito" id="qv"></p>
+  <p class="quiz-exp">Aplicado num CDB de liquidez diária, com imposto descontado, o dinheiro das 12 parcelas rende o equivalente a 5,4% do preço. Os 12,6% são o custo do lojista, que é a margem para negociar, e os 1,5% eram o empate de 10× em 2021, com juros baixos.</p>
+<div class="nps" id="nps" hidden></div>
+<script>
+(function () {
+  var cfg = {"endpoint":"https://docs.google.com/forms/d/e/1FAIpQLSejpxIzt3TjWYVPgRk6PYDCRKRibcHkZouGIPtJCjyk9-ypfg/formResponse?entry.1457604422={e}&entry.631805460={n}&submit=Submit","edicao":"2026-W48-ter"};
+  var box = document.getElementById("nps");
+  var q = document.createElement("span");
+  q.className = "nps-q";
+  q.textContent = "Essa edição te serviu?";
+  box.appendChild(q);
+  var votou = false;
+  var voto = function (nota) {
+    return function () {
+      if (votou) return;
+      votou = true;
+      var e = encodeURIComponent(cfg.edicao);
+      new Image().src = cfg.endpoint.indexOf("{n}") < 0
+        ? cfg.endpoint + (cfg.endpoint.indexOf("?") < 0 ? "?" : "&") + "e=" + e + "&n=" + nota
+        : cfg.endpoint.replace("{e}", e).replace("{n}", nota);
+      box.textContent = "Obrigado.";
+    };
+  };
+  var estrelas = [];
+  var pinta = function (ate) {
+    for (var i = 0; i < estrelas.length; i++) {
+      estrelas[i].className = i < ate ? "nps-b on" : "nps-b";
+    }
+  };
+  var passa = function (ate) {
+    return function () {
+      pinta(ate);
+    };
+  };
+  for (var n = 1; n <= 5; n++) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "nps-b";
+    b.textContent = "★";
+    b.setAttribute("aria-label", n + " de 5");
+    b.onclick = voto(n);
+    b.onmouseover = passa(n);
+    b.onfocus = passa(n);
+    estrelas.push(b);
+    box.appendChild(b);
+  }
+  box.onmouseleave = function () {
+    pinta(0);
+  };
+  box.hidden = false;
+})();
+</script>
+</section>
+<script>
+(function () {
+  var q = {"pergunta":"No estudo, com o CDI a 13,65%, qual desconto no Pix empata com 12 parcelas sem juros, para quem deixa o dinheiro aplicado?","opcoes":[{"letra":"A","texto":"1,5%, porque o parcelado quase não rende"},{"letra":"B","texto":"3%, o desconto padrão do varejo"},{"letra":"C","texto":"5,4%, e acima disso pagar à vista vence"},{"letra":"D","texto":"12,6%, o que o lojista paga à maquininha"}],"gabarito":"C","explicacao":"Aplicado num CDB de liquidez diária, com imposto descontado, o dinheiro das 12 parcelas rende o equivalente a 5,4% do preço. Os 12,6% são o custo do lojista, que é a margem para negociar, e os 1,5% eram o empate de 10× em 2021, com juros baixos."};
+  var alvo = document.getElementById("qv");
+  var texto = function (l) {
+    for (var i = 0; i < q.opcoes.length; i++) if (q.opcoes[i].letra === l) return q.opcoes[i].texto;
+    return "";
+  };
+  var escolha = new URLSearchParams(location.search).get("o");
+  var certa = q.gabarito + ") " + texto(q.gabarito);
+  if (escolha && texto(escolha)) {
+    var acertou = escolha === q.gabarito;
+    alvo.textContent = acertou
+      ? "Você marcou " + certa + ". É essa."
+      : "Você marcou " + escolha + ") " + texto(escolha) + ". A resposta é " + certa + ".";
+    alvo.className = "quiz-veredito " + (acertou ? "certo" : "errado");
+  } else {
+    alvo.textContent = "A resposta é " + certa + ".";
+  }
+})();
+</script>
+<hr class="quiz-sep">
+<div class="marca">Doctor Invest</div>
+<h1>O desconto que empata, numa folha</h1>
+<p><strong>1. A tabela do empate</strong>
+Desconto à vista que empata com o parcelado sem juros, com a primeira parcela em 30 dias e o dinheiro num CDB de liquidez diária, imposto descontado.</p>
+<table>
+<thead>
+<tr>
+<th>CDI ao ano</th>
+<th>3×</th>
+<th>6×</th>
+<th>10×</th>
+<th>12×</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>10%</td>
+<td>1,22%</td>
+<td>2,13%</td>
+<td>3,40%</td>
+<td>4,01%</td>
+</tr>
+<tr>
+<td>12%</td>
+<td>1,45%</td>
+<td>2,53%</td>
+<td>4,03%</td>
+<td>4,76%</td>
+</tr>
+<tr>
+<td>14%</td>
+<td>1,68%</td>
+<td>2,92%</td>
+<td>4,64%</td>
+<td>5,48%</td>
+</tr>
+</tbody></table>
+<p><strong>2. Três ajustes</strong>
+Dinheiro parado na conta corrente: o empate é zero, e qualquer desconto vence. Primeira parcela no ato (carnê, boleto): tire uma parcela da conta. Pontos do cartão, se o desconto for só no Pix: some ao empate o percentual que os pontos devolvem.</p>
+<p><strong>3. O dia da compra</strong>
+No cartão, a primeira parcela vem na próxima fatura. Comprar no dia seguinte ao fechamento empurra a primeira parcela para cerca de 40 dias. Em 10×, isso sobe o empate de 4,0% (véspera do fechamento) para 4,8%.</p>
+<p><strong>4. A frase do balcão</strong>
+&quot;No Pix você não paga a maquininha. Divide essa economia comigo?&quot; Em 12×, a maquininha custa ao lojista de 9,3% a 12,6% do valor.</p>
+
+<p class="estudo"><strong>O estudo completo:</strong> <a href="https://estudos.drheliobarros.com.br/avista-parcelado/?utm_source=kit&amp;utm_content=2026-W48-ter">https://estudos.drheliobarros.com.br/avista-parcelado/</a></p>
+<hr>
+<footer>Hélio Barros · Doctor Invest · esta página acompanha a newsletter “A jornada do médico investidor”.</footer>
+</body>
+</html>
